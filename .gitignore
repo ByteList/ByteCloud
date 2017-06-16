@@ -1,0 +1,12 @@
+*.iml
+*.jar
+.idea
+.classpath
+*.classpath
+*.project
+bin/
+out/
+target/
+.settings/
+
+ByteCloudSoftware/

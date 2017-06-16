@@ -1,0 +1,11 @@
+name: ByteCloud-Core
+version: 2.1
+description: §eIt's the §3Core-Software§e from the §bByteCloud-System§e. With this you can get Informations about the §bCloud-Server§e.
+
+author: §cByteList
+website: https://bytelist.de/
+
+main: de.bytelist.bytecloud.core.ByteCloudCore
+
+#load: STARTUP
+loadbefore: [GCGeneral, ClickAttack, Lobby, ShulkerDefence, JumpDuell, Survival, DeathRun]

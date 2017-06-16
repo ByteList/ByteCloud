@@ -1,0 +1,4 @@
+name: ByteCloud-Master
+version: 2.1
+author: ByteList
+main: de.bytelist.bytecloud.bungee.ByteCloudMaster
