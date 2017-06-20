@@ -97,7 +97,7 @@ public class ByteCloud {
         Installer installer = new Installer();
         if(!installer.isUpdated()) {
             this.logger.info("================================");
-            this.logger.info("Cloud isn't up-to-date! Try to update it...");
+            this.logger.info("Cloud is not up-to-date! Try to update it...");
             
             installer.downloadFiles();
             installer.extractFiles();
