@@ -103,7 +103,7 @@ public class ByteCloud {
             installer.extractFiles();
 
             if(installer.isSuccessful) {
-                this.logger.info("Update was successful!");
+                this.logger.info("Updated successful!");
                 this.logger.info("================================");
                 cleanStop();
             } else {
