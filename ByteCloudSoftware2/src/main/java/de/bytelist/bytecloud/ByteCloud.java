@@ -98,26 +98,15 @@ public class ByteCloud {
         if(!installer.isUpdated()) {
             this.logger.info("================================");
             this.logger.info("Cloud isn't up-to-date! Try to update it...");
+            installer.downloadFiles();
+            installer.extractFiles();
 
-            Thread downloadThread = new Thread("Downloading Thread") {
-                @Override
-                public void run() {
-                        installer.downloadFiles();
-                        installer.extractFiles();
-                }
-            };
-            downloadThread.start();
-
-            int i = 0;
-            while (!installer.isFinished && downloadThread.isAlive()) {
-                i++;
-            }
             if(installer.isSuccessful) {
-                this.logger.info("Update was successful! (t=" + i + ")");
+                this.logger.info("Update was successful!");
                 this.logger.info("================================");
                 cleanStop();
             } else {
-                this.logger.warning("Update was not successful! (t=" + i + ")");
+                this.logger.warning("Update was not successful!");
                 this.logger.info("Creating directories manually...");
                 for(EnumFile enumFile : EnumFile.values()) {
                     File file = new File(enumFile.getPath());
