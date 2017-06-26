@@ -112,6 +112,7 @@ public class ByteCloud {
             while (!installer.isFinished && downloadThread.isAlive()) {
                 i++;
             }
+
             if(installer.isSuccessful) {
                 this.logger.info("Update was successful! (t=" + i + ")");
                 this.logger.info("================================");
@@ -186,7 +187,7 @@ public class ByteCloud {
 
                 bungee.stopBungee();
                 while (true) {
-                    if(!bungee.isAlive() && !bungee.isRunning()) break;
+                    if(!bungee.getThread().isAlive() && !bungee.isRunning()) break;
                 }
                 cleanStop();
             }

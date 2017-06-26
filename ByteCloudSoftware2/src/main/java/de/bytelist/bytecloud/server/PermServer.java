@@ -23,7 +23,7 @@ public class PermServer extends Server {
     private String stopper;
 
     public PermServer(String serverId, PermServerObject permServerObject) {
-        super(/*ServerType.PERMANENT,*/ serverId, permServerObject.get("port").getAsInt(), ServerState.STARTING, EnumFile.SERVERS_PERMANENT.getPath());
+        super(serverId, permServerObject.get("port").getAsInt(), ServerState.STARTING, EnumFile.SERVERS_PERMANENT.getPath());
         this.permServerObject = permServerObject;
 
         try {
@@ -44,12 +44,16 @@ public class PermServer extends Server {
     }
 
     public void stopServer(String sender, StopType stopType) {
-        super.stopServer(stopType);
+//        if(this.getServerId().startsWith("Fallback") && ) {
+//            stopType = StopType.KICK;
+//            SERVER_KICK_MESSAGE = "§6Du wurdest vom Netzwerk gekickt, da kein Fallback Server verfügbar ist.";
+//        }
         this.stopper = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e"+getServerId()+"§7.");
             NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
+        super.stopServer(stopType);
     }
 
     @Override

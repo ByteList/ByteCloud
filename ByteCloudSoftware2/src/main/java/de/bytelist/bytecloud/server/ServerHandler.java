@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.server.group.ServerGroup;
 import de.bytelist.bytecloud.server.group.ServerGroupObject;
@@ -85,16 +86,15 @@ public class ServerHandler {
         };
         thread.start();
 
-        int i = 0;
-        while (areServersRunning && thread.isAlive()) {
-            i++;
+        while (true) {
+            if(areServersRunning && thread.isAlive()) break;
         }
         try {
             Thread.sleep(3000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Servers stopped! (t="+i+")");
+        System.out.println("Servers stopped!");
     }
 
     public List<Server> getServers() {
@@ -144,5 +144,17 @@ public class ServerHandler {
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
         return lobbyServer.get(i);
+    }
+
+    public int getDatabasePlayers(String serverId) {
+        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt();
+    }
+
+    public int getDatabaseSpectators(String serverId) {
+        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt();
+    }
+
+    public int getDatabaseOnlineCount(String serverId) {
+        return getDatabasePlayers(serverId) + getDatabaseSpectators(serverId);
     }
 }

@@ -21,6 +21,5 @@ public class ByteCloudLauncher {
                 byteCloud.getLogger().info("** Command not found");
             }
         }
-
     }
 }

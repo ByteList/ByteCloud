@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * Created by ByteList on 17.03.2017.
+ *
+ * Copyright by ByteList - https://bytelist.de/
  */
 public class PermServerObject {
 

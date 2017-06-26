@@ -1,6 +1,5 @@
-name: ByteCloud-Core
+name: ByteCloudAPI
 version: 2.1
-description: §eIt's the §3Core-Software§e from the §bByteCloud-System§e. With this you can get Informations about the §bCloud-Server§e.
 
 author: §cByteList
 website: https://bytelist.de/

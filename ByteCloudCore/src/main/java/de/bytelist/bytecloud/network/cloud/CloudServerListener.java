@@ -9,9 +9,9 @@ import de.bytelist.bytecloud.network.bungee.packet.PacketInBungee;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInBungeeStopped;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInStartServer;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInStopServer;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
 import de.bytelist.bytecloud.network.server.packet.PacketInServer;
 import de.bytelist.bytecloud.network.server.packet.PacketInServerStopped;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
 import de.bytelist.bytecloud.network.server.packet.PacketInStopOwnServer;
 import de.bytelist.bytecloud.server.PermServer;
 import de.bytelist.bytecloud.server.Server;
@@ -45,7 +45,6 @@ public class CloudServerListener extends JsonServerListener {
             if(packet.equals(PacketInBungeeStopped.class.getSimpleName())) {
                 ByteCloud.getInstance().getBungee().onStop();
             }
-
             if(packet.equals(PacketInStartServer.class.getSimpleName())) {
                 String group = jsonObject.get("group").getAsString();
                 String sender = jsonObject.get("sender").getAsString();

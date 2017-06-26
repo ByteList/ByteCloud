@@ -21,8 +21,8 @@ public class TempServer extends Server {
     private String starter;
     private String stopper;
 
-    public TempServer(/*ServerType serverType, */String serverId, int port, ServerGroup serverGroup) {
-        super(/*serverType,*/ serverId, port, ServerState.STARTING, EnumFile.SERVERS_RUNNING.getPath());
+    public TempServer(String serverId, int port, ServerGroup serverGroup) {
+        super(serverId, port, ServerState.STARTING, EnumFile.SERVERS_RUNNING.getPath());
         this.serverGroup = serverGroup;
 
         try {
@@ -45,11 +45,21 @@ public class TempServer extends Server {
     }
 
     public void stopServer(String sender, StopType stopType) {
-        super.stopServer(stopType);
+        if(this.serverGroup.getName().equals("LOBBY") && this.serverGroup.getServers().size() < 1) {
+            if(ByteCloud.getInstance().getServerHandler().existsPermanentServer(""))
+            stopType = StopType.KICK;
+            SERVER_KICK_MESSAGE = "§6Du wurdest vom Netzwerk gekickt, da kein Lobby-Server verfügbar ist.";
+        }
         this.stopper = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e"+getServerId()+"§7.");
             NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+        }
+        super.stopServer(stopType);
+        try {
+            FileUtils.deleteDirectory(this.getDirectory());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -67,6 +77,7 @@ public class TempServer extends Server {
     @Override
     public void onStop() {
         super.onStop();
+        this.serverGroup.removeServer(this);
         try {
             Thread.sleep(2200L);
         } catch (InterruptedException e) {
@@ -82,7 +93,6 @@ public class TempServer extends Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.serverGroup.removeServer(this);
         if(!stopper.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
             NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);

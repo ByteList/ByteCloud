@@ -17,7 +17,7 @@ import static de.bytelist.bytecloud.network.NetworkManager.getCloudServer;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class Bungee extends Thread {
+public class Bungee {
 
     @Getter
     private String bungeeId;
@@ -27,6 +27,8 @@ public class Bungee extends Thread {
     private final File directory;
     @Getter
     private Process process;
+    @Getter
+    private Thread thread;
 
     public Bungee() {
         this.bungeeId = "Bungee-1";
@@ -39,25 +41,26 @@ public class Bungee extends Thread {
         }
     }
 
-    @Override
-    public void run() {
-        this.running = true;
-        if (process == null) {
-            String[] param = { "java", "-Xmx1024M", "-Dde.bytelist.bytecloud.servername="+bungeeId, "-jar", "BungeeCord.jar" };
-            ProcessBuilder pb = new ProcessBuilder(param);
-            pb.directory(directory);
-            try {
-                process = pb.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void startBungee() {
         if(!running) {
             ByteCloud.getInstance().getLogger().info("Bungee is starting.");
-            start();
+            this.thread = new Thread(bungeeId+" Thread") {
+                @Override
+                public void run() {
+                    running = true;
+                    if (process == null) {
+                        String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx1024M", "-Dde.bytelist.bytecloud.servername="+bungeeId, "-jar", "BungeeCord.jar" };
+                        ProcessBuilder pb = new ProcessBuilder(param);
+                        pb.directory(directory);
+                        try {
+                            process = pb.start();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            this.thread.start();
         }
     }
 
@@ -85,6 +88,8 @@ public class Bungee extends Thread {
                 }
                 this.process.destroy();
                 this.process = null;
+                this.thread.interrupt();
+                this.thread = null;
             }
             this.running = false;
             System.out.println("Bungee stopped.");

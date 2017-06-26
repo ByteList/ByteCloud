@@ -14,6 +14,8 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by ByteList on 09.04.2017.
@@ -32,6 +34,10 @@ public class DatabaseManager {
     private DatabaseServer databaseServer;
 
     public DatabaseManager(String host, int port, String username, String password, String database) throws Exception {
+        // Disable the stupid log messages from mongodb
+        Logger mongoLog = Logger.getLogger("org.mongodb.driver");
+        mongoLog.setLevel(Level.OFF);
+
         // Support for new mongodb standard uuid's
         CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
                 CodecRegistries.fromCodecs(new UuidCodec(UuidRepresentation.STANDARD)),
