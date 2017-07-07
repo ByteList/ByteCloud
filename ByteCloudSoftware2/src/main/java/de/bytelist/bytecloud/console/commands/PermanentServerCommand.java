@@ -135,7 +135,7 @@ public class PermanentServerCommand extends Command {
                 Server server = ByteCloud.getInstance().getServerHandler().getServer(serverName);
 
                 if(server != null && server instanceof PermServer) {
-                    ((PermServer)server).stopServer("_cloud", Server.StopType.MOVE_TO_LOBBY);
+                    ((PermServer)server).stopServer("_cloud");
                 } else {
                     logger.info(serverName+" isn't a permanent server!");
                 }

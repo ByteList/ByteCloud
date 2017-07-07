@@ -2,7 +2,7 @@ package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
-import de.bytelist.bytecloud.network.NetworkManager;
+import de.bytelist.bytecloud.network.server.packet.PacketInChangeServerState;
 import de.bytelist.bytecloud.network.server.packet.PacketInStopOwnServer;
 import org.bukkit.entity.Player;
 
@@ -182,6 +182,7 @@ public class CloudAPI {
     public void changeServerState(ServerState serverState) {
         ByteCloudCore.getInstance().getCloudHandler().editDatabaseServerValue(getServerId(), DatabaseServerObject.STATE,
                 serverState.toString());
+        ByteCloudCore.getInstance().getServerClient().sendPacket(new PacketInChangeServerState(getServerId(), serverState.name()));
     }
 
     /**
@@ -197,13 +198,18 @@ public class CloudAPI {
 
     public void shutdown() {
         PacketInStopOwnServer packetInStopOwnServer = new PacketInStopOwnServer(getServerId());
-        NetworkManager.getServerClient().sendPacket(packetInStopOwnServer);
+        ByteCloudCore.getInstance().getServerClient().sendPacket(packetInStopOwnServer);
     }
 
     /**
      * An enum with all server states for the cloud server signs.
      */
     public enum ServerState {
-        STARTING, LOBBY, FULL, INGAME, RESTART, WHITELIST
+        STARTING,
+        LOBBY,
+        FULL,
+        INGAME,
+        RESTART,
+        STOPPED
     }
 }

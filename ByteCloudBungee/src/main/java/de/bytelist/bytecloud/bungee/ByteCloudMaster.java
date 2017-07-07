@@ -5,6 +5,7 @@ import de.bytelist.bytecloud.bungee.listener.LoginListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
 import de.bytelist.bytecloud.bungee.properties.CloudProperties;
 import de.bytelist.bytecloud.network.NetworkManager;
+import de.bytelist.bytecloud.network.bungee.BungeeClient;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInBungee;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInBungeeStopped;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public class ByteCloudMaster extends Plugin {
     private static ByteCloudMaster instance;
     @Getter
     private CloudHandler cloudHandler;
+    @Getter
+    private BungeeClient bungeeClient;
 
     @Override
     public void onEnable() {
@@ -35,24 +38,27 @@ public class ByteCloudMaster extends Plugin {
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
 
-        NetworkManager.connect(NetworkManager.ConnectType.BUNGEE, Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port", "4213")), getLogger());
+        NetworkManager.connect(Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port", "4213")), getLogger());
+        this.bungeeClient = new BungeeClient();
+        this.bungeeClient.z();
 
         getProxy().getConsole().sendMessage(prefix+"§aEnabled!");
 
         PacketInBungee packetInBungee = new PacketInBungee(this.cloudHandler.getBungeeId(), 25565);
-        NetworkManager.getBungeeClient().sendPacket(packetInBungee);
+        this.bungeeClient.sendPacket(packetInBungee);
 
         getProxy().getPluginManager().registerCommand(this, new Command("bytecloud", null, "cloud", "cloudsystem", "bungeecloud") {
             @Override
             public void execute(CommandSender sender, String[] args) {
-                sender.sendMessage(ByteCloudMaster.getInstance().prefix+"§fCloud-System by ByteList (Cloud: v"+cloudHandler.getCloudVersion()+", Bungee: v"+version+", Spigot: v"+version+")");
+                sender.sendMessage(ByteCloudMaster.getInstance().prefix+"§fByteCloud: v"+cloudHandler.getCloudVersion()+", " +
+                        "Bungee: v"+version+", Spigot: v"+version+" (Started: "+cloudHandler.getCloudStarted()+", by ByteList)");
             }
         });
     }
 
     @Override
     public void onDisable() {
-        NetworkManager.getBungeeClient().sendPacket(new PacketInBungeeStopped(cloudHandler.getBungeeId()));
+        this.bungeeClient.sendPacket(new PacketInBungeeStopped(cloudHandler.getBungeeId()));
         getProxy().getConsole().sendMessage(prefix+"§cDisabled!");
     }
 }

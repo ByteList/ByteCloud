@@ -5,8 +5,6 @@ import com.voxelboxstudios.resilent.client.JsonClientListener;
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.network.cloud.packet.*;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -24,20 +22,20 @@ public class BungeeClientListener extends JsonClientListener {
             String packet = jsonObject.get("packet").getAsString();
             if(packet.equals(PacketOutKickAllPlayers.class.getSimpleName())) {
                 String reason = jsonObject.get("reason").getAsString();
-                for(ProxiedPlayer player : BungeeCord.getInstance().getPlayers()) {
+                for(ProxiedPlayer player : ByteCloudMaster.getInstance().getProxy().getPlayers()) {
                     player.disconnect(reason);
                 }
             }
             if(packet.equals(PacketOutRegisterServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
                 int port = jsonObject.get("port").getAsInt();
-                ServerInfo serverInfo = BungeeCord.getInstance().constructServerInfo(serverId, InetSocketAddress.createUnresolved("localhost", port), "", false);
-                BungeeCord.getInstance().getServers().put(serverId, serverInfo);
+                ServerInfo serverInfo = ByteCloudMaster.getInstance().getProxy().constructServerInfo(serverId, InetSocketAddress.createUnresolved("localhost", port), "", false);
+                ByteCloudMaster.getInstance().getProxy().getServers().put(serverId, serverInfo);
             }
             if(packet.equals(PacketOutUnregisterServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
-                if(BungeeCord.getInstance().getServers().containsKey(serverId))
-                    BungeeCord.getInstance().getServers().remove(serverId);
+                if(ByteCloudMaster.getInstance().getProxy().getServers().containsKey(serverId))
+                    ByteCloudMaster.getInstance().getProxy().getServers().remove(serverId);
             }
 
             if(packet.equals(PacketOutMovePlayer.class.getSimpleName())) {
@@ -46,24 +44,24 @@ public class BungeeClientListener extends JsonClientListener {
                 String players = jsonObject.get("players").getAsString();
 
                 if(players.equals("_all")) {
-                    for(ProxiedPlayer pp : BungeeCord.getInstance().getPlayers()) {
+                    for(ProxiedPlayer pp : ByteCloudMaster.getInstance().getProxy().getPlayers()) {
                         pp.sendMessage("§c"+reason);
-                        pp.connect(BungeeCord.getInstance().getServerInfo(toMoveServerId));
+                        pp.connect(ByteCloudMaster.getInstance().getProxy().getServerInfo(toMoveServerId));
                     }
                 } else {
                     if(players.contains("#")) {
                         for (String player : players.split("#")) {
-                            ProxiedPlayer pp = BungeeCord.getInstance().getPlayer(player);
+                            ProxiedPlayer pp = ByteCloudMaster.getInstance().getProxy().getPlayer(player);
                             if (pp != null) {
                                 pp.sendMessage("§c" + reason);
-                                pp.connect(BungeeCord.getInstance().getServerInfo(toMoveServerId));
+                                pp.connect(ByteCloudMaster.getInstance().getProxy().getServerInfo(toMoveServerId));
                             }
                         }
                     } else {
-                        ProxiedPlayer pp = BungeeCord.getInstance().getPlayer(players);
+                        ProxiedPlayer pp = ByteCloudMaster.getInstance().getProxy().getPlayer(players);
                         if (pp != null) {
                             pp.sendMessage("§c" + reason);
-                            pp.connect(BungeeCord.getInstance().getServerInfo(toMoveServerId));
+                            pp.connect(ByteCloudMaster.getInstance().getProxy().getServerInfo(toMoveServerId));
                         }
                     }
                 }
@@ -71,14 +69,10 @@ public class BungeeClientListener extends JsonClientListener {
 
             if(packet.equals(PacketOutSendMessage.class.getSimpleName())) {
                 String player = jsonObject.get("player").getAsString();
-                String message = jsonObject.get("message").getAsString();
-                ProxiedPlayer pp = BungeeCord.getInstance().getPlayer(player);
+                String message = jsonObject.get("message").getAsString().replace("#&C#", "§");
+                ProxiedPlayer pp = ByteCloudMaster.getInstance().getProxy().getPlayer(player);
                 if(pp != null)
                     pp.sendMessage(ByteCloudMaster.getInstance().prefix+"§r"+message);
-            }
-
-            if(packet.equals(PacketOutStopBungee.class.getSimpleName())) {
-                BungeeCord.getInstance().stop();
             }
 
             if(packet.equals(PacketOutCloudInfo.class.getSimpleName())) {

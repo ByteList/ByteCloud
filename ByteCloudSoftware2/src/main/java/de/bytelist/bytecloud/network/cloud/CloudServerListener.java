@@ -10,6 +10,7 @@ import de.bytelist.bytecloud.network.bungee.packet.PacketInBungeeStopped;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInStartServer;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInStopServer;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
+import de.bytelist.bytecloud.network.server.packet.PacketInChangeServerState;
 import de.bytelist.bytecloud.network.server.packet.PacketInServer;
 import de.bytelist.bytecloud.network.server.packet.PacketInServerStopped;
 import de.bytelist.bytecloud.network.server.packet.PacketInStopOwnServer;
@@ -24,18 +25,21 @@ import de.bytelist.bytecloud.server.group.ServerGroup;
  * Copyright by ByteList - https://bytelist.de/
  */
 public class CloudServerListener extends JsonServerListener {
+
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+
     @Override
     public void jsonReceived(Patron patron, JsonObject jsonObject) {
         if(jsonObject.has("packet")) {
             String packet = jsonObject.get("packet").getAsString();
             if(packet.equals(PacketInServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
-                NetworkManager.getCloudServer().registerClient(serverId, patron);
+                byteCloud.getCloudServer().registerClient(serverId, patron);
                 ByteCloud.getInstance().getServerHandler().getServer(serverId).onStart();
             }
             if(packet.equals(PacketInBungee.class.getSimpleName())) {
                 String bungeeId = jsonObject.get("bungeeId").getAsString();
-                NetworkManager.getCloudServer().registerClient(bungeeId, patron);
+                byteCloud.getCloudServer().registerClient(bungeeId, patron);
                 ByteCloud.getInstance().getBungee().onStart();
             }
             if(packet.equals(PacketInServerStopped.class.getSimpleName())) {
@@ -50,7 +54,7 @@ public class CloudServerListener extends JsonServerListener {
                 String sender = jsonObject.get("sender").getAsString();
 
                 ServerGroup serverGroup = null;
-                for (ServerGroup sg : ByteCloud.getInstance().getServerHandler().getServerGroups()) {
+                for (ServerGroup sg : ByteCloud.getInstance().getServerHandler().getServerGroups().values()) {
                     if (sg.getName().equalsIgnoreCase(group)) {
                         serverGroup = sg;
                         break;
@@ -60,7 +64,7 @@ public class CloudServerListener extends JsonServerListener {
                     serverGroup.startNewServer(sender);
                 } else {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server group does not exist.");
-                    NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+                    byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
                 }
             }
             if(packet.equals(PacketInStopServer.class.getSimpleName())) {
@@ -70,12 +74,12 @@ public class CloudServerListener extends JsonServerListener {
                 if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
                     Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
                     if(server instanceof TempServer)
-                        ((TempServer)server).stopServer(sender, Server.StopType.MOVE_TO_LOBBY);
+                        ((TempServer)server).stopServer(sender);
                     else if(server instanceof PermServer)
-                        ((PermServer)server).stopServer(sender, Server.StopType.MOVE_TO_LOBBY);
+                        ((PermServer)server).stopServer(sender);
                 } else {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server does not exist.");
-                    NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+                    byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
                 }
             }
             if(packet.equals(PacketInStopOwnServer.class.getSimpleName())) {
@@ -83,9 +87,21 @@ public class CloudServerListener extends JsonServerListener {
                 if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
                     Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
                     if(server instanceof TempServer)
-                        ((TempServer)server).stopServer("_cloud", Server.StopType.MOVE_TO_LOBBY);
+                        ((TempServer)server).stopServer("_cloud");
                     else if(server instanceof PermServer)
-                        ((PermServer)server).stopServer("_cloud", Server.StopType.MOVE_TO_LOBBY);
+                        ((PermServer)server).stopServer("_cloud");
+                }
+            }
+
+            if(packet.equals(PacketInChangeServerState.class.getSimpleName())) {
+                String serverId = jsonObject.get("serverId").getAsString();
+                if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
+                    Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
+                    server.setServerState(Server.ServerState.valueOf(jsonObject.get("serverState").getAsString()));
+                    if(server instanceof TempServer) {
+                        ((TempServer)server).getServerGroup().checkAndStartNewServer();
+
+                    }
                 }
             }
         }
@@ -98,6 +114,6 @@ public class CloudServerListener extends JsonServerListener {
 
     @Override
     public void disconnected(Patron patron) {
-        NetworkManager.getCloudServer().unregisterClient(patron);
+        byteCloud.getCloudServer().unregisterClient(patron);
     }
 }

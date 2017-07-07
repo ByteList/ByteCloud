@@ -12,6 +12,7 @@ public class PacketOutSendMessage extends Packet {
     public PacketOutSendMessage(String player, String message) {
         super("PacketOutSendMessage");
         addProperty("player", player);
+        message = message.replace("§", "#&C#");
         addProperty("message", message);
     }
 }

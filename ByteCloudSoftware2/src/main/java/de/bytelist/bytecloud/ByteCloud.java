@@ -9,11 +9,12 @@ import de.bytelist.bytecloud.console.commands.PermanentServerCommand;
 import de.bytelist.bytecloud.console.commands.TemplateCommand;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
-import de.bytelist.bytecloud.installer.Installer;
 import de.bytelist.bytecloud.file.EnumFile;
+import de.bytelist.bytecloud.installer.Installer;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
 import de.bytelist.bytecloud.network.NetworkManager;
+import de.bytelist.bytecloud.network.cloud.CloudServer;
 import de.bytelist.bytecloud.server.ServerHandler;
 import jline.console.ConsoleReader;
 import lombok.Getter;
@@ -22,7 +23,7 @@ import org.fusesource.jansi.AnsiConsole;
 import java.io.File;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,16 +53,21 @@ public class ByteCloud {
     @Getter
     private DatabaseServer databaseServer;
     @Getter
-    private final String version = "2.1";
+    private final String version = "2.1.3";
     @Getter
     private CommandHandler commandHandler;
     @Getter
     private final String cloudStarted;
+    @Getter
+    private CloudServer cloudServer;
+
+    private String restartDate;
 
     public ByteCloud() throws Exception {
         instance = this;
         isRunning = false;
-        cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(Calendar.getInstance().getTime());
+        cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
+        restartDate = System.getProperty("de.bytelist.bytecloud.restart", "03:55");
 
         // This is a workaround for quite possibly the weirdest bug I have ever encountered in my life!
         // When jansi attempts to extract its natives, by default it tries to extract a specific version,
@@ -163,16 +169,17 @@ public class ByteCloud {
             e.printStackTrace();
         }
 
-        NetworkManager.connect(NetworkManager.ConnectType.CLOUD, Integer.valueOf(cloudProperties.getProperty("socket-port", "4213")), this.logger);
+        NetworkManager.connect(Integer.valueOf(cloudProperties.getProperty("socket-port", "4213")), this.logger);
+        this.cloudServer = new CloudServer();
     }
 
     public void start() {
         isRunning = true;
 
+        this.cloudServer.z();
+
         this.serverHandler.start();
         this.bungee.startBungee();
-        Thread keepAlive = new KeepAliveTask();
-        keepAlive.start();
     }
 
     public void stop() {
@@ -184,10 +191,14 @@ public class ByteCloud {
                 ByteCloud.this.logger.info("Shutting down...");
 
                 serverHandler.stop();
-
                 bungee.stopBungee();
                 while (true) {
-                    if(!bungee.getThread().isAlive() && !bungee.isRunning()) break;
+                    if(!bungee.isRunning()) break;
+                }
+                try {
+                    Thread.sleep(5000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 cleanStop();
             }
@@ -199,5 +210,39 @@ public class ByteCloud {
             handler.close();
         }
         System.exit( 0 );
+    }
+
+    public void startRestartThread() {
+        if(restartDate.equals("false")) {
+            this.logger.info("Restart is disabled.");
+            return;
+        }
+
+        new Thread("Cloud Restart Thread") {
+
+            @Override
+            public void run() {
+                ByteCloud.this.logger.info("Restart will be executed at "+restartDate+".");
+
+                while (ByteCloud.this.isRunning) {
+                    try {
+                        Thread.sleep(60000L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    String date = new SimpleDateFormat("HH:mm").format(new Date());
+
+                    if(date.equals(restartDate)) {
+                        ByteCloud.this.logger.info("** Automatic Restart executed at "+restartDate+" **");
+                        try {
+                            Thread.sleep(100L);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ByteCloud.this.stop();
+                    }
+                }
+            }
+        }.start();
     }
 }

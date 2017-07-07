@@ -2,7 +2,6 @@ package de.bytelist.bytecloud.network.server;
 
 import com.voxelboxstudios.resilent.client.Client;
 import de.bytelist.bytecloud.network.Packet;
-import de.bytelist.bytecloud.network.bungee.BungeeClientListener;
 import lombok.Getter;
 
 import java.io.IOException;

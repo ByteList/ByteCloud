@@ -22,6 +22,8 @@ public class PermServer extends Server {
     private String starter;
     private String stopper;
 
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+
     public PermServer(String serverId, PermServerObject permServerObject) {
         super(serverId, permServerObject.get("port").getAsInt(), ServerState.STARTING, EnumFile.SERVERS_PERMANENT.getPath());
         this.permServerObject = permServerObject;
@@ -39,21 +41,17 @@ public class PermServer extends Server {
         this.starter = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e"+getServerId()+"§7.");
-            NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
     }
 
-    public void stopServer(String sender, StopType stopType) {
-//        if(this.getServerId().startsWith("Fallback") && ) {
-//            stopType = StopType.KICK;
-//            SERVER_KICK_MESSAGE = "§6Du wurdest vom Netzwerk gekickt, da kein Fallback Server verfügbar ist.";
-//        }
+    public void stopServer(String sender) {
         this.stopper = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e"+getServerId()+"§7.");
-            NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
-        super.stopServer(stopType);
+        super.stopServer();
     }
 
     @Override
@@ -63,7 +61,7 @@ public class PermServer extends Server {
                 this.getPort(), this.getServerState().name(), this.getMaxPlayer(), this.getMaxSpectator(), "Permanent-Server", null);
         if(!starter.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(starter, "§aServer §e"+getServerId()+"§a started.");
-            NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
     }
 
@@ -73,7 +71,7 @@ public class PermServer extends Server {
         ByteCloud.getInstance().getServerHandler().removePermanentServer(this);
         if(!stopper.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
-            NetworkManager.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
     }
 }

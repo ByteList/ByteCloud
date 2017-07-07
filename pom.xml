@@ -10,12 +10,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>ByteCloudSoftware</module>
-        <module>ByteCloudCore</module>
+        <module>ByteCloudSoftware2</module>
         <module>ByteCloudBungee</module>
         <module>ByteCloudSpigot</module>
-        <module>ByteCloudSoftware2</module>
-        <module>ByteCloudDownloader</module>
+        <module>ByteCloudCore</module>
     </modules>
 
     <properties>

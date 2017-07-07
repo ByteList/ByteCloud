@@ -1,6 +1,5 @@
 package de.bytelist.bytecloud.network.cloud.packet;
 
-import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.network.Packet;
 
 /**
@@ -10,11 +9,10 @@ import de.bytelist.bytecloud.network.Packet;
  */
 public class PacketOutCloudInfo extends Packet {
 
-    public PacketOutCloudInfo() {
+    public PacketOutCloudInfo(String cloudVersion, String cloudStarted, boolean cloudRunning) {
         super("PacketOutCloudInfo");
-        ByteCloud byteCloud = ByteCloud.getInstance();
-        addProperty("cloudVersion", byteCloud.getVersion());
-        addProperty("cloudStarted", byteCloud.getCloudStarted());
-        addProperty("cloudRunning", String.valueOf(byteCloud.isRunning));
+        addProperty("cloudVersion", cloudVersion);
+        addProperty("cloudStarted", cloudStarted);
+        addProperty("cloudRunning", String.valueOf(cloudRunning));
     }
 }

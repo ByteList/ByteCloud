@@ -1,18 +1,20 @@
 package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.core.ByteCloudCore;
+import de.bytelist.bytecloud.core.event.AsyncLobbyUpdateStateEvent;
+import de.bytelist.bytecloud.core.properties.CloudProperties;
 import de.bytelist.bytecloud.database.DatabaseElement;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
-import de.bytelist.bytecloud.core.properties.CloudProperties;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.server.v1_9_R2.CancelledPacketHandleException;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by ByteList on 20.12.2016.
@@ -102,12 +104,19 @@ public class CloudHandler {
 
     public String getRandomLobbyId() {
         List<String> lobbyServer = new ArrayList<>();
-        for (String server : getServerInDatabase("LOBBY")) {
-            lobbyServer.add(server);
-        }
+        lobbyServer.addAll(getServerInDatabase("LOBBY"));
 
-        Random random = new Random();
-        int i = random.nextInt(lobbyServer.size());
+        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
+
+        return lobbyServer.get(i);
+    }
+
+    public String getRandomLobbyId(String excludedLobbyId) {
+        List<String> lobbyServer = new ArrayList<>();
+        for(String lb : getServerInDatabase("LOBBY"))
+            if(!lb.equals(excludedLobbyId)) lobbyServer.add(lb);
+
+        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
         return lobbyServer.get(i);
     }
@@ -121,6 +130,27 @@ public class CloudHandler {
             }
 
         return uid;
+    }
+
+    public void callAsyncLobbyUpdateStateEvent(String serverId, String serverGroup, CloudAPI.ServerState oldState, CloudAPI.ServerState newState) {
+        new Thread("Lobby Update State") {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    AsyncLobbyUpdateStateEvent asyncLobbyUpdateStateEvent = new AsyncLobbyUpdateStateEvent(
+                            serverId, serverGroup, oldState, newState);
+                    Bukkit.getPluginManager().callEvent(asyncLobbyUpdateStateEvent);
+                } catch (CancelledPacketHandleException ex) {
+                    System.out.println("ServerClientListener@56 - CancelledPacketHandleException:");
+                    ex.printStackTrace();
+                }
+            }
+        }.start();
     }
 
 }

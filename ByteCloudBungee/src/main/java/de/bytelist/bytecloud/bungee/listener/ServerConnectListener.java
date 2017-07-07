@@ -17,8 +17,14 @@ public class ServerConnectListener implements Listener {
         ProxiedPlayer pp = e.getPlayer();
         Server from = pp.getServer();
 
-        if(from == null)
-            e.setTarget(ByteCloudMaster.getInstance().getProxy().getServerInfo(
-                    ByteCloudMaster.getInstance().getCloudHandler().getRandomLobbyId()));
+
+        if(from == null) {
+            String randomLobby = ByteCloudMaster.getInstance().getCloudHandler().getRandomLobbyId();
+            if(randomLobby != null)
+                e.setTarget(ByteCloudMaster.getInstance().getProxy().getServerInfo(randomLobby));
+            else {
+                e.setCancelled(true);
+            }
+        }
     }
 }

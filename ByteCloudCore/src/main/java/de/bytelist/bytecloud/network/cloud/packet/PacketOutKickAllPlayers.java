@@ -11,6 +11,7 @@ public class PacketOutKickAllPlayers extends Packet {
 
     public PacketOutKickAllPlayers(String reason) {
         super("PacketOutKickAllPlayers");
+        reason = reason.replace("§", "#&C#");
         addProperty("reason", reason);
     }
 }

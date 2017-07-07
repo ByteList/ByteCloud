@@ -3,10 +3,11 @@ package de.bytelist.bytecloud.network.server;
 import com.google.gson.JsonObject;
 import com.voxelboxstudios.resilent.client.JsonClientListener;
 import de.bytelist.bytecloud.core.ByteCloudCore;
+import de.bytelist.bytecloud.core.cloud.CloudAPI;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutChangeServerState;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutKickAllPlayers;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutStopServer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -26,21 +27,23 @@ public class ServerClientListener extends JsonClientListener {
                     @Override
                     public void run() {
                         for(Player player : Bukkit.getOnlinePlayers()) {
-                            player.kickPlayer("§c"+reason);
+                            player.kickPlayer("§7"+reason.replace("#&C#", "§"));
                         }
                     }
                 }.start();
             }
-
-            if(packet.equals(PacketOutStopServer.class.getSimpleName())) {
-                Bukkit.shutdown();
-            }
-
             if(packet.equals(PacketOutCloudInfo.class.getSimpleName())) {
                 CloudHandler cloudHandler = ByteCloudCore.getInstance().getCloudHandler();
                 cloudHandler.setCloudVersion(jsonObject.get("cloudVersion").getAsString());
                 cloudHandler.setCloudStarted(jsonObject.get("cloudStarted").getAsString());
                 cloudHandler.setCloudRunning(jsonObject.get("cloudRunning").getAsBoolean());
+            }
+            if(packet.equals(PacketOutChangeServerState.class.getSimpleName())) {
+                String serverId = jsonObject.get("serverId").getAsString(),
+                        serverGroup = jsonObject.get("serverGroup").getAsString();
+                CloudAPI.ServerState oldState = CloudAPI.ServerState.valueOf(jsonObject.get("oldState").getAsString()),
+                        newState = CloudAPI.ServerState.valueOf(jsonObject.get("newState").getAsString());
+                ByteCloudCore.getInstance().getCloudHandler().callAsyncLobbyUpdateStateEvent(serverId, serverGroup, oldState, newState);
             }
         }
     }

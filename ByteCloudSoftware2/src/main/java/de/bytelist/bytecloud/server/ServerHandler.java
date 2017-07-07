@@ -6,27 +6,32 @@ import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.server.group.ServerGroup;
 import de.bytelist.bytecloud.server.group.ServerGroupObject;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by ByteList on 27.01.2017.
+ *
+ * Copyright by ByteList - https://bytelist.de/
  */
 public class ServerHandler {
 
     @Getter
-    private ArrayList<ServerGroup> serverGroups;
+    private HashMap<String, ServerGroup> serverGroups;
     @Getter
     private ArrayList<PermServer> permanentServers;
 
     private boolean areServersRunning;
 
     public ServerHandler() {
-        this.serverGroups = new ArrayList<>();
+        this.serverGroups = new HashMap<>();
         this.permanentServers = new ArrayList<>();
         this.areServersRunning = false;
 
@@ -37,7 +42,7 @@ public class ServerHandler {
             for(String templates : servGroups.list()) {
                 final ServerGroupObject serverGroupObject = new ServerGroupObject(templates);
                 ServerGroup serverGroup = new ServerGroup(templates, serverGroupObject);
-                this.serverGroups.add(serverGroup);
+                this.serverGroups.put(templates, serverGroup);
             }
         }
 
@@ -50,6 +55,9 @@ public class ServerHandler {
                 }
             }
         }
+        try {
+            FileUtils.cleanDirectory(new File(EnumFile.SERVERS_RUNNING.getPath()));
+        } catch (IOException ignored) { }
     }
 
     public void start() {
@@ -61,7 +69,17 @@ public class ServerHandler {
                     permServerObject.get("player").getAsInt(),
                     permServerObject.get("spectator").getAsInt());
         }
-        for(ServerGroup serverGroup : serverGroups) {
+        if(serverGroups.containsKey("LOBBY")) {
+            ByteCloud.getInstance().getLogger().info("** Startup changed. Run lobbies first.");
+            ServerGroup lobbyGroup = serverGroups.get("LOBBY");
+            lobbyGroup.onStart();
+            try {
+                Thread.sleep(3000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        for(ServerGroup serverGroup : serverGroups.values()) {
             serverGroup.onStart();
         }
     }
@@ -73,10 +91,10 @@ public class ServerHandler {
             public void run() {
                 for(Server server : getServers()) {
                     if(server instanceof PermServer) {
-                        ((PermServer) server).stopServer("_cloud", Server.StopType.KICK);
+                        ((PermServer) server).stopServer("_cloud");
                     } else if(server instanceof TempServer)
-                        ((TempServer) server).stopServer("_cloud", Server.StopType.KICK);
-                    else server.stopServer(Server.StopType.KICK);
+                        ((TempServer) server).stopServer("_cloud");
+                    else server.stopServer();
                 }
                 while (true) {
                     if (getServers().size() == 0) break;
@@ -100,7 +118,7 @@ public class ServerHandler {
     public List<Server> getServers() {
         ArrayList<Server> servers = new ArrayList<>();
         servers.addAll(permanentServers);
-        for(ServerGroup serverGroup : serverGroups) {
+        for(ServerGroup serverGroup : serverGroups.values()) {
             servers.addAll(serverGroup.getServers());
         }
         return Collections.unmodifiableList(servers);

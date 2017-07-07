@@ -14,6 +14,7 @@ public class ByteCloudLauncher {
         ByteCloud byteCloud = new ByteCloud();
         byteCloud.getLogger().info("Enabled ByteCloud version " + byteCloud.getVersion()+".");
         byteCloud.start();
+        byteCloud.startRestartThread();
 
         String line;
         while (byteCloud.isRunning && ( line = byteCloud.getConsoleReader().readLine( ">" ) ) != null) {

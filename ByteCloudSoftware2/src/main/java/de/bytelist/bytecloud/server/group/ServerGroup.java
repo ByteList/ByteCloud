@@ -2,6 +2,8 @@ package de.bytelist.bytecloud.server.group;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
+import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.TempServer;
 import lombok.Getter;
 
@@ -35,7 +37,7 @@ public class ServerGroup {
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     @Getter
-    private String name, prefix/*, motd*/;
+    private String name, prefix;
 
     @Getter
     private int amount, max, startPort, player, spectator, ram;
@@ -43,8 +45,7 @@ public class ServerGroup {
     @Getter
     private File directory;
 
-//    @Getter
-//    private Server.ServerType serverType;
+    private boolean started;
 
     @Getter
     private List<TempServer> servers = new ArrayList<>();
@@ -53,32 +54,28 @@ public class ServerGroup {
     @Getter
     private List<Integer> usedPorts = new ArrayList<>();
 
-
-    public ServerGroup(String group, ServerGroupObject serverGroupObject/*, Server.ServerType serverType*/) {
-//        this.serverGroup = this;
+    public ServerGroup(String group, ServerGroupObject serverGroupObject) {
 
         this.name = group.toUpperCase();
         this.prefix = serverGroupObject.get("prefix").getAsString();
-//        this.motd = serverGroupObject.get("motd").getAsString();
-
         this.amount = serverGroupObject.get("amount").getAsInt();
         this.max = serverGroupObject.get("max").getAsInt();
         this.startPort = serverGroupObject.get("port").getAsInt();
         this.player = serverGroupObject.get("player").getAsInt();
         this.spectator = serverGroupObject.get("spectator").getAsInt();
-
-//        this.serverType = serverType;
-
         this.ram = serverGroupObject.get("ram").getAsInt();
 
         this.directory = new File(EnumFile.TEMPLATES.getPath(), group);
     }
 
     public void onStart() {
-        int i = 0;
-        while (i < amount) {
-            i++;
-            startNewServer("_cloud");
+        if(!started) {
+            this.started = true;
+            int i = 0;
+            while (i < amount) {
+                i++;
+                startNewServer("_cloud");
+            }
         }
     }
 
@@ -101,13 +98,20 @@ public class ServerGroup {
 
     public void startNewServer(String sender) {
         if(byteCloud.isRunning) {
-            final String serverId = generateServerId();
-            final int port = getNextServerPort();
-            TempServer tempServer = new TempServer(serverId, port, this);
+            if(this.servers.size() < max) {
+                final String serverId = generateServerId();
+                final int port = getNextServerPort();
+                TempServer tempServer = new TempServer(serverId, port, this);
 
-            this.servers.add(tempServer);
+                this.servers.add(tempServer);
 
-            tempServer.startServer(sender, this.ram, this.player, this.spectator);
+                tempServer.startServer(sender, this.ram, this.player, this.spectator);
+            } else {
+                if(!sender.equals("_cloud")) {
+                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cToo much servers are currently online!");
+                    byteCloud.getCloudServer().sendPacket("Bungee-1", packetOutSendMessage);
+                }
+            }
         }
     }
 
@@ -115,6 +119,23 @@ public class ServerGroup {
         this.usedIds.remove(Integer.valueOf(tempServer.getServerId().split("-")[1]));
         this.usedPorts.remove(Integer.valueOf(tempServer.getPort()));
         this.servers.remove(tempServer);
+    }
+
+    public void checkAndStartNewServer() {
+        if(byteCloud.isRunning) {
+            boolean b = false;
+            for (TempServer server : servers) {
+                Server.ServerState serverState = server.getServerState();
+                if (serverState == Server.ServerState.STARTING || serverState == Server.ServerState.LOBBY) {
+                    b = true;
+                    break;
+                }
+            }
+
+            if (!b) {
+                startNewServer("_cloud");
+            }
+        }
     }
 
 }
