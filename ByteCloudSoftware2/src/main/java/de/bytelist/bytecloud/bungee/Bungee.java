@@ -3,6 +3,8 @@ package de.bytelist.bytecloud.bungee;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutRegisterServer;
+import de.bytelist.bytecloud.server.Server;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
@@ -25,7 +27,10 @@ public class Bungee {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
+    public boolean execByCommand;
+
     public Bungee() {
+        this.execByCommand = false;
         this.bungeeId = "Bungee-1";
         this.directory = new File(EnumFile.BUNGEE.getPath());
         try {
@@ -36,7 +41,7 @@ public class Bungee {
     }
 
     public void startBungee() {
-        if (process == null) {
+        if (!isRunning()) {
             byteCloud.getLogger().info("Bungee is starting.");
             String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx1024M", "-Dde.bytelist.bytecloud.servername="+bungeeId, "-jar", "BungeeCord.jar", "noconsole" };
             ProcessBuilder pb = new ProcessBuilder(param);
@@ -63,9 +68,15 @@ public class Bungee {
     }
 
     public void onStart() {
-        if(this.process != null) {
+        if(isRunning()) {
             byteCloud.getCloudServer().sendPacket(bungeeId, new PacketOutCloudInfo(byteCloud.getVersion(), byteCloud.getCloudStarted(), byteCloud.isRunning));
             byteCloud.getLogger().info("Bungee started.");
+            if(this.execByCommand) {
+                for(Server server : byteCloud.getServerHandler().getServers()) {
+                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutRegisterServer(server.getServerId(), server.getPort()));
+                }
+                this.execByCommand = false;
+            }
         }
     }
 
@@ -77,6 +88,7 @@ public class Bungee {
         }
         if(isRunning()) {
             this.process.destroy();
+            this.process = null;
         }
         System.out.println("Bungee stopped.");
     }
@@ -84,4 +96,5 @@ public class Bungee {
     public boolean isRunning() {
         return this.process != null && this.process.isAlive();
     }
+
 }

@@ -3,14 +3,12 @@ package de.bytelist.bytecloud;
 import de.bytelist.bytecloud.bungee.Bungee;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
-import de.bytelist.bytecloud.console.commands.EndCommand;
-import de.bytelist.bytecloud.console.commands.HelpCommand;
-import de.bytelist.bytecloud.console.commands.PermanentServerCommand;
-import de.bytelist.bytecloud.console.commands.TemplateCommand;
+import de.bytelist.bytecloud.console.commands.*;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.installer.Installer;
+import de.bytelist.bytecloud.log.AnsiColor;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
 import de.bytelist.bytecloud.network.NetworkManager;
@@ -88,7 +86,7 @@ public class ByteCloud {
         System.setOut(new PrintStream(new LoggingOutPutStream(logger, Level.INFO), true));
 
         System.out.println("Starting cloud system."+
-                "\n\n" +
+                "\n"+ AnsiColor.CYAN +"\n" +
                         "   ____        _        _____ _                 _ \n" +
                         "  |  _ \\      | |      / ____| |               | |\n" +
                         "  | |_) |_   _| |_ ___| |    | | ___  _   _  __| |\n" +
@@ -142,6 +140,7 @@ public class ByteCloud {
                 new HelpCommand(),
                 new TemplateCommand(),
                 new PermanentServerCommand(),
+                new BungeeCommand(),
                 new EndCommand()
         };
         for(Command command : commands) {
@@ -178,8 +177,8 @@ public class ByteCloud {
 
         this.cloudServer.z();
 
-        this.serverHandler.start();
         this.bungee.startBungee();
+        this.serverHandler.start();
     }
 
     public void stop() {

@@ -16,7 +16,6 @@ import java.util.logging.*;
  */
 public class CloudLogger extends Logger {
 
-    private final LogFormatter logFormatter = new LogFormatter();
     private final LogDispatcher dispatcher = new LogDispatcher( this );
 
 
@@ -30,7 +29,6 @@ public class CloudLogger extends Logger {
         setLevel(Level.ALL);
 
         try {
-
             File file = new File(EnumFile.CLOUD_LOGS.getPath());
             if(!file.exists()) file.mkdirs();
             String logFileName = EnumFile.CLOUD_LOGS.getPath()
@@ -38,12 +36,12 @@ public class CloudLogger extends Logger {
                     + new SimpleDateFormat("_dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ".log";
 
             FileHandler fileHandler = new FileHandler(logFileName);
-            fileHandler.setFormatter(logFormatter);
+            fileHandler.setFormatter(new FileFormatter());
             addHandler(fileHandler);
 
             LogWriter consoleHandler = new LogWriter(reader);
             consoleHandler.setLevel(Level.INFO);
-            consoleHandler.setFormatter(logFormatter);
+            consoleHandler.setFormatter(new LogFormatter());
             addHandler(consoleHandler);
 
         } catch (IOException ex) {

@@ -10,6 +10,7 @@ import de.bytelist.bytecloud.network.bungee.packet.PacketInBungee;
 import de.bytelist.bytecloud.network.bungee.packet.PacketInBungeeStopped;
 import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -52,6 +53,17 @@ public class ByteCloudMaster extends Plugin {
             public void execute(CommandSender sender, String[] args) {
                 sender.sendMessage(ByteCloudMaster.getInstance().prefix+"§fByteCloud: v"+cloudHandler.getCloudVersion()+", " +
                         "Bungee: v"+version+", Spigot: v"+version+" (Started: "+cloudHandler.getCloudStarted()+", by ByteList)");
+            }
+        });
+
+        getProxy().getPluginManager().registerCommand(this, new Command("cloudend") {
+            @Override
+            public void execute(CommandSender sender, String[] args) {
+                if(sender instanceof ProxiedPlayer)
+                    sender.sendMessage("§bCloud §8\u00BB §cDu hast keine Berechtigung für diesen Befehl!");
+                else
+                    getProxy().stop("§bCloud §8\u00BB §cDer Cloud-Server konnte nicht erreicht werden.\n" +
+                            "§7Grund: Cloud wird neu gestartet.");
             }
         });
     }
