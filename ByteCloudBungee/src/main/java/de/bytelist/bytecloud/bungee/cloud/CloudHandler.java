@@ -70,8 +70,13 @@ public class CloudHandler {
 
     public String getRandomLobbyId() {
         List<String> lobbyServer = new ArrayList<>();
-        lobbyServer.addAll(getServerInDatabase("LOBBY"));
+//        lobbyServer.addAll(getServerInDatabase("LOBBY"));
 
+        for(String server : ByteCloudMaster.getInstance().getProxy().getServers().keySet()) {
+            if(server.startsWith("lb")) {
+                lobbyServer.add(server);
+            }
+        }
         if(!lobbyServer.isEmpty()) {
             int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
@@ -82,8 +87,14 @@ public class CloudHandler {
 
     public String getRandomLobbyId(String excludedLobbyId) {
         List<String> lobbyServer = new ArrayList<>();
-        for(String lb : getServerInDatabase("LOBBY"))
-            if(!lb.equals(excludedLobbyId)) lobbyServer.add(lb);
+//        for(String lb : getServerInDatabase("LOBBY"))
+//            if(!lb.equals(excludedLobbyId)) lobbyServer.add(lb);
+
+        for(String server : ByteCloudMaster.getInstance().getProxy().getServers().keySet()) {
+            if(server.startsWith("lb") && !server.equals(excludedLobbyId)) {
+                lobbyServer.add(server);
+            }
+        }
 
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 

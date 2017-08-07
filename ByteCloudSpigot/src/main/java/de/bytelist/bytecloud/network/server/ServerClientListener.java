@@ -7,6 +7,7 @@ import de.bytelist.bytecloud.core.cloud.CloudAPI;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutChangeServerState;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutExecuteCommand;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutKickAllPlayers;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,6 +18,9 @@ import org.bukkit.entity.Player;
  * Copyright by ByteList - https://bytelist.de/
  */
 public class ServerClientListener extends JsonClientListener {
+
+    private final ByteCloudCore byteCloudCore = ByteCloudCore.getInstance();
+
     @Override
     public void jsonReceived(JsonObject jsonObject) {
         if(jsonObject.has("packet")) {
@@ -33,7 +37,7 @@ public class ServerClientListener extends JsonClientListener {
                 }.start();
             }
             if(packet.equals(PacketOutCloudInfo.class.getSimpleName())) {
-                CloudHandler cloudHandler = ByteCloudCore.getInstance().getCloudHandler();
+                CloudHandler cloudHandler = byteCloudCore.getCloudHandler();
                 cloudHandler.setCloudVersion(jsonObject.get("cloudVersion").getAsString());
                 cloudHandler.setCloudStarted(jsonObject.get("cloudStarted").getAsString());
                 cloudHandler.setCloudRunning(jsonObject.get("cloudRunning").getAsBoolean());
@@ -43,7 +47,13 @@ public class ServerClientListener extends JsonClientListener {
                         serverGroup = jsonObject.get("serverGroup").getAsString();
                 CloudAPI.ServerState oldState = CloudAPI.ServerState.valueOf(jsonObject.get("oldState").getAsString()),
                         newState = CloudAPI.ServerState.valueOf(jsonObject.get("newState").getAsString());
-                ByteCloudCore.getInstance().getCloudHandler().callAsyncLobbyUpdateStateEvent(serverId, serverGroup, oldState, newState);
+                byteCloudCore.getCloudHandler().callAsyncLobbyUpdateStateEvent(serverId, serverGroup, oldState, newState);
+            }
+
+            if(packet.equals(PacketOutExecuteCommand.class.getSimpleName())) {
+                String cmd = jsonObject.get("command").getAsString();
+                byteCloudCore.getLogger().info("Execute cmd from cloud: "+cmd);
+                byteCloudCore.getServer().dispatchCommand(byteCloudCore.getServer().getConsoleSender(), cmd);
             }
         }
     }

@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 public class ResilentPatronRunnable
         implements Runnable {
@@ -34,9 +33,8 @@ public class ResilentPatronRunnable
                     continue;
                 }
                 if (localJsonObject != null) {
-                    Iterator localIterator = this.patron.getServer().getListeners().iterator();
-                    while (localIterator.hasNext()) {
-                        JsonServerListener localJsonServerListener = (JsonServerListener) localIterator.next();
+                    for (Object o : this.patron.getServer().getListeners()) {
+                        JsonServerListener localJsonServerListener = (JsonServerListener) o;
                         localJsonServerListener.jsonReceived(this.patron, localJsonObject);
                     }
                 }

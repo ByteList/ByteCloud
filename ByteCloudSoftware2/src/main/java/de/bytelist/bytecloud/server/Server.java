@@ -2,7 +2,6 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutKickAllPlayers;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutRegisterServer;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutUnregisterServer;
 import lombok.Getter;
@@ -66,12 +65,8 @@ public abstract class Server {
             if(this.process.isAlive()) {
                 byteCloud.getLogger().info("Server " + serverId + " is stopping.");
 
-//                ArrayList<String> players = new ArrayList<>();
-//                players.addAll(Arrays.asList(byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYERS).getAsString().split(",")));
-//                players.addAll(Arrays.asList(byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATORS).getAsString().split(",")));
-
-                PacketOutKickAllPlayers packetOutKickAllPlayers = new PacketOutKickAllPlayers("§6Du wurdest auf die Lobby verschoben.");
-                byteCloud.getCloudServer().sendPacket(this.serverId, packetOutKickAllPlayers);
+//                PacketOutKickAllPlayers packetOutKickAllPlayers = new PacketOutKickAllPlayers("§6Du wurdest auf die Lobby verschoben.");
+//                byteCloud.getCloudServer().sendPacket(this.serverId, packetOutKickAllPlayers);
                 try {
                     Thread.sleep(3000L);
                     this.process.getOutputStream().write("stop\n".getBytes());
@@ -105,8 +100,13 @@ public abstract class Server {
         }
         if(isRunning()) {
             this.process.destroy();
+            this.process = null;
         }
         byteCloud.getLogger().info("Server " + serverId + " stopped.");
+    }
+
+    public boolean isRunning() {
+        return this.process != null && this.process.isAlive();
     }
 
     public enum ServerState {
@@ -116,9 +116,5 @@ public abstract class Server {
         INGAME,
         RESTART,
         STOPPED
-    }
-
-    public boolean isRunning() {
-        return this.process != null && this.process.isAlive();
     }
 }

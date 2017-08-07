@@ -2,7 +2,6 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
@@ -68,10 +67,10 @@ public class PermServer extends Server {
     @Override
     public void onStop() {
         super.onStop();
-        ByteCloud.getInstance().getServerHandler().removePermanentServer(this);
         if(!stopper.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
             byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
+        ByteCloud.getInstance().getServerHandler().removePermanentServer(this);
     }
 }

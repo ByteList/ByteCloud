@@ -33,7 +33,7 @@ public class TempServer extends Server {
             FileUtils.copyDirectory(new File(EnumFile.GENERALS.getPath(), "spigot"), this.getDirectory());
             FileUtils.copyDirectory(new File(EnumFile.GENERALS.getPath(), "plugins"), new File(this.getDirectory(), "plugins"));
             FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "cloud.properties"), new File(this.getDirectory(), "plugins/ByteCloud/cloud.properties"));
-            FileUtils.copyDirectory(new File(EnumFile.TEMPLATES.getPath(), serverGroup.getName()), this.getDirectory());
+            FileUtils.copyDirectory(new File(EnumFile.TEMPLATES.getPath(), serverGroup.getGroupName()), this.getDirectory());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,7 +60,7 @@ public class TempServer extends Server {
     @Override
     public void onStart() {
         super.onStart();
-        ByteCloud.getInstance().getDatabaseServer().addServer(this.serverGroup.getName(), this.getServerId(),
+        ByteCloud.getInstance().getDatabaseServer().addServer(this.serverGroup.getGroupName(), this.getServerId(),
                 this.getPort(), this.getServerState().name(), this.getMaxPlayer(), this.getMaxSpectator(), "Starting", null);
         if(!starter.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(starter, "§aServer §e"+getServerId()+"§a started.");
@@ -93,7 +93,7 @@ public class TempServer extends Server {
     public void setServerState(ServerState serverState) {
         ServerGroup serverGroup = ByteCloud.getInstance().getServerHandler().getServerGroups().getOrDefault("LOBBY", null);
         if(serverGroup != null) {
-            PacketOutChangeServerState packetOutChangeServerState = new PacketOutChangeServerState(this.getServerId(), this.serverGroup.getName(), getServerState().name(), serverState.name());
+            PacketOutChangeServerState packetOutChangeServerState = new PacketOutChangeServerState(this.getServerId(), this.serverGroup.getGroupName(), getServerState().name(), serverState.name());
             for(Server server : serverGroup.getServers()) {
                 byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutChangeServerState);
             }

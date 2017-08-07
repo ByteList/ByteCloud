@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Iterator;
 
 public class Patron {
     public static int CLIENT_ID = 0;
@@ -62,9 +61,8 @@ public class Patron {
                 e.printStackTrace();
             }
             this.socket = null;
-            Iterator localIterator = this.server.getListeners().iterator();
-            while (localIterator.hasNext()) {
-                JsonServerListener localJsonServerListener = (JsonServerListener) localIterator.next();
+            for (Object o : this.server.getListeners()) {
+                JsonServerListener localJsonServerListener = (JsonServerListener) o;
                 localJsonServerListener.disconnected(this);
             }
         }

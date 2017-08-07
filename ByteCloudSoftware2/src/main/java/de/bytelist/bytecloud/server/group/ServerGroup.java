@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * Created by ByteList on 18.02.2017.
  */
-public class ServerGroup {
+public class ServerGroup extends Thread {
 
     private static final char[] POOL = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private static final Random rnd = new Random();
@@ -37,7 +37,7 @@ public class ServerGroup {
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     @Getter
-    private String name, prefix;
+    private String groupName, prefix;
 
     @Getter
     private int amount, max, startPort, player, spectator, ram;
@@ -55,8 +55,9 @@ public class ServerGroup {
     private List<Integer> usedPorts = new ArrayList<>();
 
     public ServerGroup(String group, ServerGroupObject serverGroupObject) {
-
-        this.name = group.toUpperCase();
+        super(group);
+        start();
+        this.groupName = group.toUpperCase();
         this.prefix = serverGroupObject.get("prefix").getAsString();
         this.amount = serverGroupObject.get("amount").getAsInt();
         this.max = serverGroupObject.get("max").getAsInt();
@@ -66,6 +67,13 @@ public class ServerGroup {
         this.ram = serverGroupObject.get("ram").getAsInt();
 
         this.directory = new File(EnumFile.TEMPLATES.getPath(), group);
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            if(!byteCloud.isRunning) break;
+        }
     }
 
     public void onStart() {

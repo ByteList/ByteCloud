@@ -147,8 +147,8 @@ public class ByteCloud {
             this.commandHandler.registerCommand(command);
         }
 
-        this.serverHandler = new ServerHandler();
         this.bungee = new Bungee();
+        this.serverHandler = new ServerHandler();
 
         String host = this.cloudProperties.getProperty("mongo-host");
         String database = this.cloudProperties.getProperty("mongo-database");
@@ -178,6 +178,11 @@ public class ByteCloud {
         this.cloudServer.z();
 
         this.bungee.startBungee();
+        try {
+            Thread.sleep(2000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         this.serverHandler.start();
     }
 

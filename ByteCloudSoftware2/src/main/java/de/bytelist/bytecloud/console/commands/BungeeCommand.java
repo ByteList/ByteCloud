@@ -3,6 +3,7 @@ package de.bytelist.bytecloud.console.commands;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.bungee.Bungee;
 import de.bytelist.bytecloud.console.Command;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutExecuteCommand;
 
 /**
  * Created by ByteList on 24.07.2017.
@@ -58,9 +59,20 @@ public class BungeeCommand extends Command {
                 }
             }
         }
+        if(args.length > 1 && args[0].equals("exec")) {
+            StringBuilder cmd = new StringBuilder();
+            for(int i = 1; i < args.length; i++) {
+                cmd.append(args[i]).append(" ");
+            }
+            PacketOutExecuteCommand packetOutExecuteCommand = new PacketOutExecuteCommand(cmd.toString());
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutExecuteCommand);
+            byteCloud.getLogger().info("Executed cmd ("+byteCloud.getBungee().getBungeeId()+"): "+cmd);
+            return;
+        }
         byteCloud.getLogger().info("bungee Commands: \n"+
                 "   bungee restart - Restarting the bungee.\n"+
                 "   bungee stop - Stopping the bungee.\n"+
-                "   bungee start - Starting the bungee.\n");
+                "   bungee start - Starting the bungee.\n"+
+                "   bungee exec <command> - Execute a command on the bungee.\n");
     }
 }

@@ -97,8 +97,7 @@ public class Installer {
                     outputFolder.mkdir();
                 }
 
-                ZipInputStream zis =
-                        new ZipInputStream(new FileInputStream(fileName));
+                ZipInputStream zis = new ZipInputStream(new FileInputStream(fileName));
                 ZipEntry ze = zis.getNextEntry();
 
                 while (ze != null) {

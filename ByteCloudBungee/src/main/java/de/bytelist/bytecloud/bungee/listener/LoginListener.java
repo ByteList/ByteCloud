@@ -15,11 +15,6 @@ public class LoginListener implements Listener {
     public void onLogin(LoginEvent e) {
         PendingConnection pc = e.getConnection();
 
-//        if(!ByteCloudMaster.getInstance().getCloudHandler().canLogin()) {
-//            e.setCancelled(true);
-//            e.setCancelReason(ByteCloudMaster.getInstance().prefix+"§cDer Cloud-Server kann nicht erreicht werden.");
-//        }
-
         if(pc.getVersion() < 100) {
             e.setCancelled(true);
             e.setCancelReason(ByteCloudMaster.getInstance().prefix+"§cBitte verwende eine Minecraft-Version ab 1.9!");
