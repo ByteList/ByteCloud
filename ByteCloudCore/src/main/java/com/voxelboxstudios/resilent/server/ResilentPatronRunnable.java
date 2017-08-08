@@ -6,8 +6,8 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 
-public class ResilentPatronRunnable
-        implements Runnable {
+public class ResilentPatronRunnable implements Runnable {
+
     private Patron patron;
 
     public ResilentPatronRunnable(Patron paramPatron) {
@@ -33,8 +33,7 @@ public class ResilentPatronRunnable
                     continue;
                 }
                 if (localJsonObject != null) {
-                    for (Object o : this.patron.getServer().getListeners()) {
-                        JsonServerListener localJsonServerListener = (JsonServerListener) o;
+                    for (JsonServerListener localJsonServerListener : this.patron.getServer().getListeners()) {
                         localJsonServerListener.jsonReceived(this.patron, localJsonObject);
                     }
                 }

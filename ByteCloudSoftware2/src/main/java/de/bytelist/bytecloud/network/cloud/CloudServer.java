@@ -23,7 +23,7 @@ public class CloudServer {
     @Getter
     private PacketServer packetServer;
 
-    public void z() {
+    public void startPacketServer() {
         try {
             this.packetServer = new PacketServer(NetworkManager.getSocketPort());
             this.packetServer.addListener(new CloudServerListener());

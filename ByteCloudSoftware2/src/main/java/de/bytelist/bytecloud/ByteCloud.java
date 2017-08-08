@@ -175,7 +175,7 @@ public class ByteCloud {
     public void start() {
         isRunning = true;
 
-        this.cloudServer.z();
+        this.cloudServer.startPacketServer();
 
         this.bungee.startBungee();
         try {
@@ -204,6 +204,7 @@ public class ByteCloud {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                cloudServer.getPacketServer().stop();
                 cleanStop();
             }
         }.start();

@@ -81,6 +81,7 @@ public class ServerHandler {
         }
         for(ServerGroup serverGroup : serverGroups.values()) {
             serverGroup.onStart();
+            serverGroup.start();
         }
     }
 
@@ -97,9 +98,11 @@ public class ServerHandler {
                     else server.stopServer();
                 }
                 while (true) {
-                    if (getServers().size() == 0) break;
+                    if (getServers().size() == 0) {
+                        areServersRunning = false;
+                        break;
+                    }
                 }
-                areServersRunning = false;
             }
         };
         thread.start();

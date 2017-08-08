@@ -71,7 +71,6 @@ public class TempServer extends Server {
     @Override
     public void onStop() {
         super.onStop();
-        this.serverGroup.checkAndStartNewServer();
         try {
             FileUtils.copyFile(new File(this.getDirectory(), "/logs/latest.log"), new File(EnumFile.SERVERS_LOGS.getPath(), this.getServerId()+".log"));
         } catch (IOException e) {

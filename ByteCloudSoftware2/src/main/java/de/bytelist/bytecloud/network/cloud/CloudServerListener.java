@@ -55,7 +55,7 @@ public class CloudServerListener extends JsonServerListener {
 
                 ServerGroup serverGroup = null;
                 for (ServerGroup sg : ByteCloud.getInstance().getServerHandler().getServerGroups().values()) {
-                    if (sg.getName().equalsIgnoreCase(group)) {
+                    if (sg.getGroupName().equalsIgnoreCase(group)) {
                         serverGroup = sg;
                         break;
                     }
@@ -98,10 +98,6 @@ public class CloudServerListener extends JsonServerListener {
                 if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
                     Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
                     server.setServerState(Server.ServerState.valueOf(jsonObject.get("serverState").getAsString()));
-                    if(server instanceof TempServer) {
-                        ((TempServer)server).getServerGroup().checkAndStartNewServer();
-
-                    }
                 }
             }
         }

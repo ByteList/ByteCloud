@@ -61,8 +61,7 @@ public class Patron {
                 e.printStackTrace();
             }
             this.socket = null;
-            for (Object o : this.server.getListeners()) {
-                JsonServerListener localJsonServerListener = (JsonServerListener) o;
+            for (JsonServerListener localJsonServerListener : this.server.getListeners()) {
                 localJsonServerListener.disconnected(this);
             }
         }

@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ResilentServer {
     private ServerSocket socket;
     private Thread thread;
-    private List listeners = new ArrayList();
+    private ArrayList<JsonServerListener> listeners = new ArrayList<>();
 
-    public List getListeners() {
+    public ArrayList<JsonServerListener> getListeners() {
         return this.listeners;
     }
 
@@ -23,20 +22,20 @@ public class ResilentServer {
         return this.socket;
     }
 
-    public void start(int paramInt) throws IOException {
-        this.socket = new ServerSocket(paramInt);
+    public void start(int port) throws IOException {
+        this.socket = new ServerSocket(port);
         this.thread = new Thread(new ResilentServerRunnable(this));
         this.thread.start();
     }
 
-    public void start(String paramString, int paramInt1, int paramInt2) throws IOException {
-        this.socket = new ServerSocket(paramInt1, paramInt2, InetAddress.getByName(paramString));
+    public void start(String address, int port, int backlog) throws IOException {
+        this.socket = new ServerSocket(port, backlog, InetAddress.getByName(address));
         this.thread = new Thread(new ResilentServerRunnable(this));
         this.thread.start();
     }
 
-    public void start(String paramString, int paramInt) throws IOException {
-        this.socket = new ServerSocket(paramInt, 50, InetAddress.getByName(paramString));
+    public void start(String address, int port) throws IOException {
+        this.socket = new ServerSocket(port, 50, InetAddress.getByName(address));
         this.thread = new Thread(new ResilentServerRunnable(this));
         this.thread.start();
     }

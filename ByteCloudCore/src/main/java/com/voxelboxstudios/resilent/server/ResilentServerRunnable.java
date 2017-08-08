@@ -2,10 +2,9 @@ package com.voxelboxstudios.resilent.server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Iterator;
 
-public class ResilentServerRunnable
-        implements Runnable {
+public class ResilentServerRunnable implements Runnable {
+
     private ResilentServer server;
 
     public ResilentServerRunnable(ResilentServer paramResilentServer) {
@@ -14,17 +13,15 @@ public class ResilentServerRunnable
 
     public void run() {
         while (this.server.getSocket() != null) {
-            Socket localSocket = null;
+            Socket localSocket;
             try {
                 localSocket = this.server.getSocket().accept();
             } catch (IOException localIOException) {
                 continue;
             }
             Patron localPatron = new Patron(this.server, localSocket);
-            Iterator localIterator = this.server.getListeners().iterator();
-            while (localIterator.hasNext()) {
-                JsonServerListener localJsonServerListener = (JsonServerListener) localIterator.next();
-                localJsonServerListener.connected(localPatron);
+            for (JsonServerListener jsonServerListener : this.server.getListeners()) {
+                jsonServerListener.connected(localPatron);
             }
         }
     }

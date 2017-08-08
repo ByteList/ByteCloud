@@ -55,8 +55,7 @@ public class ServerGroup extends Thread {
     private List<Integer> usedPorts = new ArrayList<>();
 
     public ServerGroup(String group, ServerGroupObject serverGroupObject) {
-        super(group);
-        start();
+        super(group.toUpperCase());
         this.groupName = group.toUpperCase();
         this.prefix = serverGroupObject.get("prefix").getAsString();
         this.amount = serverGroupObject.get("amount").getAsInt();
@@ -71,8 +70,13 @@ public class ServerGroup extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            if(!byteCloud.isRunning) break;
+        while (byteCloud.isRunning) {
+            checkAndStartNewServer();
+            try {
+                Thread.sleep(2000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
