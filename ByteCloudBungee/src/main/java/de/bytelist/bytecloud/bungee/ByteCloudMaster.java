@@ -41,7 +41,7 @@ public class ByteCloudMaster extends Plugin {
 
         NetworkManager.connect(Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port", "4213")), getLogger());
         this.bungeeClient = new BungeeClient();
-        this.bungeeClient.z();
+        this.bungeeClient.connect();
 
         getProxy().getConsole().sendMessage(prefix+"§aEnabled!");
 
@@ -71,6 +71,7 @@ public class ByteCloudMaster extends Plugin {
     @Override
     public void onDisable() {
         this.bungeeClient.sendPacket(new PacketInBungeeStopped(cloudHandler.getBungeeId()));
+        this.bungeeClient.disconnect();
         getProxy().getConsole().sendMessage(prefix+"§cDisabled!");
     }
 }

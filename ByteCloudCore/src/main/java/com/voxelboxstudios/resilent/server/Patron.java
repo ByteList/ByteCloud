@@ -65,6 +65,14 @@ public class Patron {
                 localJsonServerListener.disconnected(this);
             }
         }
+        try {
+            this.writer.close();
+            this.reader.close();
+            this.writer = null;
+            this.reader = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (this.thread != null) {
             this.thread.interrupt();
             this.thread = null;

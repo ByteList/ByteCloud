@@ -12,11 +12,8 @@ import de.bytelist.bytecloud.network.bungee.packet.PacketInStopServer;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
 import de.bytelist.bytecloud.network.server.packet.PacketInChangeServerState;
 import de.bytelist.bytecloud.network.server.packet.PacketInServer;
-import de.bytelist.bytecloud.network.server.packet.PacketInServerStopped;
 import de.bytelist.bytecloud.network.server.packet.PacketInStopOwnServer;
-import de.bytelist.bytecloud.server.PermServer;
 import de.bytelist.bytecloud.server.Server;
-import de.bytelist.bytecloud.server.TempServer;
 import de.bytelist.bytecloud.server.group.ServerGroup;
 
 /**
@@ -35,16 +32,12 @@ public class CloudServerListener extends JsonServerListener {
             if(packet.equals(PacketInServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
                 byteCloud.getCloudServer().registerClient(serverId, patron);
-                ByteCloud.getInstance().getServerHandler().getServer(serverId).onStart();
+                byteCloud.getServerHandler().getServer(serverId).onStart();
             }
             if(packet.equals(PacketInBungee.class.getSimpleName())) {
                 String bungeeId = jsonObject.get("bungeeId").getAsString();
                 byteCloud.getCloudServer().registerClient(bungeeId, patron);
                 ByteCloud.getInstance().getBungee().onStart();
-            }
-            if(packet.equals(PacketInServerStopped.class.getSimpleName())) {
-                String serverId = jsonObject.get("serverId").getAsString();
-                ByteCloud.getInstance().getServerHandler().getServer(serverId).onStop();
             }
             if(packet.equals(PacketInBungeeStopped.class.getSimpleName())) {
                 ByteCloud.getInstance().getBungee().onStop();
@@ -73,10 +66,7 @@ public class CloudServerListener extends JsonServerListener {
 
                 if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
                     Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
-                    if(server instanceof TempServer)
-                        ((TempServer)server).stopServer(sender);
-                    else if(server instanceof PermServer)
-                        ((PermServer)server).stopServer(sender);
+                    server.stopServer(sender);
                 } else {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server does not exist.");
                     byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
@@ -86,10 +76,7 @@ public class CloudServerListener extends JsonServerListener {
                 String serverId = jsonObject.get("serverId").getAsString();
                 if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
                     Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
-                    if(server instanceof TempServer)
-                        ((TempServer)server).stopServer("_cloud");
-                    else if(server instanceof PermServer)
-                        ((PermServer)server).stopServer("_cloud");
+                    server.stopServer("_cloud");
                 }
             }
 

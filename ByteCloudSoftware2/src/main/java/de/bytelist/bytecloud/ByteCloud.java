@@ -140,6 +140,7 @@ public class ByteCloud {
                 new HelpCommand(),
                 new TemplateCommand(),
                 new PermanentServerCommand(),
+                new ServerCommand(),
                 new BungeeCommand(),
                 new EndCommand()
         };
@@ -179,7 +180,7 @@ public class ByteCloud {
 
         this.bungee.startBungee();
         try {
-            Thread.sleep(2000L);
+            Thread.sleep(7000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

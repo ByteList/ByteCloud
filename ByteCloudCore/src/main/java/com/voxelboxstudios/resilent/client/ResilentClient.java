@@ -1,39 +1,27 @@
 package com.voxelboxstudios.resilent.client;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class ResilentClient {
+    @Getter
     private Socket socket;
-    private List listeners = new ArrayList();
+    @Getter
+    private ArrayList<JsonClientListener> listeners = new ArrayList<>();
+    @Getter
     private BufferedReader reader;
+    @Getter
     private BufferedWriter writer;
     private Thread thread;
 
-    public List getListeners() {
-        return this.listeners;
+    public void addListener(JsonClientListener jsonClientListener) {
+        this.listeners.add(jsonClientListener);
     }
 
-    public void addListener(JsonClientListener paramJsonClientListener) {
-        this.listeners.add(paramJsonClientListener);
-    }
-
-    public Socket getSocket() {
-        return this.socket;
-    }
-
-    public BufferedReader getReader() {
-        return this.reader;
-    }
-
-    public BufferedWriter getWriter() {
-        return this.writer;
-    }
 
     public void connect(String paramString, int paramInt) throws IOException {
         this.socket = new Socket(paramString, paramInt);
@@ -41,10 +29,8 @@ public class ResilentClient {
         this.writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
         this.thread = new Thread(new ResilentClientRunnable(this));
         this.thread.start();
-        Iterator localIterator = getListeners().iterator();
-        while (localIterator.hasNext()) {
-            JsonClientListener localJsonClientListener = (JsonClientListener) localIterator.next();
-            localJsonClientListener.connected();
+        for (JsonClientListener jsonClientListener : listeners) {
+            jsonClientListener.connected();
         }
     }
 
@@ -57,7 +43,9 @@ public class ResilentClient {
             this.thread.interrupt();
             this.thread = null;
         }
+        this.writer.close();
         this.writer = null;
+        this.reader.close();
         this.reader = null;
     }
 

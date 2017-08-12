@@ -2,8 +2,10 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutRegisterServer;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
-import lombok.Getter;
+import de.bytelist.bytecloud.network.cloud.packet.PacketOutUnregisterServer;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -16,16 +18,10 @@ import java.io.IOException;
  */
 public class PermServer extends Server {
 
-    @Getter
-    private PermServerObject permServerObject;
-    private String starter;
-    private String stopper;
-
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
-    public PermServer(String serverId, PermServerObject permServerObject) {
-        super(serverId, permServerObject.get("port").getAsInt(), ServerState.STARTING, EnumFile.SERVERS_PERMANENT.getPath());
-        this.permServerObject = permServerObject;
+    public PermServer(String serverId, int port, int ramM, int maxPlayer, int maxSpectator) {
+        super(serverId, port, ramM, maxPlayer, maxSpectator, ServerState.STARTING, EnumFile.SERVERS_PERMANENT.getPath());
 
         try {
             FileUtils.copyDirectory(new File(EnumFile.GENERALS.getPath(), "plugins"), new File(this.getDirectory(), "plugins"));
@@ -35,28 +31,77 @@ public class PermServer extends Server {
         }
     }
 
-    public void startServer(String sender, int ramM, int maxPlayer, int maxSpectator) {
-        super.startServer(ramM, maxPlayer, maxSpectator);
+    @Override
+    public boolean startServer(String sender) {
         this.starter = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e"+getServerId()+"§7.");
             byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
+        if (process == null) {
+            byteCloud.getLogger().info("Server " + serverId + " is starting on port " + port + ".");
+            String[] param =
+                    { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername="+serverId, "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
+                            "-jar", "spigot-"+ byteCloud.getCloudProperties().getProperty("spigot-version")+".jar", "-s",
+                            String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
+            ProcessBuilder pb = new ProcessBuilder(param);
+            pb.directory(directory);
+            try {
+                process = pb.start();
+                byteCloud.getServerHandler().setAreServersRunning();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return false;
     }
 
-    public void stopServer(String sender) {
+    @Override
+    public boolean stopServer(String sender) {
         this.stopper = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e"+getServerId()+"§7.");
             byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
-        super.stopServer();
+        if(this.process != null) {
+            byteCloud.getLogger().info("Server " + serverId + " is stopping.");
+            if(this.process.isAlive()) {
+                try {
+                    this.process.getOutputStream().write("stop\n".getBytes());
+                    this.process.getOutputStream().flush();
+                    Thread.sleep(1000L);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            this.process.destroy();
+        }
+
+        if(byteCloud.getDatabaseServer().existsServer(this.serverId)) {
+            byteCloud.getDatabaseServer().removeServer(this.serverId);
+        }
+        byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutUnregisterServer(serverId));
+        byteCloud.getServerHandler().removePermanentServer(this);
+
+        if(!stopper.equals("_cloud")) {
+            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
+            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+        }
+
+        byteCloud.getLogger().info("Server " + serverId + " stopped.");
+        return false;
     }
 
     @Override
     public void onStart() {
-        super.onStart();
-        ByteCloud.getInstance().getDatabaseServer().addServer("PERMANENT", this.getServerId(),
+        if(this.process != null) {
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutRegisterServer(serverId, port));
+            byteCloud.getCloudServer().sendPacket(serverId, new PacketOutCloudInfo(byteCloud.getVersion(), byteCloud.getCloudStarted(), byteCloud.isRunning));
+            byteCloud.getLogger().info("Server " + serverId + " started. RAM: "+this.ramM+" Slots: "+(this.maxPlayer+this.maxSpectator));
+        }
+        byteCloud.getDatabaseServer().addServer("PERMANENT", this.getServerId(),
                 this.getPort(), this.getServerState().name(), this.getMaxPlayer(), this.getMaxSpectator(), "Permanent-Server", null);
         if(!starter.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(starter, "§aServer §e"+getServerId()+"§a started.");
@@ -64,13 +109,5 @@ public class PermServer extends Server {
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(!stopper.equals("_cloud")) {
-            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
-        }
-        ByteCloud.getInstance().getServerHandler().removePermanentServer(this);
-    }
+
 }

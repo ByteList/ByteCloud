@@ -24,7 +24,8 @@ public class PermanentServerCommand extends Command {
         super("pserver", "permanent server commands");
     }
 
-    private final Logger logger = ByteCloud.getInstance().getLogger();
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+    private final Logger logger = byteCloud.getLogger();
 
     @Override
     public void execute(String[] args) {
@@ -104,7 +105,7 @@ public class PermanentServerCommand extends Command {
             }
             if(args[0].equalsIgnoreCase("start")) {
                 String serverName = args[1];
-                Server server = ByteCloud.getInstance().getServerHandler().getServer(serverName);
+                Server server = byteCloud.getServerHandler().getServer(serverName);
 
                 if(server != null && server instanceof PermServer) {
                     PermServer permServer = (PermServer) server;
@@ -112,19 +113,16 @@ public class PermanentServerCommand extends Command {
                     if (permServer.isRunning()) {
                         logger.info("Permanent server " + serverName + " is already running!");
                     } else {
-                        PermServerObject permServerObject = permServer.getPermServerObject();
-                        permServer.startServer("_cloud",
-                                permServerObject.get("ram").getAsInt(),
-                                permServerObject.get("player").getAsInt(),
-                                permServerObject.get("spectator").getAsInt());
+                        permServer.startServer("_cloud");
                     }
-                } else if(ByteCloud.getInstance().getServerHandler().existsPermanentServer(serverName)) {
+                } else if(byteCloud.getServerHandler().existsPermanentServer(serverName)) {
                     final PermServerObject permServerObject = new PermServerObject(serverName);
-                    PermServer permServer = new PermServer(serverName, permServerObject);
-                    permServer.startServer("_cloud",
+                    PermServer permServer = new PermServer(serverName, permServerObject.get("port").getAsInt(),
                             permServerObject.get("ram").getAsInt(),
                             permServerObject.get("player").getAsInt(),
                             permServerObject.get("spectator").getAsInt());
+                    byteCloud.getServerHandler().getPermanentServers().add(permServer);
+                    permServer.startServer("_cloud");
                 } else {
                     logger.info(serverName+" isn't a permanent server!");
                 }
@@ -132,10 +130,10 @@ public class PermanentServerCommand extends Command {
             }
             if(args[0].equalsIgnoreCase("stop")) {
                 String serverName = args[1];
-                Server server = ByteCloud.getInstance().getServerHandler().getServer(serverName);
+                Server server = byteCloud.getServerHandler().getServer(serverName);
 
                 if(server != null && server instanceof PermServer) {
-                    ((PermServer)server).stopServer("_cloud");
+                    server.stopServer("_cloud");
                 } else {
                     logger.info(serverName+" isn't a permanent server!");
                 }

@@ -50,7 +50,10 @@ public class ServerHandler {
             for(String servs : permServs.list()) {
                 final PermServerObject permServerObject = new PermServerObject(servs);
                 if(permServerObject.get("autoStart").getAsBoolean()) {
-                    PermServer permServer = new PermServer(servs, permServerObject);
+                    PermServer permServer = new PermServer(servs, permServerObject.get("port").getAsInt(),
+                            permServerObject.get("ram").getAsInt(),
+                            permServerObject.get("player").getAsInt(),
+                            permServerObject.get("spectator").getAsInt());
                     this.permanentServers.add(permServer);
                 }
             }
@@ -63,11 +66,7 @@ public class ServerHandler {
     public void start() {
         System.out.println("Starting servers...");
         for(PermServer permServer : permanentServers) {
-            PermServerObject permServerObject = permServer.getPermServerObject();
-            permServer.startServer("_cloud",
-                    permServerObject.get("ram").getAsInt(),
-                    permServerObject.get("player").getAsInt(),
-                    permServerObject.get("spectator").getAsInt());
+            permServer.startServer("_cloud");
         }
         if(serverGroups.containsKey("LOBBY")) {
             ByteCloud.getInstance().getLogger().info("** Startup changed. Run lobbies first.");
@@ -91,11 +90,7 @@ public class ServerHandler {
             @Override
             public void run() {
                 for(Server server : getServers()) {
-                    if(server instanceof PermServer) {
-                        ((PermServer) server).stopServer("_cloud");
-                    } else if(server instanceof TempServer)
-                        ((TempServer) server).stopServer("_cloud");
-                    else server.stopServer();
+                    server.stopServer("_cloud");
                 }
                 while (true) {
                     if (getServers().size() == 0) {

@@ -30,9 +30,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.12.Final</version>
+            <groupId>com.voxelboxstudios</groupId>
+            <artifactId>resilent</artifactId>
+            <version>LATEST</version>
         </dependency>
     </dependencies>
 </project>

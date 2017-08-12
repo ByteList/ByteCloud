@@ -2,11 +2,13 @@ package com.voxelboxstudios.resilent.client;
 
 import com.google.gson.JsonObject;
 import de.bytelist.bytecloud.network.NetworkManager;
+import lombok.Getter;
 
 import java.io.IOException;
 
 public class Client {
-    private static ResilentClient client;
+    @Getter
+    private ResilentClient client;
 
     public Client() throws IOException {
         client = new ResilentClient();
@@ -18,19 +20,7 @@ public class Client {
         client.addListener(jsonClientListener);
     }
 
-    public static ResilentClient gC() {
-        return client;
-    }
-
-    public static void sendPacket(JsonObject paramJsonObject) {
-        try {
-            client.sendPacket(paramJsonObject);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sP(JsonObject paramJsonObject) {
+    public void sendPacket(JsonObject paramJsonObject) {
         try {
             client.sendPacket(paramJsonObject);
         } catch (IOException e) {

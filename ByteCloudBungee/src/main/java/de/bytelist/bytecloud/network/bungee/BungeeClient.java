@@ -16,7 +16,7 @@ public class BungeeClient {
     @Getter
     private Client client;
 
-    public void z() {
+    public void connect() {
         System.out.println("["+this.getClass().getSimpleName()+"] Starting...");
         try {
             this.client = new Client();
@@ -29,8 +29,18 @@ public class BungeeClient {
 
     public void sendPacket(Packet packet) {
         if(packet.getName().startsWith("PacketIn")) {
-            this.client.sP(packet.toJson());
+            this.client.sendPacket(packet.toJson());
         } else
             throw new IllegalArgumentException(packet.getName()+" can't sent to cloud.");
+    }
+
+    public void disconnect() {
+        System.out.println("["+this.getClass().getSimpleName()+"] Stopping...");
+        try {
+            this.client.getClient().disconnect();
+            System.out.println("["+this.getClass().getSimpleName()+"] Stopped!");
+        } catch (IOException e) {
+            System.err.println("["+this.getClass().getSimpleName()+"] Error while stopping: "+e);
+        }
     }
 }

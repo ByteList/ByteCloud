@@ -32,8 +32,6 @@ public class ServerGroup extends Thread {
         return kb.toString();
     }
 
-//    private ServerGroup serverGroup;
-
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     @Getter
@@ -113,11 +111,11 @@ public class ServerGroup extends Thread {
             if(this.servers.size() < max) {
                 final String serverId = generateServerId();
                 final int port = getNextServerPort();
-                TempServer tempServer = new TempServer(serverId, port, this);
+                TempServer tempServer = new TempServer(serverId, port, this.ram, this.player, this.spectator, this);
 
                 this.servers.add(tempServer);
 
-                tempServer.startServer(sender, this.ram, this.player, this.spectator);
+                tempServer.startServer(sender);
             } else {
                 if(!sender.equals("_cloud")) {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cToo much servers are currently online!");
@@ -133,7 +131,7 @@ public class ServerGroup extends Thread {
         this.servers.remove(tempServer);
     }
 
-    public void checkAndStartNewServer() {
+    private void checkAndStartNewServer() {
         if(byteCloud.isRunning) {
             boolean b = false;
             for (TempServer server : servers) {
