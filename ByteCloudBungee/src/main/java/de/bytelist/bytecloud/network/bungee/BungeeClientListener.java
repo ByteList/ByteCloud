@@ -32,8 +32,7 @@ public class BungeeClientListener extends JsonClientListener {
             if(packet.equals(PacketOutRegisterServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
                 int port = jsonObject.get("port").getAsInt();
-                ServerInfo serverInfo = byteCloudMaster.getProxy().constructServerInfo(serverId, InetSocketAddress.createUnresolved("localhost", port), "", false);
-                byteCloudMaster.getProxy().getServers().put(serverId, serverInfo);
+                byteCloudMaster.getProxy().getServers().put(serverId, byteCloudMaster.getProxy().constructServerInfo(serverId, new InetSocketAddress("localhost", port), "ByteCloud Minecraft-Server", false));
             }
             if(packet.equals(PacketOutUnregisterServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();

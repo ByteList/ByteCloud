@@ -70,7 +70,7 @@ public class PermServer extends Server {
                 try {
                     this.process.getOutputStream().write("stop\n".getBytes());
                     this.process.getOutputStream().flush();
-                    Thread.sleep(1000L);
+                    Thread.sleep(1500L);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -79,11 +79,10 @@ public class PermServer extends Server {
             this.process.destroy();
         }
 
-        if(byteCloud.getDatabaseServer().existsServer(this.serverId)) {
-            byteCloud.getDatabaseServer().removeServer(this.serverId);
-        }
+        byteCloud.getDatabaseServer().removeServer(this.serverId);
+
         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutUnregisterServer(serverId));
-        byteCloud.getServerHandler().removePermanentServer(this);
+        byteCloud.getServerHandler().unregisterServer(serverId);
 
         if(!stopper.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");

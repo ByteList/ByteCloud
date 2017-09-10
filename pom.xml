@@ -29,10 +29,5 @@
             <version>1.16.12</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.voxelboxstudios</groupId>
-            <artifactId>resilent</artifactId>
-            <version>LATEST</version>
-        </dependency>
     </dependencies>
 </project>

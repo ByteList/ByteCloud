@@ -46,11 +46,11 @@ public class ServerGroup extends Thread {
     private boolean started;
 
     @Getter
-    private List<TempServer> servers = new ArrayList<>();
+    private ArrayList<String> servers = new ArrayList<>();
     @Getter
-    private List<Integer> usedIds = new ArrayList<>();
+    private ArrayList<Integer> usedIds = new ArrayList<>();
     @Getter
-    private List<Integer> usedPorts = new ArrayList<>();
+    private ArrayList<Integer> usedPorts = new ArrayList<>();
 
     public ServerGroup(String group, ServerGroupObject serverGroupObject) {
         super(group.toUpperCase());
@@ -109,11 +109,12 @@ public class ServerGroup extends Thread {
     public void startNewServer(String sender) {
         if(byteCloud.isRunning) {
             if(this.servers.size() < max) {
-                final String serverId = generateServerId();
-                final int port = getNextServerPort();
+                String serverId = generateServerId();
+                int port = getNextServerPort();
                 TempServer tempServer = new TempServer(serverId, port, this.ram, this.player, this.spectator, this);
 
-                this.servers.add(tempServer);
+                this.servers.add(tempServer.getServerId());
+                byteCloud.getServerHandler().registerServer(tempServer);
 
                 tempServer.startServer(sender);
             } else {
@@ -128,14 +129,14 @@ public class ServerGroup extends Thread {
     public void removeServer(TempServer tempServer) {
         this.usedIds.remove(Integer.valueOf(tempServer.getServerId().split("-")[1]));
         this.usedPorts.remove(Integer.valueOf(tempServer.getPort()));
-        this.servers.remove(tempServer);
+        this.servers.remove(tempServer.getServerId());
     }
 
     private void checkAndStartNewServer() {
         if(byteCloud.isRunning) {
             boolean b = false;
-            for (TempServer server : servers) {
-                Server.ServerState serverState = server.getServerState();
+            for (String server : servers) {
+                Server.ServerState serverState = byteCloud.getServerHandler().getServer(server).getServerState();
                 if (serverState == Server.ServerState.STARTING || serverState == Server.ServerState.LOBBY) {
                     b = true;
                     break;

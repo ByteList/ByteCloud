@@ -96,11 +96,9 @@ public class TempServer extends Server {
             }
         }
 
-        if(byteCloud.getDatabaseServer().existsServer(this.serverId)) {
-            byteCloud.getDatabaseServer().removeServer(this.serverId);
-        }
+        byteCloud.getDatabaseServer().removeServer(this.serverId);
         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutUnregisterServer(serverId));
-        this.serverGroup.removeServer(this);
+        byteCloud.getServerHandler().unregisterServer(serverId);
 
         if(!stopper.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
@@ -131,8 +129,8 @@ public class TempServer extends Server {
         ServerGroup serverGroup = ByteCloud.getInstance().getServerHandler().getServerGroups().getOrDefault("LOBBY", null);
         if(serverGroup != null) {
             PacketOutChangeServerState packetOutChangeServerState = new PacketOutChangeServerState(this.getServerId(), this.serverGroup.getGroupName(), getServerState().name(), serverState.name());
-            for(Server server : serverGroup.getServers()) {
-                byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutChangeServerState);
+            for(String server : serverGroup.getServers()) {
+                byteCloud.getCloudServer().sendPacket(server, packetOutChangeServerState);
             }
         }
         super.setServerState(serverState);

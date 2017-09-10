@@ -10,10 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -28,11 +25,14 @@ public class ServerHandler {
     @Getter
     private ArrayList<PermServer> permanentServers;
 
+    private HashMap<String, Server> servers;
+
     private boolean areServersRunning;
 
     public ServerHandler() {
         this.serverGroups = new HashMap<>();
         this.permanentServers = new ArrayList<>();
+        this.servers = new HashMap<>();
         this.areServersRunning = false;
 
         final File servGroups = new File(EnumFile.TEMPLATES.getPath());
@@ -55,6 +55,7 @@ public class ServerHandler {
                             permServerObject.get("player").getAsInt(),
                             permServerObject.get("spectator").getAsInt());
                     this.permanentServers.add(permServer);
+                    this.servers.put(servs, permServer);
                 }
             }
         }
@@ -89,11 +90,13 @@ public class ServerHandler {
         Thread thread = new Thread("Server Stop Thread") {
             @Override
             public void run() {
-                for(Server server : getServers()) {
+                ArrayList<Server> servers1 = new ArrayList<>();
+                servers1.addAll(getServers());
+                for(Server server : servers1) {
                     server.stopServer("_cloud");
                 }
                 while (true) {
-                    if (getServers().size() == 0) {
+                    if (servers.size() == 0) {
                         areServersRunning = false;
                         break;
                     }
@@ -113,17 +116,12 @@ public class ServerHandler {
         System.out.println("Servers stopped!");
     }
 
-    public List<Server> getServers() {
-        ArrayList<Server> servers = new ArrayList<>();
-        servers.addAll(permanentServers);
-        for(ServerGroup serverGroup : serverGroups.values()) {
-            servers.addAll(serverGroup.getServers());
-        }
-        return Collections.unmodifiableList(servers);
+    public Collection<Server> getServers() {
+        return Collections.unmodifiableCollection(servers.values());
     }
 
     public Server getServer(String serverId) {
-        for(Server server : getServers()) {
+        for(Server server : servers.values()) {
             if(serverId.equals(server.getServerId())) {
                 return server;
             }
@@ -132,7 +130,7 @@ public class ServerHandler {
     }
 
     public boolean existsServer(String serverId) {
-        return getServer(serverId) != null;
+        return servers.containsKey(serverId);
     }
 
     public boolean existsPermanentServer(String serverName) {
@@ -144,8 +142,17 @@ public class ServerHandler {
         return false;
     }
 
-    void removePermanentServer(PermServer permServer) {
-        this.permanentServers.remove(permServer);
+    public void registerServer(Server server) {
+        this.servers.put(server.getServerId(), server);
+    }
+
+    public void unregisterServer(String serverId) {
+        Server server = this.servers.remove(serverId);
+        if(server instanceof TempServer) {
+            ((TempServer) server).getServerGroup().removeServer((TempServer) server);
+        } else if(server instanceof PermServer) {
+            this.permanentServers.remove(server);
+        }
     }
 
     void setAreServersRunning() {

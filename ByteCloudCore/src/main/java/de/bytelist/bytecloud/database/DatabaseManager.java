@@ -14,6 +14,8 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.Collections;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,10 +35,15 @@ public class DatabaseManager {
     @Getter
     private DatabaseServer databaseServer;
 
+    @Getter
+    private Executor executor;
+
     public DatabaseManager(String host, int port, String username, String password, String database) throws Exception {
         // Disable the stupid log messages from mongodb
         Logger mongoLog = Logger.getLogger("org.mongodb.driver");
         mongoLog.setLevel(Level.OFF);
+
+        this.executor = Executors.newCachedThreadPool();
 
         // Support for new mongodb standard uuid's
         CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
