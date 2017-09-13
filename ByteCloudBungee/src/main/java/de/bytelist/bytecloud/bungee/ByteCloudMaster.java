@@ -52,7 +52,7 @@ public class ByteCloudMaster extends Plugin {
             @Override
             public void execute(CommandSender sender, String[] args) {
                 sender.sendMessage(ByteCloudMaster.getInstance().prefix+"§fByteCloud: v"+cloudHandler.getCloudVersion()+", " +
-                        "Bungee: v"+version+", Spigot: v"+version+" (Started: "+cloudHandler.getCloudStarted()+", by ByteList)");
+                        "Bungee: v"+version+", Spigot: v"+version+" (Started: "+cloudHandler.getCloudStarted()+"), by ByteList");
             }
         });
 
