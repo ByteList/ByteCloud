@@ -4,19 +4,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.bytelist</groupId>
+    <groupId>de.bytelist.bytecloud</groupId>
     <artifactId>bytecloud-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
+    <organization>
+        <name>GameChest</name>
+        <url>https://game-chest.de</url>
+    </organization>
+
+    <name>ByteCloud v2</name>
+
     <modules>
-        <module>ByteCloudSoftware2</module>
-        <module>ByteCloudBungee</module>
-        <module>ByteCloudSpigot</module>
-        <module>ByteCloudCore</module>
+        <module>Software</module>
+        <module>Core</module>
+        <module>Plugin-Bungee</module>
+        <module>Plugin-Spigot</module>
     </modules>
 
     <properties>
+        <build.number>unknown</build.number>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

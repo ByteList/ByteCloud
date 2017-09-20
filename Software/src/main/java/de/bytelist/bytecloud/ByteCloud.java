@@ -51,7 +51,7 @@ public class ByteCloud {
     @Getter
     private DatabaseServer databaseServer;
     @Getter
-    private final String version = "2.1.3";
+    private final String version;
     @Getter
     private CommandHandler commandHandler;
     @Getter
@@ -66,6 +66,7 @@ public class ByteCloud {
         isRunning = false;
         cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         restartDate = System.getProperty("de.bytelist.bytecloud.restart", "03:55");
+        version = ByteCloud.class.getPackage().getImplementationVersion();
 
         // This is a workaround for quite possibly the weirdest bug I have ever encountered in my life!
         // When jansi attempts to extract its natives, by default it tries to extract a specific version,
