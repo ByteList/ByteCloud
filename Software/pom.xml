@@ -91,7 +91,8 @@
                             <mainClass>de.bytelist.bytecloud.bootstrap.Bootstrap</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Implementation-Build>version-${build.number}</Implementation-Build>
+                            <Implementation-Title>${finalName}</Implementation-Title>
+                            <Implementation-Version>v2-${build.number}</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
