@@ -85,14 +85,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <addMavenDescriptor>true</addMavenDescriptor>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <mainClass>de.bytelist.bytecloud.bootstrap.Bootstrap</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Implementation-Title>${finalName}</Implementation-Title>
-                            <Implementation-Version>v2-${build.number}</Implementation-Version>
+                            <Implementation-Title>${build.finalName}</Implementation-Title>
+                            <Implementation-Version>${build.version}</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
