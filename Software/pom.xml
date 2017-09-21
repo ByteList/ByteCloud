@@ -11,6 +11,8 @@
 
     <artifactId>Software</artifactId>
 
+    <name>ByteCloud-Software</name>
+
     <dependencies>
         <dependency>
             <groupId>jline</groupId>
