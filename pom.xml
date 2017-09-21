@@ -26,7 +26,7 @@
     <properties>
         <build.number>unknown</build.number>
         <build.version>v2-${project.version}-${build.number}</build.version>
-        <build.finalName>${project.name}-${project.artifactId}-${build.version}</build.finalName>
+        <build.finalName>${name}-${project.name}-${build.version}</build.finalName>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

@@ -34,6 +34,8 @@
     </dependencies>
 
     <build>
+        <finalName>${build.finalName}</finalName>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -50,6 +52,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -64,28 +67,10 @@
                 </executions>
             </plugin>
 
-            <!--<plugin>-->
-                <!--<groupId>net.md-5</groupId>-->
-                <!--<artifactId>scriptus</artifactId>-->
-                <!--<version>0.3.1</version>-->
-                <!--<configuration>-->
-                    <!--<format>git:${project.name}:${project.version}:%s:${build.number}</format>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>initialize</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>describe</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <finalName>${build.finalName}</finalName>
-
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
