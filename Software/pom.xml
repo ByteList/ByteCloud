@@ -92,7 +92,7 @@
                             <mainClass>de.bytelist.bytecloud.bootstrap.Bootstrap</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Implementation-Title>${project.build.finalName}</Implementation-Title>
+                            <Implementation-Title>${build.finalName}</Implementation-Title>
                             <Implementation-Version>${build.version}</Implementation-Version>
                         </manifestEntries>
                     </archive>
