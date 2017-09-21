@@ -87,6 +87,7 @@
                 <configuration>
                     <archive>
                         <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <mainClass>de.bytelist.bytecloud.bootstrap.Bootstrap</mainClass>
                         </manifest>
                     </archive>
