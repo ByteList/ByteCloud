@@ -15,7 +15,7 @@ public abstract class Packet {
     private JsonObject jsonObject;
 
 
-    public Packet(String name/*, PacketType packetType*/) {
+    public Packet(String name) {
         this.name = name;
         this.jsonObject = new JsonObject();
         this.jsonObject.addProperty("packet", name);
