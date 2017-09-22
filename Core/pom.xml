@@ -14,8 +14,8 @@
     <dependencies>
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.6.0-SNAPSHOT</version>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.5.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
