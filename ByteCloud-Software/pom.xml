@@ -36,7 +36,7 @@
     <packaging>jar</packaging>
 
     <build>
-        <finalName>${project.name}:${project.version}-${build.number}</finalName>
+        <finalName>${project.name}-${project.version}-${build.number}:${git.commit}</finalName>
 
         <resources>
             <resource>
@@ -80,8 +80,8 @@
                             <mainClass>de.bytelist.bytecloud.bootstrap.Bootstrap</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Implementation-Title>${build.finalName}</Implementation-Title>
-                            <Implementation-Version>${build.version}</Implementation-Version>
+                            <Implementation-Title>${project.name}-${project.version}-${build.number}:${git.commit}</Implementation-Title>
+                            <Implementation-Version>${project.version}-${build.number}:${git.commit}</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
