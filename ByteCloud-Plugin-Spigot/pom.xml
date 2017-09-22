@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Plugin-Spigot</artifactId>
+    <artifactId>ByteCloud-Plugin-Spigot</artifactId>
 
     <repositories>
         <repository>
@@ -45,7 +45,7 @@
     <packaging>jar</packaging>
 
     <build>
-        <finalName>ByteCloud-${project.name}-${project.version}:${build.number}</finalName>
+        <finalName>${project.name}:${project.version}${build.number}</finalName>
 
         <resources>
             <resource>

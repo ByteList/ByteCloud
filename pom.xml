@@ -17,10 +17,10 @@
     <name>ByteCloud</name>
 
     <modules>
-        <module>Software</module>
-        <module>Core</module>
-        <module>Plugin-Bungee</module>
-        <module>Plugin-Spigot</module>
+        <module>ByteCloud-Software</module>
+        <module>ByteCloud-Core</module>
+        <module>ByteCloud-Plugin-Bungee</module>
+        <module>ByteCloud-Plugin-Spigot</module>
     </modules>
 
     <properties>
