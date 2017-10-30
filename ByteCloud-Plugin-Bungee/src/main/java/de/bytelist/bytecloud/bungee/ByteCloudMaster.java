@@ -40,7 +40,7 @@ public class ByteCloudMaster extends Plugin {
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloudMaster.class.getPackage().getImplementationVersion().split(":");
         // 2.0-23:003425
-        version = v[0]+v[1].substring(0, 6);
+        version = v[0]+":"+v[1].substring(0, 6);
 
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
