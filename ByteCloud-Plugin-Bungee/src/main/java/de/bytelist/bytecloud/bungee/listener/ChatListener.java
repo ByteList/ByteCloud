@@ -25,12 +25,24 @@ public class ChatListener implements Listener {
                 String command = message.split(" ")[0];
 
                 if (command.equalsIgnoreCase("/cloud") || command.equalsIgnoreCase("/cloudsystem") || command.equalsIgnoreCase("/bytecloud")) {
-                    player.sendMessage(byteCloudMaster.prefix + "ByteCloud: v"+byteCloudMaster.getCloudHandler().getCloudVersion());
-                    player.sendMessage(byteCloudMaster.prefix + "Bungee: v"+byteCloudMaster.getVersion());
+                    player.sendMessage(byteCloudMaster.prefix + "§fByteCloud: v"+byteCloudMaster.getCloudHandler().getCloudVersion());
+                    player.sendMessage(byteCloudMaster.prefix + "§fBungee: v"+byteCloudMaster.getVersion());
                 }
 
                 if(command.equalsIgnoreCase("/pl") || command.equalsIgnoreCase("/plugins")) {
                     e.setMessage("/fakeplugins s6adD4g146 exec");
+                }
+
+                if(command.startsWith("/minecraft:")) {
+                    e.setMessage(message.replace("/minecraft:", "/"));
+                }
+
+                if(command.startsWith("/bukkit:")) {
+                    e.setMessage(message.replace("/bukkit:", "/"));
+                }
+
+                if(command.startsWith("/spigot:")) {
+                    e.setMessage(message.replace("/spigot:", "/"));
                 }
             }
         }
