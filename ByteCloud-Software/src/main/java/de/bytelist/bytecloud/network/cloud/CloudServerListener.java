@@ -37,17 +37,17 @@ public class CloudServerListener extends JsonServerListener {
             if(packet.equals(PacketInBungee.class.getSimpleName())) {
                 String bungeeId = jsonObject.get("bungeeId").getAsString();
                 byteCloud.getCloudServer().registerClient(bungeeId, patron);
-                ByteCloud.getInstance().getBungee().onStart();
+                byteCloud.getBungee().onStart();
             }
             if(packet.equals(PacketInBungeeStopped.class.getSimpleName())) {
-                ByteCloud.getInstance().getBungee().onStop();
+                byteCloud.getBungee().onStop();
             }
             if(packet.equals(PacketInStartServer.class.getSimpleName())) {
                 String group = jsonObject.get("group").getAsString();
                 String sender = jsonObject.get("sender").getAsString();
 
                 ServerGroup serverGroup = null;
-                for (ServerGroup sg : ByteCloud.getInstance().getServerHandler().getServerGroups().values()) {
+                for (ServerGroup sg : byteCloud.getServerHandler().getServerGroups().values()) {
                     if (sg.getGroupName().equalsIgnoreCase(group)) {
                         serverGroup = sg;
                         break;
@@ -57,33 +57,33 @@ public class CloudServerListener extends JsonServerListener {
                     serverGroup.startNewServer(sender);
                 } else {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server group does not exist.");
-                    byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
                 }
             }
             if(packet.equals(PacketInStopServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
                 String sender = jsonObject.get("sender").getAsString();
 
-                if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
-                    Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
+                if(byteCloud.getServerHandler().existsServer(serverId)) {
+                    Server server = byteCloud.getServerHandler().getServer(serverId);
                     server.stopServer(sender);
                 } else {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server does not exist.");
-                    byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
                 }
             }
             if(packet.equals(PacketInStopOwnServer.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
-                if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
-                    Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
+                if(byteCloud.getServerHandler().existsServer(serverId)) {
+                    Server server = byteCloud.getServerHandler().getServer(serverId);
                     server.stopServer("_cloud");
                 }
             }
 
             if(packet.equals(PacketInChangeServerState.class.getSimpleName())) {
                 String serverId = jsonObject.get("serverId").getAsString();
-                if(ByteCloud.getInstance().getServerHandler().existsServer(serverId)) {
-                    Server server = ByteCloud.getInstance().getServerHandler().getServer(serverId);
+                if(byteCloud.getServerHandler().existsServer(serverId)) {
+                    Server server = byteCloud.getServerHandler().getServer(serverId);
                     server.setServerState(Server.ServerState.valueOf(jsonObject.get("serverState").getAsString()));
                 }
             }

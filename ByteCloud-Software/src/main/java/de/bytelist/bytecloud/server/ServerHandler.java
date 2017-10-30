@@ -146,8 +146,7 @@ public class ServerHandler {
         this.servers.put(server.getServerId(), server);
     }
 
-    public void unregisterServer(String serverId) {
-        Server server = this.servers.remove(serverId);
+    public void unregisterServer(Server server) {
         if(server instanceof TempServer) {
             ((TempServer) server).getServerGroup().removeServer((TempServer) server);
         } else if(server instanceof PermServer) {

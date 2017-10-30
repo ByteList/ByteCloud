@@ -98,7 +98,7 @@ public class TempServer extends Server {
 
         byteCloud.getDatabaseServer().removeServer(this.serverId);
         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutUnregisterServer(serverId));
-        byteCloud.getServerHandler().unregisterServer(serverId);
+        byteCloud.getServerHandler().unregisterServer(this);
 
         if(!stopper.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
