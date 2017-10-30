@@ -45,6 +45,7 @@ public class TempServer extends Server {
         }
         if (process == null) {
             byteCloud.getLogger().info("Server " + serverId + " is starting on port " + port + ".");
+            byteCloud.getServerHandler().registerServer(this);
             String[] param =
                     { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername="+serverId, "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
                             "-jar", "spigot-"+ byteCloud.getCloudProperties().getProperty("spigot-version")+".jar", "-s",

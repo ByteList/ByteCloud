@@ -114,7 +114,6 @@ public class ServerGroup extends Thread {
                 TempServer tempServer = new TempServer(serverId, port, this.ram, this.player, this.spectator, this);
 
                 this.servers.add(tempServer.getServerId());
-                byteCloud.getServerHandler().registerServer(tempServer);
 
                 tempServer.startServer(sender);
             } else {
