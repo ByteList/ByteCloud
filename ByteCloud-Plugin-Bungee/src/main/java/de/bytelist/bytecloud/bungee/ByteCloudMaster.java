@@ -22,7 +22,7 @@ public class ByteCloudMaster extends Plugin {
     public String prefix = "§bCloud §8\u00BB ";
 
     @Getter
-    private final String version = "2.1";
+    private String version = "unknown";
     @Getter
     private static ByteCloudMaster instance;
     @Getter
@@ -36,6 +36,11 @@ public class ByteCloudMaster extends Plugin {
         CloudProperties.load();
         this.cloudHandler = new CloudHandler();
 
+        // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
+        String[] v = ByteCloudMaster.class.getPackage().getImplementationVersion().split(":");
+        // 2.0-23:003425
+        version = v[0]+v[1].substring(0, 6);
+
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
 
@@ -47,14 +52,6 @@ public class ByteCloudMaster extends Plugin {
 
         PacketInBungee packetInBungee = new PacketInBungee(this.cloudHandler.getBungeeId(), 25565);
         this.bungeeClient.sendPacket(packetInBungee);
-
-        getProxy().getPluginManager().registerCommand(this, new Command("bytecloud", null, "cloud", "cloudsystem", "bungeecloud") {
-            @Override
-            public void execute(CommandSender sender, String[] args) {
-                sender.sendMessage(ByteCloudMaster.getInstance().prefix+"§fByteCloud: v"+cloudHandler.getCloudVersion()+", " +
-                        "Bungee: v"+version+", Spigot: v"+version+" (Started: "+cloudHandler.getCloudStarted()+"), by ByteList");
-            }
-        });
 
         getProxy().getPluginManager().registerCommand(this, new Command("cloudend") {
             @Override

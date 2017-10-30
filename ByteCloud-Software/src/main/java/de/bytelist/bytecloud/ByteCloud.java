@@ -7,7 +7,7 @@ import de.bytelist.bytecloud.console.commands.*;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.installer.Installer;
+import de.bytelist.bytecloud.updater.Updater;
 import de.bytelist.bytecloud.log.AnsiColor;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
@@ -66,7 +66,11 @@ public class ByteCloud {
         isRunning = false;
         cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         restartDate = System.getProperty("de.bytelist.bytecloud.restart", "03:55");
-        version = ByteCloud.class.getPackage().getImplementationVersion();
+
+        // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
+        String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
+        // 2.0-23:003425
+        version = v[0]+v[1].substring(0, 6);
 
         // This is a workaround for quite possibly the weirdest bug I have ever encountered in my life!
         // When jansi attempts to extract its natives, by default it tries to extract a specific version,
@@ -99,39 +103,44 @@ public class ByteCloud {
                         "\n\n");
 
 
-        Installer installer = new Installer();
-        if(!installer.isUpdated()) {
-            this.logger.info("================================");
-            this.logger.info("Cloud isn't up-to-date! Try to update it...");
-
-            Thread downloadThread = new Thread("Downloading Thread") {
-                @Override
-                public void run() {
-                        installer.downloadFiles();
-                        installer.extractFiles();
-                }
-            };
-            downloadThread.start();
-
-            int i = 0;
-            while (!installer.isFinished && downloadThread.isAlive()) {
-                i++;
-            }
-
-            if(installer.isSuccessful) {
-                this.logger.info("Update was successful! (t=" + i + ")");
-                this.logger.info("================================");
-                cleanStop();
-            } else {
-                this.logger.warning("Update was not successful! (t=" + i + ")");
-                this.logger.info("Creating directories manually...");
-                for(EnumFile enumFile : EnumFile.values()) {
-                    File file = new File(enumFile.getPath());
-                    if(!file.exists())
-                        file.mkdirs();
-                }
-                this.logger.info("Directories manually created.");
-            }
+//        Updater updater = new Updater(Integer.parseInt(v[0].split("-")[1]));
+//        if(!updater.isUpdated()) {
+//            this.logger.info("================================");
+//            this.logger.info("Cloud isn't up-to-date! Try to update it...");
+//
+//            Thread downloadThread = new Thread("Downloading Thread") {
+//                @Override
+//                public void run() {
+//                        updater.downloadFiles();
+//                        updater.extractFiles();
+//                }
+//            };
+//            downloadThread.start();
+//
+//            int i = 0;
+//            while (!updater.isFinished && downloadThread.isAlive()) {
+//                i++;
+//            }
+//
+//            if(updater.isSuccessful) {
+//                this.logger.info("Update was successful! (t=" + i + ")");
+//                this.logger.info("================================");
+//                cleanStop();
+//            } else {
+//                this.logger.warning("Update was not successful! (t=" + i + ")");
+//                this.logger.info("Creating directories manually...");
+//                for(EnumFile enumFile : EnumFile.values()) {
+//                    File file = new File(enumFile.getPath());
+//                    if(!file.exists())
+//                        file.mkdirs();
+//                }
+//                this.logger.info("Directories manually created.");
+//            }
+//        }
+        for (EnumFile enumFile : EnumFile.values()) {
+            File file = new File(enumFile.getPath());
+            if (!file.exists())
+                file.mkdirs();
         }
         this.cloudProperties = new CloudProperties();
 

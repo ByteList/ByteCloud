@@ -8,6 +8,9 @@ import de.bytelist.bytecloud.network.server.ServerClient;
 import de.bytelist.bytecloud.network.server.packet.PacketInServer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -28,9 +31,16 @@ public class ByteCloudCore extends JavaPlugin {
 
     public String prefix = "§bCloud §8\u00BB ";
 
+    private String version = "unknown";
+
     @Override
     public void onEnable() {
         instance = this;
+
+        // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
+        String[] v = ByteCloudCore.class.getPackage().getImplementationVersion().split(":");
+        // 2.0-23:003425
+        version = v[0]+v[1].substring(0, 6);
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
@@ -48,11 +58,21 @@ public class ByteCloudCore extends JavaPlugin {
 
         PacketInServer packetInServer = new PacketInServer(serverId);
         this.serverClient.sendPacket(packetInServer);
+
+        getCommand("cloud").setExecutor((sender, cmd, label, args) -> {
+            sender.sendMessage(prefix+"§fSpigot: v"+version);
+            sender.sendMessage(prefix+"§fCloud started: "+cloudHandler.getCloudStarted()+", developed by ByteList");
+            return true;
+        });
     }
 
     @Override
     public void onDisable() {
         this.serverClient.disconnect();
         Bukkit.getConsoleSender().sendMessage(prefix + "§cDisabled!");
+    }
+
+    public String getVersion() {
+        return version;
     }
 }

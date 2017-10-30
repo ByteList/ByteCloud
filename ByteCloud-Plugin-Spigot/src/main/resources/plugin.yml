@@ -8,3 +8,7 @@ main: de.bytelist.bytecloud.core.ByteCloudCore
 
 #load: STARTUP
 loadbefore: [GameChest, ClickAttack, Lobby, ShulkerDefence, JumpDuell, Survival, DeathRun]
+
+commands:
+   cloud:
+      aliases: [bytecloud, cloudsystem]
