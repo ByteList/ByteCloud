@@ -152,6 +152,7 @@ public class ServerHandler {
         } else if(server instanceof PermServer) {
             this.permanentServers.remove(server);
         }
+        servers.remove(server.getServerId());
     }
 
     void setAreServersRunning() {

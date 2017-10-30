@@ -70,7 +70,7 @@ public class ByteCloud {
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
         // 2.0-23:003425
-        version = v[0]+":"+v[1].substring(0, 6);
+        version = v[0]+":"+v[1].substring(0, 7);
 
         // This is a workaround for quite possibly the weirdest bug I have ever encountered in my life!
         // When jansi attempts to extract its natives, by default it tries to extract a specific version,

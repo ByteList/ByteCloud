@@ -40,7 +40,7 @@ public class ByteCloudCore extends JavaPlugin {
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloudCore.class.getPackage().getImplementationVersion().split(":");
         // 2.0-23:003425
-        version = v[0]+":"+v[1].substring(0, 6);
+        version = v[0]+":"+v[1].substring(0, 7);
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
