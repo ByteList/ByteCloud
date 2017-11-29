@@ -34,33 +34,94 @@ import java.util.logging.Logger;
 public class ByteCloud {
 
     public boolean isRunning;
+
+    /**
+     * That's the cloud instance. It's needed to return the main class.
+     */
     @Getter
     private static ByteCloud instance;
+    /**
+     * The ConsoleReader is used to optimize the console out- and input.
+     */
     @Getter
     private ConsoleReader consoleReader;
+    /**
+     * The Logger is used to perform information's and so on to the log.
+     */
     @Getter
     private Logger logger;
+    /**
+     * The CloudProperties are used to save data's for mongodb and communication systems.
+     * In the future maybe replaced by a json format.
+     */
     @Getter
     private CloudProperties cloudProperties;
+    /**
+     * The ServerHandler manages server groups and permanently servers.
+     * Server groups manage servers like game-servers or lobby-servers.
+     * Permanent-servers are good for survival servers, build servers or something like this.
+     */
     @Getter
     private ServerHandler serverHandler;
+    /**
+     * The Bungee manages the bungee instance from the cloud.
+     * It's only used to start and stop the bungee instance.
+     * This instance can be managed in the Bungee folder like a normal bungee server.
+     */
     @Getter
     private Bungee bungee;
+    /**
+     * The DatabaseManager is used to manage all database things.
+     * Here you can find all mongodb data's.
+     */
     @Getter
     private DatabaseManager databaseManager;
+    /**
+     * The DatabaseServer put's all data's from servers in it and load this data any time.
+     * You can get information's like player count and
+     * server id from the cloudAPI in the bungee or spigot plugin.
+     */
     @Getter
     private DatabaseServer databaseServer;
+    /**
+     * This returns the correct version from the cloud.
+     * It contains information's about git commit and jenkins build number.
+     * If you doesn't build the software with jenkins you would get and "unknown" version.
+     */
     @Getter
     private final String version;
+    /**
+     * This handler is used to register commands for the console input.
+     */
     @Getter
     private CommandHandler commandHandler;
+    /**
+     * This string returns the cloud start date with time.
+     */
     @Getter
     private final String cloudStarted;
+    /**
+     * The CloudServer manages all incoming connections.
+     * It's the packet server.
+     * You get an information in the console when a connection comes in.
+     * If this connection comes from a game server or from a bungee
+     * you will see this and get informed about this.
+     */
     @Getter
     private CloudServer cloudServer;
 
+    /**
+     * This string represent a time who the cloud should be stopped.
+     * Set this to -1 to disable it.
+     * In the future maybe renamed to "stopDate".
+     */
     private String restartDate;
 
+    /**
+     * Initialise the cloud system. This doesn't start anything!
+     *
+     * @throws Exception
+     */
     public ByteCloud() throws Exception {
         instance = this;
         isRunning = false;
@@ -183,6 +244,11 @@ public class ByteCloud {
         this.cloudServer = new CloudServer();
     }
 
+    /**
+     * Start all servers, the bungee and the packet server.
+     *
+     * A {{@link ByteCloud}} instance is required.
+     */
     public void start() {
         isRunning = true;
 
@@ -197,6 +263,9 @@ public class ByteCloud {
         this.serverHandler.start();
     }
 
+    /**
+     * This method stops the cloud system with all servers and so on.
+     */
     public void stop() {
         this.isRunning = false;
         new Thread("Shutdown Thread") {
