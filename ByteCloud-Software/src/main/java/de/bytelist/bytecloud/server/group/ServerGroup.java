@@ -9,7 +9,6 @@ import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -94,7 +93,7 @@ public class ServerGroup extends Thread {
 
         for (Integer i : usedIds) if (i.equals(min)) min = min + 1;
         usedIds.add(min);
-        return prefix + "-" + min + "-" + randomKey(5);
+        return prefix + "-" + min + "-" + randomKey(15);
     }
 
     private Integer getNextServerPort() {

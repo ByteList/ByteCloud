@@ -7,7 +7,6 @@ import de.bytelist.bytecloud.console.commands.*;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.updater.Updater;
 import de.bytelist.bytecloud.log.AnsiColor;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
@@ -19,6 +18,7 @@ import lombok.Getter;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,6 +33,9 @@ import java.util.logging.Logger;
  */
 public class ByteCloud {
 
+    /**
+     * This boolean returns the running status from the cloud instance.
+     */
     public boolean isRunning;
 
     /**
@@ -118,11 +121,10 @@ public class ByteCloud {
     private String restartDate;
 
     /**
-     * Initialise the cloud system. This doesn't start anything!
+     * Initialise the cloud instance. This doesn't start anything!
      *
-     * @throws Exception
      */
-    public ByteCloud() throws Exception {
+    public ByteCloud() {
         instance = this;
         isRunning = false;
         cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
@@ -130,7 +132,7 @@ public class ByteCloud {
 
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
-        // 2.0-23:003425
+        // 2.0-23:0034258
         version = v[0]+":"+v[1].substring(0, 7);
 
         // This is a workaround for quite possibly the weirdest bug I have ever encountered in my life!
@@ -144,7 +146,11 @@ public class ByteCloud {
         System.setProperty("library.jansi.version", "ByteCloud");
 
         AnsiConsole.systemInstall();
-        consoleReader = new ConsoleReader();
+        try {
+            consoleReader = new ConsoleReader();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         consoleReader.setExpandEvents(false);
 
         logger = new CloudLogger("ByteCloud", consoleReader);

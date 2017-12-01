@@ -21,6 +21,7 @@
         <module>ByteCloud-Core</module>
         <module>ByteCloud-Plugin-Bungee</module>
         <module>ByteCloud-Plugin-Spigot</module>
+        <module>ByteCloud-Plugin-Fallback</module>
     </modules>
 
     <properties>
