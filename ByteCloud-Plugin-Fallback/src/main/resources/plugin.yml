@@ -1,0 +1,6 @@
+name: ByteCloudFallback
+version: 1.0
+author: §cByteList
+website: https://bytelist.de/
+
+main: de.bytelist.bytecloud.fallback.Fallback
