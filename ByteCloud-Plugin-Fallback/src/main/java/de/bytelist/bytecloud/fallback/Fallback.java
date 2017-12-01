@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -29,6 +30,11 @@ public class Fallback extends JavaPlugin {
             public void onLogin(PlayerLoginEvent e) {
                 e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
                 e.setKickMessage(prefix+"§cDer Cloud-Server konnte nicht erreicht werden.");
+            }
+
+            @EventHandler
+            public void onPing(ServerListPingEvent e) {
+                e.setMotd("§6Game-Chest.de §f| §cKeine Verbindung");
             }
 
         }, this);
