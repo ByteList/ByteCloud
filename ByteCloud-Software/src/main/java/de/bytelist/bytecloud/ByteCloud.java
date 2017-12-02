@@ -299,7 +299,7 @@ public class ByteCloud {
                 }
                 if(startFallback.equals("true")) {
                     Thread shutdownHook = new Thread(() -> {
-                        String[] param = {"sh", "Fallback-Server/start.sh"};
+                        String[] param = {"sh", "/home/minecraft/CloudSystem/Fallback-Server/start.sh"};
                         try {
                             Runtime.getRuntime().exec(param);
                         } catch (IOException e) {
