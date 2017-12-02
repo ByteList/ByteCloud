@@ -35,6 +35,7 @@ public class Fallback extends JavaPlugin {
             @EventHandler
             public void onPing(ServerListPingEvent e) {
                 e.setMotd("§6Game-Chest.de §7\u00BB §cKeine Verbindung");
+                e.setMaxPlayers(0);
             }
 
         }, this);

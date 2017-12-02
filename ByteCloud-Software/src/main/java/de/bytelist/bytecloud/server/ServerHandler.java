@@ -3,6 +3,7 @@ package de.bytelist.bytecloud.server;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
+import de.bytelist.bytecloud.file.FileMethods;
 import de.bytelist.bytecloud.server.group.ServerGroup;
 import de.bytelist.bytecloud.server.group.ServerGroupObject;
 import lombok.Getter;
@@ -108,6 +109,17 @@ public class ServerHandler {
         while (true) {
             if(areServersRunning && thread.isAlive()) break;
         }
+
+        File logDir = new File(EnumFile.SERVERS_LOGS.getPath());
+        List<File> files = new ArrayList<>();
+        for (File file : logDir.listFiles()) {
+            if(file.getName().contains(".") && file.getName().endsWith(".log")) {
+                files.add(file);
+            }
+        }
+
+        FileMethods.compressZipFile(EnumFile.SERVERS_LOGS.getPath()+ByteCloud.getInstance().getCloudStarted(), files);
+
         try {
             Thread.sleep(3000L);
         } catch (InterruptedException e) {

@@ -114,11 +114,22 @@ public class ByteCloud {
     private CloudServer cloudServer;
 
     /**
-     * This string represent a time who the cloud should be stopped.
-     * Set this to -1 to disable it.
-     * In the future maybe renamed to "stopDate".
+     * This string represents a time who the cloud should be stopped.
+     * Set this to false to disable it.
+     * <p>
+     * Arg: -Dde.bytelist.bytecloud.stop=03:55
      */
-    private String restartDate;
+    private String stopDate;
+
+    /**
+     * This is used to start an Fallback server if cloud get stopped.
+     * It will run at the minecraft standard port (25565).
+     * You can edit this server in Fallback-Server/
+     * Set this to false to disable it.
+     * <p>
+     * Arg: -Dde.bytelist.bytecloud.startFallback=false
+     */
+    private String startFallback;
 
     /**
      * Initialise the cloud instance. This doesn't start anything!
@@ -128,7 +139,8 @@ public class ByteCloud {
         instance = this;
         isRunning = false;
         cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
-        restartDate = System.getProperty("de.bytelist.bytecloud.restart", "03:55");
+        stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
+        startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
 
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
@@ -285,6 +297,15 @@ public class ByteCloud {
                 while (true) {
                     if(!bungee.isRunning()) break;
                 }
+                if(startFallback.equals("true")) {
+                    String[] param = {"cd", "Fallback-Server/", "&&", "sh", "start.sh"};
+                    try {
+                        Runtime.getRuntime().exec(param);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 try {
                     Thread.sleep(5000L);
                 } catch (InterruptedException e) {
@@ -304,8 +325,8 @@ public class ByteCloud {
     }
 
     public void startRestartThread() {
-        if(restartDate.equals("false")) {
-            this.logger.info("Restart is disabled.");
+        if(stopDate.equals("false")) {
+            this.logger.info("Automatic Stop is disabled.");
             return;
         }
 
@@ -313,7 +334,7 @@ public class ByteCloud {
 
             @Override
             public void run() {
-                ByteCloud.this.logger.info("Restart will be executed at "+restartDate+".");
+                ByteCloud.this.logger.info("Automatic Stop will be executed at "+stopDate+".");
 
                 while (ByteCloud.this.isRunning) {
                     try {
@@ -323,13 +344,14 @@ public class ByteCloud {
                     }
                     String date = new SimpleDateFormat("HH:mm").format(new Date());
 
-                    if(date.equals(restartDate)) {
-                        ByteCloud.this.logger.info("** Automatic Restart executed at "+restartDate+" **");
+                    if(date.equals(stopDate)) {
+                        ByteCloud.this.logger.info("** Automatic Stop executed at "+stopDate+" **");
                         try {
                             Thread.sleep(100L);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                        startFallback = "false";
                         ByteCloud.this.stop();
                     }
                 }
