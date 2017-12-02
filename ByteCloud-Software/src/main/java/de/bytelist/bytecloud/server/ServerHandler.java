@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -126,7 +127,13 @@ public class ServerHandler {
             e.printStackTrace();
         }
 
-        compressZipFile(EnumFile.SERVERS_LOGS.getPath()+ByteCloud.getInstance().getCloudStarted(), files);
+        int length = 0;
+        if(new File(EnumFile.SERVERS_LOGS.getPath()).exists() && new File(EnumFile.SERVERS_LOGS.getPath()).listFiles() != null) {
+            length = (int) Arrays.stream(new File(EnumFile.SERVERS_LOGS.getPath()).listFiles().clone())
+                    .filter(file -> file.getName().contains(".") && file.getName().endsWith(".zip")).count();
+        }
+
+        compressZipFile(EnumFile.SERVERS_LOGS.getPath()+new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime())+":"+ length, files);
         deleteFiles(files);
         System.out.println("Servers stopped!");
     }
