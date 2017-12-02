@@ -1,5 +1,7 @@
 package com.voxelboxstudios.resilent.server;
 
+import de.bytelist.bytecloud.network.NetworkManager;
+
 import java.io.IOException;
 
 public class PacketServer {
@@ -14,6 +16,7 @@ public class PacketServer {
     public void stop() {
         try {
             resilentServer.close();
+            NetworkManager.getLogger().info("Packet-Server stopped!");
         } catch (IOException e) {
             e.printStackTrace();
         }

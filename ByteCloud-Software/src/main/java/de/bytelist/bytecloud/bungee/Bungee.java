@@ -64,6 +64,7 @@ public class Bungee {
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+            byteCloud.getLogger().info("Bungee stopped.");
         }
     }
 
@@ -90,7 +91,6 @@ public class Bungee {
             this.process.destroy();
             this.process = null;
         }
-        System.out.println("Bungee stopped.");
     }
 
     public boolean isRunning() {

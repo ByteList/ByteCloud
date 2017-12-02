@@ -27,7 +27,7 @@ public class CloudServer {
         try {
             this.packetServer = new PacketServer(NetworkManager.getSocketPort());
             this.packetServer.addListener(new CloudServerListener());
-            NetworkManager.getLogger().info("Packet-Server Started!");
+            NetworkManager.getLogger().info("Packet-Server started!");
         } catch (IOException e) {
             NetworkManager.getLogger().warning("Error while starting Packet-Server: "+e);
         }
