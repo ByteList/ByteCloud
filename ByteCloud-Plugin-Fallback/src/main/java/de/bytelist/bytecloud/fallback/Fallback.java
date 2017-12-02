@@ -28,8 +28,8 @@ public class Fallback extends JavaPlugin {
 
             @EventHandler
             public void onLogin(PlayerLoginEvent e) {
-                e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
                 e.setKickMessage(prefix+"§cDer Cloud-Server konnte nicht erreicht werden.");
+                e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
             }
 
             @EventHandler
