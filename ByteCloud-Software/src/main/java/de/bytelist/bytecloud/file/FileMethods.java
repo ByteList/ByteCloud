@@ -23,7 +23,7 @@ public class FileMethods {
             ZipOutputStream zos = new ZipOutputStream(fos);
 
             for(File file : files) {
-                ZipEntry ze= new ZipEntry(file.getName());
+                ZipEntry ze = new ZipEntry(file.getName());
                 zos.putNextEntry(ze);
                 FileInputStream in = new FileInputStream(file);
 
@@ -35,7 +35,6 @@ public class FileMethods {
             }
 
             zos.closeEntry();
-
             zos.close();
 
             return true;
@@ -44,5 +43,12 @@ public class FileMethods {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    public static boolean deleteFiles(List<File> files) {
+        for(File file : files) {
+            file.delete();
+        }
+        return true;
     }
 }

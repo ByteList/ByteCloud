@@ -3,7 +3,6 @@ package de.bytelist.bytecloud.server;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.file.FileMethods;
 import de.bytelist.bytecloud.server.group.ServerGroup;
 import de.bytelist.bytecloud.server.group.ServerGroupObject;
 import lombok.Getter;
@@ -13,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static de.bytelist.bytecloud.file.FileMethods.compressZipFile;
+import static de.bytelist.bytecloud.file.FileMethods.deleteFiles;
 
 /**
  * Created by ByteList on 27.01.2017.
@@ -118,13 +120,14 @@ public class ServerHandler {
             }
         }
 
-        FileMethods.compressZipFile(EnumFile.SERVERS_LOGS.getPath()+ByteCloud.getInstance().getCloudStarted(), files);
-
         try {
             Thread.sleep(3000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        compressZipFile(EnumFile.SERVERS_LOGS.getPath()+ByteCloud.getInstance().getCloudStarted(), files);
+        deleteFiles(files);
         System.out.println("Servers stopped!");
     }
 
