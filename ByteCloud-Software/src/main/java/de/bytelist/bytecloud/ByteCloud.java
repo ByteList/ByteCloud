@@ -298,7 +298,7 @@ public class ByteCloud {
                     if(!bungee.isRunning()) break;
                 }
                 if(startFallback.equals("true")) {
-                    String[] param = {"cd", "Fallback-Server/", "&&", "sh", "start.sh"};
+                    String[] param = {"sh", "Fallback-Server/start.sh"};
                     try {
                         Runtime.getRuntime().exec(param);
                     } catch (IOException e) {
