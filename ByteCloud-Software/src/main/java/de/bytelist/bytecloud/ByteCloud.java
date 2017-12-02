@@ -286,19 +286,6 @@ public class ByteCloud {
      */
     public void stop() {
         this.isRunning = false;
-        if(startFallback.equals("true")) {
-            Thread shutdownHook = new Thread(() -> {
-                String[] param = {"sh", "/home/minecraft/CloudSystem/Fallback-Server/start.sh"};
-                try {
-                    Runtime.getRuntime().exec(param);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            shutdownHook.setDaemon(true);
-            Runtime.getRuntime().addShutdownHook(shutdownHook);
-        }
-
         new Thread("Shutdown Thread") {
 
             @Override
@@ -325,6 +312,18 @@ public class ByteCloud {
     private void cleanStop() {
         for (Handler handler : getLogger().getHandlers()) {
             handler.close();
+        }
+        if(startFallback.equals("true")) {
+            Thread shutdownHook = new Thread(() -> {
+                String[] param = {"sh", "/home/minecraft/CloudSystem/Fallback-Server/start.sh"};
+                try {
+                    Runtime.getRuntime().exec(param);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            shutdownHook.setDaemon(true);
+            Runtime.getRuntime().addShutdownHook(shutdownHook);
         }
         System.exit( 0 );
     }
