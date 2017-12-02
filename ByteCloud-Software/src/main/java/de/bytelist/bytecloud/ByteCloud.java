@@ -306,6 +306,7 @@ public class ByteCloud {
                             e.printStackTrace();
                         }
                     });
+                    shutdownHook.setDaemon(true);
                     Runtime.getRuntime().addShutdownHook(shutdownHook);
                 }
 
