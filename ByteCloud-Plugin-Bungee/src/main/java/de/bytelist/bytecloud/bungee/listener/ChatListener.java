@@ -1,7 +1,6 @@
 package de.bytelist.bytecloud.bungee.listener;
 
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
-import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -24,7 +23,7 @@ public class ChatListener implements Listener {
             if(message.startsWith("/")) {
                 String command = message.split(" ")[0];
 
-                if (command.equalsIgnoreCase("/cloud") || command.equalsIgnoreCase("/cloudsystem") || command.equalsIgnoreCase("/bytecloud")) {
+                if (command.equalsIgnoreCase("/cloud")) {
                     player.sendMessage(byteCloudMaster.prefix + "§fByteCloud: v"+byteCloudMaster.getCloudHandler().getCloudVersion());
                     player.sendMessage(byteCloudMaster.prefix + "§fBungee: v"+byteCloudMaster.getVersion());
                 }

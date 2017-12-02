@@ -11,4 +11,3 @@ loadbefore: [GameChest, ClickAttack, Lobby, ShulkerDefence, JumpDuell, Survival,
 
 commands:
    cloud:
-      aliases: [bytecloud, cloudsystem]
