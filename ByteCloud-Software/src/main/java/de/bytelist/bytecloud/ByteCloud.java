@@ -315,7 +315,7 @@ public class ByteCloud {
         }
         if(startFallback.equals("true")) {
             Thread shutdownHook = new Thread(() -> {
-                String[] param = {"sh", "start_fallback.sh"};
+                String[] param = {"sh", System.getProperty("FallbackSh", "start_fallback.sh")};
                 try {
                     Runtime.getRuntime().exec(param);
                 } catch (IOException e) {
