@@ -21,9 +21,9 @@ public class FileFormatter extends Formatter {
         StringBuilder formatted = new StringBuilder();
 
         formatted.append(this.date.format(record.getMillis()));
-        formatted.append(" [");
+        formatted.append(" | ");
         formatted.append(record.getLoggerName());
-        formatted.append("] ");
+        formatted.append(" | ");
         formatted.append(record.getLevel().getName());
         formatted.append(" | ");
         formatted.append(formatMessage(record));

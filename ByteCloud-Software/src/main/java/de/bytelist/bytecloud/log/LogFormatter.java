@@ -23,12 +23,12 @@ public class LogFormatter extends Formatter {
         formatted.append(" ");
         formatted.append(AnsiColor.GREEN);
         formatted.append(this.date.format(record.getMillis()));
-        formatted.append(AnsiColor.DEFAULT);
-        formatted.append(" [");
+        formatted.append(AnsiColor.GRAY);
+        formatted.append(" | ");
         formatted.append(AnsiColor.CYAN);
         formatted.append(record.getLoggerName());
-        formatted.append(AnsiColor.DEFAULT);
-        formatted.append("] ");
+        formatted.append(AnsiColor.GRAY);
+        formatted.append(" | ");
         if(record.getLevel().getName().startsWith("INFO")) {
             formatted.append(AnsiColor.YELLOW);
         } else {
