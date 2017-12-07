@@ -24,7 +24,11 @@ public class LogFormatter extends Formatter {
         formatted.append(AnsiColor.GREEN);
         formatted.append(this.date.format(record.getMillis()));
         formatted.append(AnsiColor.DEFAULT);
-        formatted.append(" ");
+        formatted.append(" [");
+        formatted.append(AnsiColor.CYAN);
+        formatted.append(Thread.currentThread().getName());
+        formatted.append(AnsiColor.DEFAULT);
+        formatted.append("] ");
         if(record.getLevel().getName().startsWith("INFO")) {
             formatted.append(AnsiColor.YELLOW);
         } else {

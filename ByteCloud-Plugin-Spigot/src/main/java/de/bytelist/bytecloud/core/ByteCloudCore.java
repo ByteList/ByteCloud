@@ -8,9 +8,6 @@ import de.bytelist.bytecloud.network.server.ServerClient;
 import de.bytelist.bytecloud.network.server.packet.PacketInServer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -39,7 +36,7 @@ public class ByteCloudCore extends JavaPlugin {
 
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloudCore.class.getPackage().getImplementationVersion().split(":");
-        // 2.0-23:003425
+        // 2.0-23:0034258
         version = v[0]+":"+v[1].substring(0, 7);
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

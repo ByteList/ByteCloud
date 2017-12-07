@@ -41,7 +41,7 @@ public class TempServer extends Server {
         this.starter = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e"+getServerId()+"§7.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
         }
         if (process == null) {
             byteCloud.getLogger().info("Server " + serverId + " is starting on port " + port + ".");
@@ -68,7 +68,7 @@ public class TempServer extends Server {
         this.stopper = sender;
         if(!sender.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e"+getServerId()+"§7.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
         }
         if(this.process != null) {
             byteCloud.getLogger().info("Server " + serverId + " is stopping.");
@@ -103,7 +103,7 @@ public class TempServer extends Server {
 
         if(!stopper.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
         }
 
         byteCloud.getLogger().info("Server " + serverId + " stopped.");
@@ -121,13 +121,13 @@ public class TempServer extends Server {
                 this.getPort(), this.getServerState().name(), this.getMaxPlayer(), this.getMaxSpectator(), "Starting", null);
         if(!starter.equals("_cloud")) {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(starter, "§aServer §e"+getServerId()+"§a started.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
         }
     }
 
     @Override
     public void setServerState(ServerState serverState) {
-        ServerGroup serverGroup = ByteCloud.getInstance().getServerHandler().getServerGroups().getOrDefault("LOBBY", null);
+        ServerGroup serverGroup = byteCloud.getServerHandler().getServerGroups().getOrDefault("LOBBY", null);
         if(serverGroup != null) {
             PacketOutChangeServerState packetOutChangeServerState = new PacketOutChangeServerState(this.getServerId(), this.serverGroup.getGroupName(), getServerState().name(), serverState.name());
             for(String server : serverGroup.getServers()) {
