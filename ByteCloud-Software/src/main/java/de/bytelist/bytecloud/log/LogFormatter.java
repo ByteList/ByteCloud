@@ -26,7 +26,7 @@ public class LogFormatter extends Formatter {
         formatted.append(AnsiColor.DEFAULT);
         formatted.append(" [");
         formatted.append(AnsiColor.CYAN);
-        formatted.append(Thread.currentThread().getName());
+        formatted.append(record.getLoggerName());
         formatted.append(AnsiColor.DEFAULT);
         formatted.append("] ");
         if(record.getLevel().getName().startsWith("INFO")) {

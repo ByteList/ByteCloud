@@ -22,7 +22,7 @@ public class FileFormatter extends Formatter {
 
         formatted.append(this.date.format(record.getMillis()));
         formatted.append(" [");
-        formatted.append(Thread.currentThread().getName());
+        formatted.append(record.getLoggerName());
         formatted.append("] ");
         formatted.append(record.getLevel().getName());
         formatted.append(" | ");
