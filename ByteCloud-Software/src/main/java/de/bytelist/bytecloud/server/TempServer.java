@@ -75,8 +75,13 @@ public class TempServer extends Server {
             if (this.process != null) {
                 byteCloud.getLogger().info("Server " + serverId + " is stopping.");
                 if (this.process.isAlive()) {
-                    PacketOutMovePlayer packetOutMovePlayer = new PacketOutMovePlayer(byteCloud.getServerHandler().getRandomLobbyId(serverId), "§6Verbinde zur Lobby...");
-                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutMovePlayer);
+                    if(byteCloud.isRunning) {
+                        PacketOutMovePlayer packetOutMovePlayer = new PacketOutMovePlayer(byteCloud.getServerHandler().getRandomLobbyId(serverId), "§6Verbinde zur Lobby...");
+                        byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutMovePlayer);
+                    } else {
+                        PacketOutKickAllPlayers packetOutKickAllPlayers = new PacketOutKickAllPlayers("§cDas Cloud System wird gerade gestoppt.");
+                        byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickAllPlayers);
+                    }
                     while (true) {
                         if(byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt() == 0 &&
                                 byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt() == 0)

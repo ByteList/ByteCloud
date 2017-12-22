@@ -62,7 +62,7 @@ public class Bungee {
                 byteCloud.getLogger().info("Bungee is stopping.");
                 try {
                     Thread.sleep(3000L);
-                    this.process.getOutputStream().write("cloudend\n".getBytes());
+                    this.process.getOutputStream().write("end\n".getBytes());
                     this.process.getOutputStream().flush();
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
