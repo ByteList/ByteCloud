@@ -150,9 +150,9 @@ public class ByteCloud {
         cloudExecutor = new CloudExecutor();
         cloudExecutor.start();
 
-        // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
+        // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
-        // 2.0-23:0034258
+        // 2.0.23:0034258
         version = v[0]+":"+v[1].substring(0, 7);
 
         // This is a workaround for quite possibly the weirdest bug I have ever encountered in my life!

@@ -84,7 +84,7 @@
                     <archive>
                         <manifestEntries>
                             <Implementation-Title>${project.name}-${project.version}-${build.number}:${git.commit}</Implementation-Title>
-                            <Implementation-Version>${project.version}-${build.number}:${git.commit}</Implementation-Version>
+                            <Implementation-Version>${project.version}.${build.number}:${git.commit}</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
