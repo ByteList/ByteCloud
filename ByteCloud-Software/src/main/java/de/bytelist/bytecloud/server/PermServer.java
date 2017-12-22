@@ -1,11 +1,9 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutRegisterServer;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutUnregisterServer;
+import de.bytelist.bytecloud.network.cloud.packet.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -34,64 +32,79 @@ public class PermServer extends Server {
     @Override
     public boolean startServer(String sender) {
         this.starter = sender;
-        if(!sender.equals("_cloud")) {
-            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e"+getServerId()+"§7.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
-        }
-        if (process == null) {
-            byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
-            byteCloud.getServerHandler().registerServer(this);
-            String[] param =
-                    { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername="+serverId, "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
-                            "-jar", "spigot-"+ byteCloud.getCloudProperties().getProperty("spigot-version")+".jar", "-s",
-                            String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
-            ProcessBuilder pb = new ProcessBuilder(param);
-            pb.directory(directory);
-            try {
-                process = pb.start();
-                byteCloud.getServerHandler().setAreServersRunning();
-            } catch (IOException e) {
-                e.printStackTrace();
+        return byteCloud.getCloudExecutor().execute(()-> {
+            if(!sender.equals("_cloud")) {
+                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e"+getServerId()+"§7.");
+                byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
             }
-            return true;
-        }
-        return false;
+            if (process == null) {
+                byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
+                byteCloud.getServerHandler().registerServer(this);
+                String[] param =
+                        { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername="+serverId, "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
+                                "-jar", "spigot-"+ byteCloud.getCloudProperties().getProperty("spigot-version")+".jar", "-s",
+                                String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
+                ProcessBuilder pb = new ProcessBuilder(param);
+                pb.directory(directory);
+                try {
+                    process = pb.start();
+                    byteCloud.getServerHandler().setAreServersRunning();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
     public boolean stopServer(String sender) {
         this.stopper = sender;
-        if(!sender.equals("_cloud")) {
-            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent server §e"+getServerId()+"§7.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
-        }
-        if(this.process != null) {
-            byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
-            if(this.process.isAlive()) {
-                try {
-                    this.process.getOutputStream().write("stop\n".getBytes());
-                    this.process.getOutputStream().flush();
-                    Thread.sleep(1500L);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+        return byteCloud.getCloudExecutor().execute(()-> {
+            if(!sender.equals("_cloud")) {
+                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent server §e"+getServerId()+"§7.");
+                byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            }
+            if(this.process != null) {
+                byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
+                if(this.process.isAlive()) {
+                    PacketOutMovePlayer packetOutMovePlayer = new PacketOutMovePlayer(byteCloud.getServerHandler().getRandomLobbyId(), "§6Verbinde zur Lobby...");
+                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutMovePlayer);
+                    while (true) {
+                        if(byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt() == 0 &&
+                                byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt() == 0)
+                            break;
+                        else {
+                            try {
+                                Thread.sleep(2000L);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    try {
+                        this.process.getOutputStream().write("stop\n".getBytes());
+                        this.process.getOutputStream().flush();
+                        Thread.sleep(1500L);
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+                this.process.destroy();
             }
 
-            this.process.destroy();
-        }
+            byteCloud.getDatabaseServer().removeServer(this.serverId);
 
-        byteCloud.getDatabaseServer().removeServer(this.serverId);
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutUnregisterServer(serverId));
+            byteCloud.getServerHandler().unregisterServer(this);
 
-        byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutUnregisterServer(serverId));
-        byteCloud.getServerHandler().unregisterServer(this);
+            if(!stopper.equals("_cloud")) {
+                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
+                byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            }
 
-        if(!stopper.equals("_cloud")) {
-            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e"+getServerId()+"§a stopped.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
-        }
-
-        byteCloud.getLogger().info("Server " + serverId + " (permanent) stopped.");
-        return false;
+            byteCloud.getLogger().info("Server " + serverId + " (permanent) stopped.");
+        });
     }
 
     @Override

@@ -130,6 +130,11 @@ public class ByteCloud {
      * Arg: -Dde.bytelist.bytecloud.startFallback=false
      */
     private String startFallback;
+    /**
+     * The cloudExecutor executes all runnable's.
+     */
+    @Getter
+    private CloudExecutor cloudExecutor;
 
     /**
      * Initialise the cloud instance. This doesn't start anything!
@@ -141,6 +146,9 @@ public class ByteCloud {
         cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
         startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
+
+        cloudExecutor = new CloudExecutor();
+        cloudExecutor.start();
 
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");

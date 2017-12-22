@@ -41,31 +41,35 @@ public class Bungee {
     }
 
     public void startBungee() {
-        if (!isRunning()) {
-            byteCloud.getLogger().info("Bungee is starting.");
-            String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx1024M", "-Dde.bytelist.bytecloud.servername="+bungeeId, "-jar", "BungeeCord.jar", "noconsole" };
-            ProcessBuilder pb = new ProcessBuilder(param);
-            pb.directory(directory);
-            try {
-                process = pb.start();
-            } catch (IOException e) {
-                e.printStackTrace();
+        byteCloud.getCloudExecutor().execute(()-> {
+            if (!isRunning()) {
+                byteCloud.getLogger().info("Bungee is starting.");
+                String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx1024M", "-Dde.bytelist.bytecloud.servername="+bungeeId, "-jar", "BungeeCord.jar", "noconsole" };
+                ProcessBuilder pb = new ProcessBuilder(param);
+                pb.directory(directory);
+                try {
+                    process = pb.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        });
     }
 
     public void stopBungee() {
-        if(isRunning()) {
-            byteCloud.getLogger().info("Bungee is stopping.");
-            try {
-                Thread.sleep(3000L);
-                this.process.getOutputStream().write("cloudend\n".getBytes());
-                this.process.getOutputStream().flush();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+        byteCloud.getCloudExecutor().execute(()-> {
+            if(isRunning()) {
+                byteCloud.getLogger().info("Bungee is stopping.");
+                try {
+                    Thread.sleep(3000L);
+                    this.process.getOutputStream().write("cloudend\n".getBytes());
+                    this.process.getOutputStream().flush();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                byteCloud.getLogger().info("Bungee stopped.");
             }
-            byteCloud.getLogger().info("Bungee stopped.");
-        }
+        });
     }
 
     public void onStart() {
