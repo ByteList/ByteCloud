@@ -32,6 +32,9 @@ public class Updater {
             byteCloud.getLogger().info("Update found! Current build: "+currentBuildNumber+" - New build: "+lastStableBuildNumber);
             byteCloud.getLogger().info("Start downloading...");
             try {
+                if(!new File(".", "tempUpdate/").exists()) {
+                    new File(".", "tempUpdate/").mkdir();
+                }
                 String path = "https://vs.bytelist.de/jenkins/job/ByteCloud%20v2/lastSuccessfulBuild/artifact/";
                 byteCloud.getLogger().info(downloadFile(jenkinsAPI, path+"ByteCloud-Software/target/ByteCloud-Software.jar", "./tempUpdate/ByteCloud-Software.jar"));
                 byteCloud.getLogger().info(downloadFile(jenkinsAPI, path+"ByteCloud-Plugin-Spigot/target/ByteCloud-Plugin-Spigot.jar", "./tempUpdate/ByteCloud-Plugin-Spigot.jar"));
