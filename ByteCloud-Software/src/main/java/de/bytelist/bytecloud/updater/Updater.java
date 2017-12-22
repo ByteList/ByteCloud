@@ -29,7 +29,8 @@ public class Updater {
         int lastStableBuildNumber = Integer.parseInt(jenkinsAPI.getBuildNumber("https://vs.bytelist.de/jenkins/job/ByteCloud%20v2/lastSuccessfulBuild/"));
 
         if(currentBuildNumber < lastStableBuildNumber) {
-            byteCloud.getLogger().info("Update found! Start downloading...");
+            byteCloud.getLogger().info("Update found! Current build: "+currentBuildNumber+" - New build: "+lastStableBuildNumber);
+            byteCloud.getLogger().info("Start downloading...");
             try {
                 String path = "https://vs.bytelist.de/jenkins/job/ByteCloud%20v2/lastSuccessfulBuild/artifact/";
                 byteCloud.getLogger().info(downloadFile(jenkinsAPI, path+"ByteCloud-Software/target/ByteCloud-Software.jar", "./tempUpdate/ByteCloud-Software.jar"));
@@ -64,6 +65,8 @@ public class Updater {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            byteCloud.getLogger().info("No update found.");
         }
     }
 
