@@ -5,7 +5,6 @@ import com.voxelboxstudios.resilent.client.JsonClientListener;
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.network.cloud.packet.*;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.net.InetSocketAddress;
@@ -26,7 +25,7 @@ public class BungeeClientListener extends JsonClientListener {
             if(packet.equals(PacketOutKickAllPlayers.class.getSimpleName())) {
                 String reason = jsonObject.get("reason").getAsString();
                 for(ProxiedPlayer player : byteCloudMaster.getProxy().getPlayers()) {
-                    player.disconnect(reason);
+                    player.disconnect(reason.replace("#&C#", "§"));
                 }
             }
             if(packet.equals(PacketOutRegisterServer.class.getSimpleName())) {
@@ -47,7 +46,7 @@ public class BungeeClientListener extends JsonClientListener {
 
                 if(players.equals("_all")) {
                     for(ProxiedPlayer pp : byteCloudMaster.getProxy().getPlayers()) {
-                        pp.sendMessage("§c"+reason);
+                        pp.sendMessage("§c"+reason.replace("#&C#", "§"));
                         pp.connect(byteCloudMaster.getProxy().getServerInfo(toMoveServerId));
                     }
                 } else {

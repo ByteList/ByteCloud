@@ -191,6 +191,22 @@ public class ServerHandler {
         return lobbyServer.get(i);
     }
 
+    public String getRandomLobbyId(String excludeLobby) {
+        List<String> lobbyServer = new ArrayList<>();
+        lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("LOBBY"));
+        if(lobbyServer.contains(excludeLobby)) {
+            lobbyServer.remove(excludeLobby);
+        }
+
+        if(lobbyServer.size() < 1) {
+            return "null";
+        }
+
+        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
+
+        return lobbyServer.get(i);
+    }
+
     public int getDatabasePlayers(String serverId) {
         return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt();
     }

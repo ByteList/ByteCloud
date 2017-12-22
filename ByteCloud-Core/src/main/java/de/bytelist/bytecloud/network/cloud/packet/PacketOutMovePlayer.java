@@ -15,28 +15,28 @@ public class PacketOutMovePlayer extends Packet {
     public PacketOutMovePlayer(String serverId, String reason) {
         super("PacketOutMovePlayer");
         addProperty("serverId", serverId);
-        addProperty("reason", reason);
+        addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", "_all");
     }
 
     public PacketOutMovePlayer(String serverId, String reason, String player) {
         super("PacketOutMovePlayer");
         addProperty("serverId", serverId);
-        addProperty("reason", reason);
+        addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", player);
     }
 
     public PacketOutMovePlayer(String serverId, String reason, String... players) {
         super("PacketOutMovePlayer");
         addProperty("serverId", serverId);
-        addProperty("reason", reason);
+        addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", Joiner.on("#").join(players));
     }
 
     public PacketOutMovePlayer(String serverId, String reason, ArrayList<String> players) {
         super("PacketOutMovePlayer");
         addProperty("serverId", serverId);
-        addProperty("reason", reason);
+        addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", Joiner.on("#").join(players));
     }
 }

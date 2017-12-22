@@ -104,8 +104,7 @@ public class Updater {
         FileOutputStream fos = new FileOutputStream(downloadedFile);
         fos.write(response);
         fos.close();
-        System.out.println("Downloaded.");
-        return "Downloading" + url + " to " + downloadedFile;
+        return "Downloaded " + url + " to " + downloadedFile;
     }
 
     private String moveFile(File file, File to) {
