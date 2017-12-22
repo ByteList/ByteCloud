@@ -25,6 +25,14 @@
             <version>2.0</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>de.bytelist</groupId>
+            <artifactId>jenkins-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

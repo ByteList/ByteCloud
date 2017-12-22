@@ -13,6 +13,7 @@ import de.bytelist.bytecloud.log.LoggingOutPutStream;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.cloud.CloudServer;
 import de.bytelist.bytecloud.server.ServerHandler;
+import de.bytelist.bytecloud.updater.Updater;
 import jline.console.ConsoleReader;
 import lombok.Getter;
 import org.fusesource.jansi.AnsiConsole;
@@ -189,41 +190,8 @@ public class ByteCloud {
                         "         |___/                 b y   B y t e L i s t\n" +
                         "\n\n");
 
+        new Updater();
 
-//        Updater updater = new Updater(Integer.parseInt(v[0].split("-")[1]));
-//        if(!updater.isUpdated()) {
-//            this.logger.info("================================");
-//            this.logger.info("Cloud isn't up-to-date! Try to update it...");
-//
-//            Thread downloadThread = new Thread("Downloading Thread") {
-//                @Override
-//                public void run() {
-//                        updater.downloadFiles();
-//                        updater.extractFiles();
-//                }
-//            };
-//            downloadThread.start();
-//
-//            int i = 0;
-//            while (!updater.isFinished && downloadThread.isAlive()) {
-//                i++;
-//            }
-//
-//            if(updater.isSuccessful) {
-//                this.logger.info("Update was successful! (t=" + i + ")");
-//                this.logger.info("================================");
-//                cleanStop();
-//            } else {
-//                this.logger.warning("Update was not successful! (t=" + i + ")");
-//                this.logger.info("Creating directories manually...");
-//                for(EnumFile enumFile : EnumFile.values()) {
-//                    File file = new File(enumFile.getPath());
-//                    if(!file.exists())
-//                        file.mkdirs();
-//                }
-//                this.logger.info("Directories manually created.");
-//            }
-//        }
         for (EnumFile enumFile : EnumFile.values()) {
             File file = new File(enumFile.getPath());
             if (!file.exists())
