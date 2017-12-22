@@ -24,6 +24,13 @@
         <module>ByteCloud-Plugin-Fallback</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>byte-repo</id>
+            <url>https://vs.bytelist.de/nexus/repository/byte-repo/</url>
+        </repository>
+    </repositories>
+
     <properties>
         <build.number>unknown</build.number>
         <git.commit>unknown</git.commit>
