@@ -119,7 +119,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <file>target/classes/bungee.yml</file>
+                    <file>${project.artifactId}/target/classes/bungee.yml</file>
                     <replacements>
                         <replacement>
                             <token>version: mvn:unknown</token>

@@ -103,7 +103,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <file>target/classes/plugin.yml</file>
+                    <file>${project.artifactId}/target/classes/plugin.yml</file>
                     <replacements>
                         <replacement>
                             <token>version: mvn:unknown</token>
