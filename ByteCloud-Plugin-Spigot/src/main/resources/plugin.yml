@@ -1,13 +1,10 @@
 name: ByteCloudAPI
 version: mvn:unknown
-
-author: §cByteList
-website: https://bytelist.de/
-
+#description
+author: ByteList
 main: de.bytelist.bytecloud.core.ByteCloudCore
 
-#load: STARTUP
-loadbefore: [GameChest, ClickAttack, Lobby, ShulkerDefence, JumpDuell, Survival, DeathRun]
+loadbefore: [GameChest]
 
 commands:
    cloud:

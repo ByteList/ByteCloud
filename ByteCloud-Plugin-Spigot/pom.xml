@@ -109,6 +109,10 @@
                             <token>version: mvn:unknown</token>
                             <value>version: ${project.version}.${build.number}</value>
                         </replacement>
+                        <replacement>
+                            <token>#description</token>
+                            <value>description: Git: ${git.commit}</value>
+                        </replacement>
                     </replacements>
                 </configuration>
             </plugin>

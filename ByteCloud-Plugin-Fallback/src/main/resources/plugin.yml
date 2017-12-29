@@ -1,6 +1,6 @@
 name: ByteCloudFallback
 version: mvn:unknown
-author: §cByteList
-website: https://bytelist.de/
+#description
+author: ByteList
 
 main: de.bytelist.bytecloud.fallback.Fallback
