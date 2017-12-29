@@ -1,4 +1,4 @@
 name: ByteCloudAPI
-version: 2.1
+version: mvn:unknown
 author: ByteList
 main: de.bytelist.bytecloud.bungee.ByteCloudMaster
