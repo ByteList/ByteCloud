@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by ByteList on 28.05.2017.
@@ -76,7 +78,11 @@ public class TempServer extends Server {
                 byteCloud.getLogger().info("Server " + serverId + " is stopping.");
                 if (this.process.isAlive()) {
                     if(byteCloud.isRunning) {
-                        PacketOutMovePlayer packetOutMovePlayer = new PacketOutMovePlayer(byteCloud.getServerHandler().getRandomLobbyId(serverId), "§6Verbinde zur Lobby...");
+                        ArrayList<String> player = new ArrayList<>();
+                        Collections.addAll(player, byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYERS).getAsString().split(","));
+                        Collections.addAll(player, byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATORS).getAsString().split(","));
+
+                        PacketOutMovePlayer packetOutMovePlayer = new PacketOutMovePlayer(byteCloud.getServerHandler().getRandomLobbyId(serverId), "§6Verbinde zur Lobby...", player);
                         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutMovePlayer);
                     } else {
                         PacketOutKickAllPlayers packetOutKickAllPlayers = new PacketOutKickAllPlayers("§cDas Cloud System wird gerade gestoppt.");

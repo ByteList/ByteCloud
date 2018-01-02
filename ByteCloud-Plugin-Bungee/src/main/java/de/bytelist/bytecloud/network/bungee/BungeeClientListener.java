@@ -54,14 +54,14 @@ public class BungeeClientListener extends JsonClientListener {
                         for (String player : players.split("#")) {
                             ProxiedPlayer pp = byteCloudMaster.getProxy().getPlayer(player);
                             if (pp != null) {
-                                pp.sendMessage("§c" + reason);
+                                pp.sendMessage("§c"+reason.replace("#&C#", "§"));
                                 pp.connect(byteCloudMaster.getProxy().getServerInfo(toMoveServerId));
                             }
                         }
                     } else {
                         ProxiedPlayer pp = byteCloudMaster.getProxy().getPlayer(players);
                         if (pp != null) {
-                            pp.sendMessage("§c" + reason);
+                            pp.sendMessage("§c"+reason.replace("#&C#", "§"));
                             pp.connect(byteCloudMaster.getProxy().getServerInfo(toMoveServerId));
                         }
                     }
