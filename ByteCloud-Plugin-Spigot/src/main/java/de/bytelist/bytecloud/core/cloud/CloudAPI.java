@@ -71,6 +71,7 @@ public class CloudAPI {
      *
      * @param player
      */
+    @Deprecated
     public void addPlayer(Player player) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
         Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt()+1;
@@ -83,17 +84,51 @@ public class CloudAPI {
     }
 
     /**
+     * Add a playername to the player list in database and
+     * add 1 to the online player value.
+     *
+     * @param player
+     */
+    public void addPlayer(String player) {
+        String serverId = byteCloudCore.getCloudHandler().getServerId();
+        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt()+1;
+        String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS).getAsString();
+
+        connectedPlayer = connectedPlayer+(player+",");
+
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE, value);
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS, connectedPlayer);
+    }
+
+    /**
      * Remove a playername from the player list in database and
      * remove 1 from the online player value.
      *
      * @param player
      */
+    @Deprecated
     public void removePlayer(Player player) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
         Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt()-1;
         String connectedPlayer =  byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS).getAsString();
 
         connectedPlayer = connectedPlayer.replace(player.getName()+",", "");
+
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE, value);
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS, connectedPlayer);
+    }
+    /**
+     * Remove a playername from the player list in database and
+     * remove 1 from the online player value.
+     *
+     * @param player
+     */
+    public void removePlayer(String player) {
+        String serverId = byteCloudCore.getCloudHandler().getServerId();
+        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt()-1;
+        String connectedPlayer =  byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS).getAsString();
+
+        connectedPlayer = connectedPlayer.replace(player+",", "");
 
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE, value);
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS, connectedPlayer);
@@ -105,12 +140,29 @@ public class CloudAPI {
      *
      * @param spectator
      */
+    @Deprecated
     public void addSpectator(Player spectator) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
         Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt()+1;
         String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS).getAsString();
 
         connectedPlayer = connectedPlayer+(spectator.getName()+",");
+
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
+    }
+    /**
+     * Add a playername to the spectator list in database and
+     * add 1 to the online spectator value.
+     *
+     * @param spectator
+     */
+    public void addSpectator(String spectator) {
+        String serverId = byteCloudCore.getCloudHandler().getServerId();
+        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt()+1;
+        String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS).getAsString();
+
+        connectedPlayer = connectedPlayer+(spectator+",");
 
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
@@ -122,12 +174,29 @@ public class CloudAPI {
      *
      * @param spectator
      */
+    @Deprecated
     public void removeSpectator(Player spectator) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
         Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt()-1;
         String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS).getAsString();
 
         connectedPlayer = connectedPlayer.replace(spectator.getName()+",", "");
+
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
+    }
+    /**
+     * Remove a playername from the spectator list in database and
+     * remove 1 from the online spectator value.
+     *
+     * @param spectator
+     */
+    public void removeSpectator(String spectator) {
+        String serverId = byteCloudCore.getCloudHandler().getServerId();
+        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt()-1;
+        String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS).getAsString();
+
+        connectedPlayer = connectedPlayer.replace(spectator+",", "");
 
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
