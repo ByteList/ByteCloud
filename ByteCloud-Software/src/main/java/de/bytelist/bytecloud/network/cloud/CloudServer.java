@@ -23,13 +23,15 @@ public class CloudServer {
     @Getter
     private PacketServer packetServer;
 
-    public void startPacketServer() {
+    public boolean startPacketServer() {
         try {
             this.packetServer = new PacketServer(NetworkManager.getSocketPort());
             this.packetServer.addListener(new CloudServerListener());
             NetworkManager.getLogger().info("Packet-Server started!");
+            return true;
         } catch (IOException e) {
             NetworkManager.getLogger().warning("Error while starting Packet-Server: "+e);
+            return false;
         }
     }
 

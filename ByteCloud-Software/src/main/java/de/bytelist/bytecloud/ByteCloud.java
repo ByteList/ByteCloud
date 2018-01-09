@@ -199,6 +199,13 @@ public class ByteCloud {
         }
         this.cloudProperties = new CloudProperties();
 
+        NetworkManager.connect(Integer.valueOf(cloudProperties.getProperty("socket-port", "4213")), this.logger);
+        this.cloudServer = new CloudServer();
+        if(!this.cloudServer.startPacketServer()) {
+            cleanStop();
+            return;
+        }
+
         this.commandHandler = new CommandHandler();
 
         Command[] commands = {
@@ -233,9 +240,6 @@ public class ByteCloud {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        NetworkManager.connect(Integer.valueOf(cloudProperties.getProperty("socket-port", "4213")), this.logger);
-        this.cloudServer = new CloudServer();
     }
 
     /**
@@ -245,8 +249,6 @@ public class ByteCloud {
      */
     public void start() {
         isRunning = true;
-
-        this.cloudServer.startPacketServer();
 
         this.bungee.startBungee();
         try {

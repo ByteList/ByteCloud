@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 public class NetworkManager {
 
     private static int socketPort = 0;
+    @Getter
+    private static Logger logger;
 
     public static int getSocketPort() {
         if(socketPort < 4100 && socketPort > 6000) {
@@ -19,9 +21,6 @@ public class NetworkManager {
             return 4213;
         } else return socketPort;
     }
-
-    @Getter
-    private static Logger logger;
 
     public static void connect(int socketPort, Logger logger) {
             NetworkManager.socketPort = socketPort;
