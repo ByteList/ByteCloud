@@ -19,6 +19,11 @@ public class Screen {
     @Getter
     private Thread handled;
 
+    public Screen() {
+        this.screen = null;
+        this.handled = null;
+    }
+
     public void joinNewScreen(IScreen screen) {
         this.closeScreen();
         this.screen = screen;
