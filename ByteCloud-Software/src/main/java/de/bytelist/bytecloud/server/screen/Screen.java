@@ -29,7 +29,7 @@ public class Screen {
 
                 String input;
                 while((input = reader.readLine()) != null) {
-                    System.out.println("[" + screen.getServerId() + "] " + input);
+                    System.out.println(input);
                 }
 
                 this.handled = null;

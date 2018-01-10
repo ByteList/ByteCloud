@@ -13,6 +13,8 @@ import java.io.IOException;
  */
 public class ScreenCommand extends Command {
 
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+
     public ScreenCommand() {
         super("screen", "Screen addon commands");
     }
@@ -22,11 +24,11 @@ public class ScreenCommand extends Command {
         if(args.length == 1) {
             if(args[0].equalsIgnoreCase("leave")) {
                 try {
-                    ByteCloud.getInstance().getConsoleReader().clearScreen();
+                    byteCloud.getConsoleReader().clearScreen();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                ByteCloud.getInstance().getScreenSystem().closeScreen();
+                byteCloud.getScreenSystem().closeScreen();
                 System.out.println("Starting cloud system."+
                         "\n"+ AnsiColor.CYAN +"\n" +
                         "   ____        _        _____ _                 _ \n" +
@@ -38,6 +40,7 @@ public class ScreenCommand extends Command {
                         "          __/ | T I G E R\n" +
                         "         |___/                 b y   B y t e L i s t\n" +
                         "\n\n");
+                byteCloud.getLogger().info("** You leaved the screen.");
             }
         }
     }

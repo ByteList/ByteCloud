@@ -1,5 +1,7 @@
 package de.bytelist.bytecloud.log;
 
+import de.bytelist.bytecloud.ByteCloud;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
@@ -21,20 +23,22 @@ public class LogFormatter extends Formatter {
         StringBuilder formatted = new StringBuilder();
 
         formatted.append(" ");
-        formatted.append(AnsiColor.GREEN);
-        formatted.append(this.date.format(record.getMillis()));
-        formatted.append(AnsiColor.GRAY);
-        formatted.append(" | ");
-//        formatted.append(AnsiColor.CYAN);
-//        formatted.append(Thread.currentThread().getName());
-//        formatted.append(AnsiColor.GRAY);
-//        formatted.append(" | ");
-        if(record.getLevel().getName().startsWith("INFO")) {
-            formatted.append(AnsiColor.YELLOW);
+        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null) {
+            formatted.append(AnsiColor.GREEN);
+            formatted.append(this.date.format(record.getMillis()));
+            formatted.append(AnsiColor.GRAY);
+            formatted.append(" | ");
+            if(record.getLevel().getName().startsWith("INFO")) {
+                formatted.append(AnsiColor.YELLOW);
+            } else {
+                formatted.append(AnsiColor.RED);
+            }
+            formatted.append(record.getLevel().getName());
+
         } else {
             formatted.append(AnsiColor.RED);
+            formatted.append(ByteCloud.getInstance().getScreenSystem().getScreen().getServerId());
         }
-        formatted.append(record.getLevel().getName());
         formatted.append(AnsiColor.GRAY);
         formatted.append(" | ");
         formatted.append(AnsiColor.WHITE);

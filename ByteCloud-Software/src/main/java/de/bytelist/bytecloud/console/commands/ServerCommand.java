@@ -63,8 +63,9 @@ public class ServerCommand extends Command {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    byteCloud.getLogger().info("You are now in the screen session [" + server.getServerId() + "]");
-                    byteCloud.getLogger().info("You can leave with the command \"screen leave\"");
+                    byteCloud.getLogger().info("** You are now in the screen session [" + server.getServerId() + "]");
+                    byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
+                    return;
                 }
             }
         }
