@@ -5,6 +5,7 @@ import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
 import de.bytelist.bytecloud.network.cloud.packet.PacketOutRegisterServer;
 import de.bytelist.bytecloud.server.Server;
+import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class Bungee {
+public class Bungee implements IScreen {
 
     @Getter
     private String bungeeId;
@@ -104,4 +105,21 @@ public class Bungee {
         return this.process != null && this.process.isAlive();
     }
 
+    @Override
+    public void runCommand(String command) {
+        String x = command + "\n";
+        if (this.process != null) {
+            try {
+                this.process.getOutputStream().write(x.getBytes());
+                this.process.getOutputStream().flush();
+            } catch (IOException var4) {
+                var4.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public String getServerId() {
+        return bungeeId;
+    }
 }

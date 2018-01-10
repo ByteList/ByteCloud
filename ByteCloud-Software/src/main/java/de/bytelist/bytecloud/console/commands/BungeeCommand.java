@@ -58,6 +58,19 @@ public class BungeeCommand extends Command {
                     return;
                 }
             }
+            if(args[0].equalsIgnoreCase("screen")) {
+                if(!bungee.isRunning()) {
+                    byteCloud.getScreenSystem().joinNewScreen(bungee);
+                    try {
+                        Thread.sleep(500L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    byteCloud.getLogger().info("** You are now in the screen session [" + bungee.getServerId() + "]");
+                    byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
+                    return;
+                }
+            }
         }
         if(args.length > 1 && args[0].equals("exec")) {
             StringBuilder cmd = new StringBuilder();
