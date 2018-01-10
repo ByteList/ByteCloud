@@ -163,6 +163,8 @@ public class ByteCloud {
         cloudExecutor = new CloudExecutor();
         cloudExecutor.start();
 
+        this.screenSystem = new Screen();
+
         // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
         // 2.0.23:0034258
@@ -260,8 +262,6 @@ public class ByteCloud {
         for(Command command : commands) {
             this.commandHandler.registerCommand(command);
         }
-
-        this.screenSystem = new Screen();
 
         this.bungee = new Bungee();
         this.serverHandler = new ServerHandler();
