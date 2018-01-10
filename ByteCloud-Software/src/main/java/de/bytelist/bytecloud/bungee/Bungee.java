@@ -24,6 +24,8 @@ public class Bungee {
     private final File directory;
     @Getter
     private Process process;
+    @Getter
+    private int ramM;
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
@@ -33,6 +35,7 @@ public class Bungee {
         this.execByCommand = false;
         this.bungeeId = "Bungee-1";
         this.directory = new File(EnumFile.BUNGEE.getPath());
+        this.ramM = 1024;
         try {
             FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "cloud.properties"), new File(this.getDirectory(), "plugins/ByteCloud/cloud.properties"));
         } catch (IOException e) {
@@ -44,7 +47,7 @@ public class Bungee {
         byteCloud.getCloudExecutor().execute(()-> {
             if (!isRunning()) {
                 byteCloud.getLogger().info("Bungee is starting.");
-                String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx1024M", "-Dde.bytelist.bytecloud.servername="+bungeeId, "-jar", "BungeeCord.jar", "noconsole" };
+                String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx"+String.valueOf(ramM)+"M", "-Dde.bytelist.bytecloud.servername="+bungeeId, "-jar", "BungeeCord.jar", "noconsole" };
                 ProcessBuilder pb = new ProcessBuilder(param);
                 pb.directory(directory);
                 try {

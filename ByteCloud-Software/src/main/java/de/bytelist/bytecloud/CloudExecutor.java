@@ -36,4 +36,15 @@ public class CloudExecutor extends Thread {
     public boolean execute(Runnable runnable) {
         return !isInterrupted() && queue.add(runnable);
     }
+
+    public boolean execute(Runnable runnable, long sleepSeconds) {
+        return !isInterrupted() && queue.add(()-> {
+            try {
+                Thread.sleep(sleepSeconds*1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            runnable.run();
+        });
+    }
 }

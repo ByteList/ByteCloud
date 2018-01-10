@@ -35,24 +35,33 @@ public class PermServer extends Server {
     public boolean startServer(String sender) {
         this.starter = sender;
         return byteCloud.getCloudExecutor().execute(()-> {
-            if(!sender.equals("_cloud")) {
-                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e"+getServerId()+"§7.");
-                byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
-            }
-            if (process == null) {
-                byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
-                byteCloud.getServerHandler().registerServer(this);
-                String[] param =
-                        { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername="+serverId, "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
-                                "-jar", "spigot-"+ byteCloud.getCloudProperties().getProperty("spigot-version")+".jar", "-s",
-                                String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
-                ProcessBuilder pb = new ProcessBuilder(param);
-                pb.directory(directory);
-                try {
-                    process = pb.start();
-                    byteCloud.getServerHandler().setAreServersRunning();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if(byteCloud.getUsedMemory()+ramM < byteCloud.getMaxMemory()) {
+                if (!sender.equals("_cloud")) {
+                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
+                    byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+                }
+                if (process == null) {
+                    byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
+                    byteCloud.getServerHandler().registerServer(this);
+                    String[] param =
+                            {"java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername=" + serverId, "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
+                                    "-jar", "spigot-" + byteCloud.getCloudProperties().getProperty("spigot-version") + ".jar", "-s",
+                                    String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
+                    ProcessBuilder pb = new ProcessBuilder(param);
+                    pb.directory(directory);
+                    try {
+                        process = pb.start();
+                        byteCloud.getServerHandler().setAreServersRunning();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                if (!sender.equals("_cloud")) {
+                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cToo much servers are currently online!");
+                    byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+                } else {
+                    byteCloud.getLogger().info("Server " + serverId + " can't start! Too much servers are currently online!");
                 }
             }
         });
@@ -95,7 +104,7 @@ public class PermServer extends Server {
                         e.printStackTrace();
                     }
                 }
-
+                byteCloud.getScreenSystem().checkAndRemove(this);
                 this.process.destroy();
             }
 
@@ -129,4 +138,17 @@ public class PermServer extends Server {
     }
 
 
+    @Override
+    public void runCommand(String command) {
+        String x = command + "\n";
+        if (this.process != null) {
+            try {
+                this.process.getOutputStream().write(x.getBytes());
+                this.process.getOutputStream().flush();
+            } catch (IOException var4) {
+                var4.printStackTrace();
+            }
+
+        }
+    }
 }

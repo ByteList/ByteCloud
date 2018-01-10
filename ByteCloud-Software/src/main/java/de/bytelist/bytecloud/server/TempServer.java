@@ -109,6 +109,7 @@ public class TempServer extends Server {
                     }
                 }
 
+                byteCloud.getScreenSystem().checkAndRemove(this);
                 this.process.destroy();
 
                 try {
@@ -162,5 +163,19 @@ public class TempServer extends Server {
             }
         }
         super.setServerState(serverState);
+    }
+
+    @Override
+    public void runCommand(String command) {
+        String x = command + "\n";
+        if (this.process != null) {
+            try {
+                this.process.getOutputStream().write(x.getBytes());
+                this.process.getOutputStream().flush();
+            } catch (IOException var4) {
+                var4.printStackTrace();
+            }
+
+        }
     }
 }

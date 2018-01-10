@@ -12,7 +12,9 @@ import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.cloud.CloudServer;
+import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.ServerHandler;
+import de.bytelist.bytecloud.server.screen.Screen;
 import de.bytelist.bytecloud.updater.Updater;
 import jline.console.ConsoleReader;
 import lombok.Getter;
@@ -136,7 +138,17 @@ public class ByteCloud {
      */
     @Getter
     private CloudExecutor cloudExecutor;
-
+    /**
+     * This returns the max memory value.
+     * It can be changed in the config or with the system priority -Dde.bytelist.bytecloud.maxMem=*memoryInMB*
+     */
+    @Getter
+    private int maxMemory;
+    /**
+     *
+     */
+    @Getter
+    private Screen screenSystem;
     /**
      * Initialise the cloud instance. This doesn't start anything!
      *
@@ -199,9 +211,37 @@ public class ByteCloud {
         }
         this.cloudProperties = new CloudProperties();
 
+        try {
+            String host = this.cloudProperties.getProperty("mongo-host");
+            String database = this.cloudProperties.getProperty("mongo-database");
+            String user = this.cloudProperties.getProperty("mongo-user");
+            String password = this.cloudProperties.getProperty("mongo-password");
+
+            this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
+            this.databaseServer = this.databaseManager.getDatabaseServer();
+            if(this.databaseServer.getServer().size() > 0) {
+                for(String server : this.databaseServer.getServer()) {
+                    this.databaseServer.removeServer(server);
+                }
+            }
+            this.logger.info("Connected to database.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            cleanStop();
+            return;
+        }
+
         NetworkManager.connect(Integer.valueOf(cloudProperties.getProperty("socket-port", "4213")), this.logger);
         this.cloudServer = new CloudServer();
         if(!this.cloudServer.startPacketServer()) {
+            cleanStop();
+            return;
+        }
+
+        try {
+            maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.cloudProperties.getProperty("max-memory", "-1")));
+        } catch (NumberFormatException ex) {
+            System.err.println("Max memory size must be a number!");
             cleanStop();
             return;
         }
@@ -214,32 +254,17 @@ public class ByteCloud {
                 new PermanentServerCommand(),
                 new ServerCommand(),
                 new BungeeCommand(),
-                new EndCommand()
+                new EndCommand(),
+                new ScreenCommand()
         };
         for(Command command : commands) {
             this.commandHandler.registerCommand(command);
         }
 
+        this.screenSystem = new Screen();
+
         this.bungee = new Bungee();
         this.serverHandler = new ServerHandler();
-
-        String host = this.cloudProperties.getProperty("mongo-host");
-        String database = this.cloudProperties.getProperty("mongo-database");
-        String user = this.cloudProperties.getProperty("mongo-user");
-        String password = this.cloudProperties.getProperty("mongo-password");
-
-        try {
-            this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
-            this.databaseServer = this.databaseManager.getDatabaseServer();
-            if(this.databaseServer.getServer().size() > 0) {
-                for(String server : this.databaseServer.getServer()) {
-                    this.databaseServer.removeServer(server);
-                }
-            }
-            this.logger.info("Connected to database.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -339,5 +364,20 @@ public class ByteCloud {
                 }
             }
         }.start();
+    }
+
+    /**
+     * This returns the used memory fro mthe cloud system.
+     *
+     * @return used memory
+     */
+    public int getUsedMemory() {
+        int mem = 128;
+        for (Server server : serverHandler.getServers()) {
+            mem = mem + server.getRamM();
+        }
+
+        mem = mem + bungee.getRamM();
+        return mem;
     }
 }

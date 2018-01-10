@@ -107,7 +107,7 @@ public class ServerGroup extends Thread {
 
     public void startNewServer(String sender) {
         if(byteCloud.isRunning) {
-            if(this.servers.size() < max) {
+            if(byteCloud.getUsedMemory()+ram < byteCloud.getMaxMemory() && this.servers.size() < max) {
                 String serverId = generateServerId();
                 int port = getNextServerPort();
                 TempServer tempServer = new TempServer(serverId, port, this.ram, this.player, this.spectator, this);

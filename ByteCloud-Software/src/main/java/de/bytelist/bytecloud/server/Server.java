@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud.server;
 
+import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import java.io.File;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public abstract class Server implements Executable {
+public abstract class Server implements IScreen, Executable {
 
     @Getter
     protected String serverId;

@@ -51,6 +51,22 @@ public class ServerCommand extends Command {
                 }
                 return;
             }
+
+            if(args[0].equalsIgnoreCase("screen")) {
+                String serverName = args[1];
+                Server server = byteCloud.getServerHandler().getServer(serverName);
+
+                if(server != null) {
+                    byteCloud.getScreenSystem().joinNewScreen(server);
+                    try {
+                        Thread.sleep(500L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    byteCloud.getLogger().info("You are now in the screen session [" + server.getServerId() + "]");
+                    byteCloud.getLogger().info("You can leave with the command \"screen leave\"");
+                }
+            }
         }
 
         if(args.length == 1 && args[0].equalsIgnoreCase("list")) {
@@ -65,6 +81,7 @@ public class ServerCommand extends Command {
         System.out.println("Using server command:");
         System.out.println("server start <group>");
         System.out.println("server stop <id>");
+        System.out.println("server screen <id>");
         System.out.println("server list");
     }
 }

@@ -16,9 +16,11 @@ public class ByteCloudLauncher {
         byteCloud.start();
         byteCloud.startRestartThread();
 
-        String line;
-        while (byteCloud.isRunning && ( line = byteCloud.getConsoleReader().readLine( ">" ) ) != null) {
-            if(!byteCloud.getCommandHandler().dispatchCommand(line)) {
+        String input;
+        while (byteCloud.isRunning && ( input = byteCloud.getConsoleReader().readLine( ">" ) ) != null && !byteCloud.getCommandHandler().dispatchCommand(input)) {
+            if(byteCloud.getScreenSystem().getScreen() != null) {
+                byteCloud.getScreenSystem().getScreen().runCommand(input);
+            } else {
                 byteCloud.getLogger().info("** Command not found");
             }
         }

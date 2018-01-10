@@ -24,6 +24,8 @@ import static de.bytelist.bytecloud.file.FileMethods.deleteFiles;
  */
 public class ServerHandler {
 
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+
     @Getter
     private HashMap<String, ServerGroup> serverGroups;
     @Getter
@@ -85,8 +87,12 @@ public class ServerHandler {
         }
         for(ServerGroup serverGroup : serverGroups.values()) {
             serverGroup.onStart();
-            serverGroup.start();
         }
+        ByteCloud.getInstance().getCloudExecutor().execute(()-> {
+            for(ServerGroup serverGroup : serverGroups.values()) {
+                serverGroup.start();
+            }
+        }, 10);
     }
 
     public void stop() {
