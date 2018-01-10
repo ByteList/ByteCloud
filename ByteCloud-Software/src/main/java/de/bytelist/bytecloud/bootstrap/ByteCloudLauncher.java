@@ -12,17 +12,18 @@ public class ByteCloudLauncher {
     public static void main(String[] args) throws Exception {
 
         ByteCloud byteCloud = new ByteCloud();
-        byteCloud.getLogger().info("Enabled ByteCloud version " + byteCloud.getVersion()+".");
+        byteCloud.getLogger().info("Enabled ByteCloud version " + byteCloud.getVersion() + ".");
         byteCloud.start();
         byteCloud.startRestartThread();
 
         String input;
-        while (byteCloud.isRunning && ( input = byteCloud.getConsoleReader().readLine( ">" ) ) != null && !byteCloud.getCommandHandler().dispatchCommand(input)) {
-            if(byteCloud.getScreenSystem().getScreen() != null) {
-                byteCloud.getScreenSystem().getScreen().runCommand(input);
-            } else {
-                byteCloud.getLogger().info("** Command not found");
-            }
+        while (byteCloud.isRunning && (input = byteCloud.getConsoleReader().readLine(">")) != null) {
+            if (!byteCloud.getCommandHandler().dispatchCommand(input))
+                if (byteCloud.getScreenSystem().getScreen() != null) {
+                    byteCloud.getScreenSystem().getScreen().runCommand(input);
+                } else {
+                    byteCloud.getLogger().info("** Command not found");
+                }
         }
     }
 }
