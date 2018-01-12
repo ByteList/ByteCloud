@@ -97,26 +97,12 @@ public class ServerHandler {
 
     public void stop() {
         System.out.println("Stopping servers...");
-        Thread thread = new Thread("Server Stop Thread") {
-            @Override
-            public void run() {
-                ArrayList<Server> servers1 = new ArrayList<>();
-                servers1.addAll(getServers());
-                for(Server server : servers1) {
-                    server.stopServer("_cloud");
-                }
-                while (true) {
-                    if (servers.size() == 0) {
-                        areServersRunning = false;
-                        break;
-                    }
-                }
-            }
-        };
-        thread.start();
 
-        while (true) {
-            if(areServersRunning && thread.isAlive()) break;
+        for (Server server : new ArrayList<>(getServers())) {
+            server.stopServer("_cloud");
+            while (true) {
+                if(!server.isRunning()) break;
+            }
         }
 
         File logDir = new File(EnumFile.SERVERS_LOGS.getPath());

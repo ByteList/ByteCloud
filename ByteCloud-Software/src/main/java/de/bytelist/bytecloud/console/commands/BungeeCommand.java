@@ -59,7 +59,7 @@ public class BungeeCommand extends Command {
                 }
             }
             if(args[0].equalsIgnoreCase("screen")) {
-                if(!bungee.isRunning()) {
+                if(bungee.isRunning()) {
                     byteCloud.getScreenSystem().joinNewScreen(bungee);
                     try {
                         Thread.sleep(500L);
@@ -68,6 +68,9 @@ public class BungeeCommand extends Command {
                     }
                     byteCloud.getLogger().info("** You are now in the screen session [" + bungee.getServerId() + "]");
                     byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
+                    return;
+                } else {
+                    byteCloud.getLogger().info("Bungee isn't running!");
                     return;
                 }
             }
@@ -86,6 +89,7 @@ public class BungeeCommand extends Command {
                 "   bungee restart - Restarting the bungee.\n"+
                 "   bungee stop - Stopping the bungee.\n"+
                 "   bungee start - Starting the bungee.\n"+
+                "   bungee screen - Screen in the bungee.\n"+
                 "   bungee exec <command> - Execute a command on the bungee.\n");
     }
 }

@@ -89,8 +89,8 @@ public class TempServer extends Server {
                         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickAllPlayers);
                     }
                     while (true) {
-                        if(byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt() == 0 &&
-                                byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt() == 0)
+                        if(byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt() < 1 &&
+                                byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt() < 1)
                             break;
                         else {
                             try {
