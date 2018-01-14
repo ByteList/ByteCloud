@@ -7,7 +7,6 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.logging.Formatter;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
@@ -21,10 +20,22 @@ public class LogFormatter extends Formatter {
 
     @Override
     public String format(LogRecord record) {
+        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null) {
+            return formatted(record, true);
+        } else {
+            if(record.getMessage().startsWith("#%scr3En%#")) {
+                return formatted(record, false);
+            } else {
+                return formatted(record, true);
+            }
+        }
+    }
+
+    private String formatted(LogRecord record, boolean normal) {
         StringBuilder formatted = new StringBuilder();
 
         formatted.append(" ");
-        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null && record.getLevel() != Level.FINE) {
+        if(normal) {
             formatted.append(AnsiColor.GREEN);
             formatted.append(this.date.format(record.getMillis()));
             formatted.append(AnsiColor.GRAY);
@@ -35,7 +46,6 @@ public class LogFormatter extends Formatter {
                 formatted.append(AnsiColor.RED);
             }
             formatted.append(record.getLevel().getName());
-
         } else {
             formatted.append(AnsiColor.RED);
             formatted.append(ByteCloud.getInstance().getScreenSystem().getScreen().getServerId());
@@ -43,7 +53,7 @@ public class LogFormatter extends Formatter {
         formatted.append(AnsiColor.GRAY);
         formatted.append(" | ");
         formatted.append(AnsiColor.WHITE);
-        formatted.append(formatMessage(record));
+        formatted.append(formatMessage(record).replaceFirst("#%scr3En%#", ""));
         formatted.append(AnsiColor.DEFAULT);
         formatted.append('\n');
 
@@ -52,7 +62,6 @@ public class LogFormatter extends Formatter {
             record.getThrown().printStackTrace(new PrintWriter(writer));
             formatted.append(writer);
         }
-
         return formatted.toString();
     }
 }
