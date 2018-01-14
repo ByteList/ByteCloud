@@ -13,7 +13,7 @@ public class LogDispatcher extends Thread {
 
 
     private final CloudLogger logger;
-    private final BlockingQueue<DispatcherElement> queue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<LogRecord> queue = new LinkedBlockingQueue<>();
 
     public LogDispatcher(CloudLogger logger) {
         super("Cloud Logger Thread");
@@ -25,24 +25,21 @@ public class LogDispatcher extends Thread {
         while (!isInterrupted()) {
             LogRecord record;
             try {
-                DispatcherElement dispatcherElement = queue.take();
-                record = dispatcherElement.getLogRecord();
-                if (dispatcherElement.isFromScreen()) {
-                    logger.doScreen(record);
-                } else {
-                    logger.doLog(record);
-                }
-            } catch (InterruptedException ignored) { }
+                record = queue.take();
+            } catch (InterruptedException ex) {
+                continue;
+            }
 
+            logger.doLog(record);
         }
-        for (DispatcherElement dispatcherElement : queue) {
-            logger.doLog(dispatcherElement.getLogRecord());
+        for (LogRecord record : queue) {
+            logger.doLog(record);
         }
     }
 
-    public void queue(LogRecord record, boolean fromScreen) {
+    public void queue(LogRecord record) {
         if (!isInterrupted()) {
-            queue.add(new DispatcherElement(record, fromScreen));
+            queue.add(record);
         }
     }
 }

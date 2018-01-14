@@ -50,19 +50,15 @@ public class CloudLogger extends Logger {
     }
 
     public void screen(String s) {
-        dispatcher.queue(new LogRecord(Level.FINE, s), true);
+        dispatcher.queue(new LogRecord(Level.FINE, s));
     }
 
     @Override
     public void log(LogRecord record) {
-        dispatcher.queue(record, false);
+        dispatcher.queue(record);
     }
 
     void doLog(LogRecord record) {
-        super.log(record);
-    }
-
-    void doScreen(LogRecord record) {
         super.log(record);
     }
 }

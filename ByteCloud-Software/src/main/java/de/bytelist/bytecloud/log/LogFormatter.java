@@ -24,7 +24,7 @@ public class LogFormatter extends Formatter {
         StringBuilder formatted = new StringBuilder();
 
         formatted.append(" ");
-        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null || record.getLevel() != Level.FINE) {
+        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null && record.getLevel() != Level.FINE) {
             formatted.append(AnsiColor.GREEN);
             formatted.append(this.date.format(record.getMillis()));
             formatted.append(AnsiColor.GRAY);
