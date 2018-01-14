@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by ByteList on 14.05.2017.
@@ -55,7 +54,7 @@ public class ByteCloud {
      * The Logger is used to perform information's and so on to the log.
      */
     @Getter
-    private Logger logger;
+    private CloudLogger logger;
     /**
      * The CloudProperties are used to save data's for mongodb and communication systems.
      * In the future maybe replaced by a json format.

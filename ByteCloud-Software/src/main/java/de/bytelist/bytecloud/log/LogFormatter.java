@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.logging.Formatter;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
@@ -23,7 +24,7 @@ public class LogFormatter extends Formatter {
         StringBuilder formatted = new StringBuilder();
 
         formatted.append(" ");
-        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null) {
+        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null || record.getLevel() != Level.FINE) {
             formatted.append(AnsiColor.GREEN);
             formatted.append(this.date.format(record.getMillis()));
             formatted.append(AnsiColor.GRAY);

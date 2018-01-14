@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud.server.screen;
 
+import de.bytelist.bytecloud.ByteCloud;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -34,7 +35,7 @@ public class Screen {
 
                 String input;
                 while((input = reader.readLine()) != null) {
-                    System.out.println(input);
+                    ByteCloud.getInstance().getLogger().screen(input);
                 }
 
                 this.handled = null;

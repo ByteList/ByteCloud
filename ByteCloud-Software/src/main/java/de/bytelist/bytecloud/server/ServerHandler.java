@@ -176,7 +176,7 @@ public class ServerHandler {
 
     public String getRandomLobbyId() {
         List<String> lobbyServer = new ArrayList<>();
-        lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("LOBBY"));
+        lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("Lobby"));
 
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
@@ -185,7 +185,7 @@ public class ServerHandler {
 
     public String getRandomLobbyId(String excludeLobby) {
         List<String> lobbyServer = new ArrayList<>();
-        lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("LOBBY"));
+        lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("Lobby"));
         if(lobbyServer.contains(excludeLobby)) {
             lobbyServer.remove(excludeLobby);
         }
