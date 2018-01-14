@@ -28,7 +28,7 @@ public class TemplateCommand extends Command {
 
         if(args.length == 9) {
             if(args[0].equalsIgnoreCase("create")) {
-                String name = args[1].toUpperCase();
+                String name = args[1];
                 String prefix = args[2];
                 int amount = Integer.parseInt(args[3]);
                 int max = Integer.parseInt(args[4]);
@@ -37,7 +37,7 @@ public class TemplateCommand extends Command {
                 int ramM = Integer.parseInt(args[7]);
                 int port = Integer.parseInt(args[8]);
 
-                File dir = new File(EnumFile.TEMPLATES.getPath(), name);
+                File dir = new File(EnumFile.TEMPLATES.getPath(), name.toUpperCase());
                 if(!dir.exists()) dir.mkdirs();
                 File file = new File(dir, "settings.bci");
                 if (!file.exists())
@@ -48,6 +48,7 @@ public class TemplateCommand extends Command {
                     }
 
                 ArrayList<String> lines = new ArrayList<>();
+                lines.add("name=" + name);
                 lines.add("prefix=" + prefix);
                 lines.add("amount=" + amount);
                 lines.add("max=" + max);
@@ -68,8 +69,8 @@ public class TemplateCommand extends Command {
 
         if(args.length == 2) {
             if(args[0].equalsIgnoreCase("info")) {
-                String name = args[1].toUpperCase();
-                File file = new File(EnumFile.TEMPLATES.getPath()+name, "settings.bci");
+                String name = args[1];
+                File file = new File(EnumFile.TEMPLATES.getPath()+name.toUpperCase(), "settings.bci");
 
                 if (!file.exists()) {
                     logger.info("Can not find settings.bci for template " + name+"!");
@@ -87,8 +88,8 @@ public class TemplateCommand extends Command {
                 return;
             }
             if(args[0].equalsIgnoreCase("delete")) {
-                String name = args[1].toUpperCase();
-                File file = new File(EnumFile.TEMPLATES.getPath(), name);
+                String name = args[1];
+                File file = new File(EnumFile.TEMPLATES.getPath(), name.toUpperCase());
 
                 if (!file.exists()) {
                     logger.info("Can not find template directory for " + name);

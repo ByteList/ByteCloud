@@ -52,8 +52,8 @@ public class ServerGroup extends Thread {
     private ArrayList<Integer> usedPorts = new ArrayList<>();
 
     public ServerGroup(String group, ServerGroupObject serverGroupObject) {
-        super(group.toUpperCase());
-        this.groupName = group.toUpperCase();
+        super(group+"-Thread");
+        this.groupName = serverGroupObject.get("name").getAsString();
         this.prefix = serverGroupObject.get("prefix").getAsString();
         this.amount = serverGroupObject.get("amount").getAsInt();
         this.max = serverGroupObject.get("max").getAsInt();
@@ -62,7 +62,7 @@ public class ServerGroup extends Thread {
         this.spectator = serverGroupObject.get("spectator").getAsInt();
         this.ram = serverGroupObject.get("ram").getAsInt();
 
-        this.directory = new File(EnumFile.TEMPLATES.getPath(), group);
+        this.directory = new File(EnumFile.TEMPLATES.getPath(), group.toUpperCase());
     }
 
     @Override
