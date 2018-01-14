@@ -34,7 +34,7 @@ public class PermServer extends Server {
     @Override
     public boolean startServer(String sender) {
         this.starter = sender;
-        return byteCloud.getCloudExecutor().execute(()-> {
+        boolean b = byteCloud.getCloudExecutor().execute(()-> {
             if(byteCloud.getUsedMemory()+ramM < byteCloud.getMaxMemory()) {
                 if (!sender.equals("_cloud")) {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
@@ -65,18 +65,21 @@ public class PermServer extends Server {
                 }
             }
         });
+
+        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server "+serverId);
+        return b;
     }
 
     @Override
     public boolean stopServer(String sender) {
+        byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
         this.stopper = sender;
-        return byteCloud.getCloudExecutor().execute(()-> {
-            if(!sender.equals("_cloud")) {
-                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent server §e"+getServerId()+"§7.");
-                byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
-            }
+        if(!sender.equals("_cloud")) {
+            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent server §e"+getServerId()+"§7.");
+            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+        }
+        boolean b = byteCloud.getCloudExecutor().execute(()-> {
             if(this.process != null) {
-                byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
                 if(this.process.isAlive()) {
                     ArrayList<String> player = new ArrayList<>();
                     Collections.addAll(player, byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYERS).getAsString().split(","));
@@ -120,6 +123,9 @@ public class PermServer extends Server {
 
             byteCloud.getLogger().info("Server " + serverId + " (permanent) stopped.");
         });
+
+        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping server "+serverId);
+        return b;
     }
 
     @Override

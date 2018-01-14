@@ -88,11 +88,11 @@ public class ServerHandler {
         for(ServerGroup serverGroup : serverGroups.values()) {
             serverGroup.onStart();
         }
-        ByteCloud.getInstance().getCloudExecutor().execute(()-> {
+        if(!ByteCloud.getInstance().getCloudExecutor().execute(()-> {
             for(ServerGroup serverGroup : serverGroups.values()) {
                 serverGroup.start();
             }
-        }, 10);
+        }, 10)) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server groups.");
     }
 
     public void stop() {

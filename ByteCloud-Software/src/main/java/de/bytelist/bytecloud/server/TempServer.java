@@ -42,7 +42,7 @@ public class TempServer extends Server {
     @Override
     public boolean startServer(String sender) {
         this.starter = sender;
-        return byteCloud.getCloudExecutor().execute(() -> {
+        boolean b = byteCloud.getCloudExecutor().execute(() -> {
             if (!sender.equals("_cloud")) {
                 PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
                 byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
@@ -64,18 +64,21 @@ public class TempServer extends Server {
                 }
             }
         });
+
+        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server "+serverId);
+        return b;
     }
 
     @Override
     public boolean stopServer(String sender) {
+        byteCloud.getLogger().info("Server " + serverId + " is stopping.");
         this.stopper = sender;
-        return byteCloud.getCloudExecutor().execute(() -> {
-            if (!sender.equals("_cloud")) {
-                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e" + getServerId() + "§7.");
-                byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
-            }
+        if (!sender.equals("_cloud")) {
+            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e" + getServerId() + "§7.");
+            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+        }
+        boolean b = byteCloud.getCloudExecutor().execute(() -> {
             if (this.process != null) {
-                byteCloud.getLogger().info("Server " + serverId + " is stopping.");
                 if (this.process.isAlive()) {
                     if(byteCloud.isRunning) {
                         ArrayList<String> player = new ArrayList<>();
@@ -136,6 +139,8 @@ public class TempServer extends Server {
 
             byteCloud.getLogger().info("Server " + serverId + " stopped.");
         });
+        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping server "+serverId);
+        return b;
     }
 
     @Override
