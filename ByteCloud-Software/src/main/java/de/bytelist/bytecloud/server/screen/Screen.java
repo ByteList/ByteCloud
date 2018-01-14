@@ -34,7 +34,7 @@ public class Screen {
 
                 String input;
                 while((input = reader.readLine()) != null) {
-                    System.out.println("#%scr3En%#"+input);
+                    if(!input.equals(">")) System.out.println("#%scr3En%#"+input);
                 }
 
                 this.handled = null;
