@@ -56,11 +56,11 @@ public class CloudServer {
             this.ids.put(clientId, client);
             if(!this.patrons.containsKey(clientId)) {
                 this.patrons.put(clientId, patron);
-                NetworkManager.getLogger().info("Client "+patron.getID()+"("+client+") registered!");
+                NetworkManager.getLogger().info("Client "+client+" ("+patron.getID()+") registered!");
                 return;
             }
         }
-        NetworkManager.getLogger().warning("Client "+patron.getID()+"("+client+") can't registered!");
+        NetworkManager.getLogger().warning("Client "+client+" ("+patron.getID()+") can't registered!");
     }
 
     void unregisterClient(Patron patron) {
@@ -72,7 +72,11 @@ public class CloudServer {
             this.clients.remove(client);
         if(this.ids.containsKey(clientId))
             this.ids.remove(clientId);
-        NetworkManager.getLogger().info("Client "+patron.getID()+"("+client+") unregistered!");
+        NetworkManager.getLogger().info("Client "+client+" ("+patron.getID()+") unregistered!");
+    }
+
+    boolean isClient(Patron patron) {
+        return this.patrons.containsKey(patron.getID());
     }
 
     public void sendPacket(Patron patron, Packet packet) {

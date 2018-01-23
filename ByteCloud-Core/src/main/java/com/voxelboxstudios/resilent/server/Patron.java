@@ -93,7 +93,7 @@ public class Patron {
         return this.thread;
     }
 
-    public InetAddress getInetaddress() {
+    public InetAddress getInetAddress() {
         if (this.socket == null) {
             return null;
         }

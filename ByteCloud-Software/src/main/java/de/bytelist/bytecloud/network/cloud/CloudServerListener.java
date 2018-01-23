@@ -92,11 +92,15 @@ public class CloudServerListener extends JsonServerListener {
 
     @Override
     public void connected(Patron patron) {
-        NetworkManager.getLogger().info("Client "+patron.getID()+" connected. Waiting for response...");
+        NetworkManager.getLogger().info("Connection "+patron.getInetAddress().getHostAddress()+":"+patron.getSocket().getPort()+" connected. Waiting for response...");
     }
 
     @Override
     public void disconnected(Patron patron) {
-        byteCloud.getCloudServer().unregisterClient(patron);
+        if(byteCloud.getCloudServer().isClient(patron)) {
+            byteCloud.getCloudServer().unregisterClient(patron);
+        } else {
+            NetworkManager.getLogger().warning("Connection "+patron.getInetAddress().getHostAddress()+":"+patron.getSocket().getPort()+" disconnected and wasn't a client!");
+        }
     }
 }
