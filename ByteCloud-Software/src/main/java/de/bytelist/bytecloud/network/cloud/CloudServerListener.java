@@ -92,7 +92,7 @@ public class CloudServerListener extends JsonServerListener {
 
     @Override
     public void connected(Patron patron) {
-        NetworkManager.getLogger().info("Connection "+patron.getInetAddress().getHostAddress()+":"+patron.getSocket().getPort()+" ("+patron.getID()+") connected. Waiting for response...");
+        NetworkManager.getLogger().info("Connection "+patron.getInetAddress().getHostAddress()+":"+patron.getSocket().getPort()+" ("+patron.getID()+") connected.");
     }
 
     @Override
