@@ -71,7 +71,6 @@ public class Bungee implements IScreen {
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                byteCloud.getLogger().info("Bungee stopped.");
             }
         })) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping bungee "+bungeeId);
     }
@@ -91,7 +90,7 @@ public class Bungee implements IScreen {
 
     public void onStop() {
         try {
-            Thread.sleep(15000L);
+            Thread.sleep(5000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -99,6 +98,7 @@ public class Bungee implements IScreen {
             this.process.destroy();
             this.process = null;
         }
+        byteCloud.getLogger().info("Bungee stopped.");
     }
 
     public boolean isRunning() {
