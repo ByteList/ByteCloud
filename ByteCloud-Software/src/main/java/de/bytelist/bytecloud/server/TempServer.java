@@ -88,7 +88,7 @@ public class TempServer extends Server {
                         PacketOutMovePlayer packetOutMovePlayer = new PacketOutMovePlayer(byteCloud.getServerHandler().getRandomLobbyId(serverId), "§6Verbinde zur Lobby...", player);
                         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutMovePlayer);
                     } else {
-                        PacketOutKickAllPlayers packetOutKickAllPlayers = new PacketOutKickAllPlayers("§cDas Cloud System wird gerade gestoppt.");
+                        PacketOutKickAllPlayers packetOutKickAllPlayers = new PacketOutKickAllPlayers("§cDas Cloud-System wird gerade gestoppt.");
                         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickAllPlayers);
                     }
                     while (true) {
