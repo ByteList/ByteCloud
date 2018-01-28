@@ -1,7 +1,8 @@
 package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.core.ByteCloudCore;
-import de.bytelist.bytecloud.core.event.AsyncLobbyUpdateStateEvent;
+import de.bytelist.bytecloud.core.event.CloudServerUpdateEvent;
+import de.bytelist.bytecloud.core.event.CloudServerUpdateStateEvent;
 import de.bytelist.bytecloud.core.properties.CloudProperties;
 import de.bytelist.bytecloud.database.DatabaseElement;
 import de.bytelist.bytecloud.database.DatabaseManager;
@@ -23,7 +24,7 @@ public class CloudHandler {
     private DatabaseServer databaseServer;
     private DatabaseManager databaseManager;
     @Getter
-    private String serverId;
+    private String serverId, serverGroup;
 
     @Getter @Setter
     private String cloudVersion, cloudStarted;
@@ -37,6 +38,7 @@ public class CloudHandler {
         String password = CloudProperties.getCloudProperties().getProperty("mongo-password");
 
         this.serverId = System.getProperty("de.bytelist.bytecloud.servername", Bukkit.getServerName());
+        this.serverGroup = System.getProperty("de.bytelist.bytecloud.servergroup", "null");
 
         try {
             this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
@@ -131,10 +133,15 @@ public class CloudHandler {
         return uid;
     }
 
-    public void callAsyncLobbyUpdateStateEvent(String serverId, String serverGroup, CloudAPI.ServerState oldState, CloudAPI.ServerState newState) {
-        AsyncLobbyUpdateStateEvent asyncLobbyUpdateStateEvent = new AsyncLobbyUpdateStateEvent(
-                serverId, serverGroup, oldState, newState);
-        Bukkit.getPluginManager().callEvent(asyncLobbyUpdateStateEvent);
+    public void callCloudServerUpdateEvent(String serverId, String serverGroup) {
+        CloudServerUpdateEvent event = new CloudServerUpdateEvent(serverId, serverGroup);
+        Bukkit.getPluginManager().callEvent(event);
     }
+
+    public void callCloudServerUpdateStateEvent(String serverId, String serverGroup, CloudAPI.ServerState oldState, CloudAPI.ServerState newState) {
+        CloudServerUpdateStateEvent event = new CloudServerUpdateStateEvent(serverId, serverGroup, oldState, newState);
+        Bukkit.getPluginManager().callEvent(event);
+    }
+
 
 }

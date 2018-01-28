@@ -44,7 +44,7 @@ public class PermServer extends Server {
                     byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
                     byteCloud.getServerHandler().registerServer(this);
                     String[] param =
-                            {"java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername=" + serverId, "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
+                            {"java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername=" + serverId, "-Dde.bytelist.bytecloud.servergroup=PERMANENT", "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
                                     "-jar", "spigot-" + byteCloud.getCloudProperties().getProperty("spigot-version") + ".jar", "-s",
                                     String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
                     ProcessBuilder pb = new ProcessBuilder(param);

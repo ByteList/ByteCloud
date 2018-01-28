@@ -1,6 +1,5 @@
 package de.bytelist.bytecloud.core.event;
 
-import de.bytelist.bytecloud.core.cloud.CloudAPI;
 import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -10,7 +9,7 @@ import org.bukkit.event.HandlerList;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class AsyncLobbyUpdateStateEvent extends Event {
+public class CloudServerUpdateEvent extends Event {
 
     @Getter
     private static HandlerList handlerList = new HandlerList();
@@ -19,17 +18,10 @@ public class AsyncLobbyUpdateStateEvent extends Event {
     private String serverId;
     @Getter
     private String serverGroup;
-    @Getter
-    private CloudAPI.ServerState oldState;
-    @Getter
-    private CloudAPI.ServerState newState;
 
-    public AsyncLobbyUpdateStateEvent(String serverId, String serverGroup, CloudAPI.ServerState oldState, CloudAPI.ServerState newState) {
-        super(true);
+    public CloudServerUpdateEvent(String serverId, String serverGroup) {
         this.serverId = serverId;
         this.serverGroup = serverGroup;
-        this.oldState = oldState;
-        this.newState = newState;
     }
 
     @Override

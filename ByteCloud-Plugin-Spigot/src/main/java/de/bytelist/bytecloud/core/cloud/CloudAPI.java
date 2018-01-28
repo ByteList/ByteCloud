@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,14 +72,7 @@ public class CloudAPI {
      */
     @Deprecated
     public void addPlayer(Player player) {
-        String serverId = byteCloudCore.getCloudHandler().getServerId();
-        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt()+1;
-        String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS).getAsString();
-
-        connectedPlayer = connectedPlayer+(player.getName()+",");
-
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE, value);
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS, connectedPlayer);
+        addPlayer(player.getName());
     }
 
     /**
@@ -98,6 +90,8 @@ public class CloudAPI {
 
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE, value);
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS, connectedPlayer);
+
+        byteCloudCore.getCloudHandler().callCloudServerUpdateEvent(serverId, byteCloudCore.getCloudHandler().getServerGroup());
     }
 
     /**
@@ -108,14 +102,7 @@ public class CloudAPI {
      */
     @Deprecated
     public void removePlayer(Player player) {
-        String serverId = byteCloudCore.getCloudHandler().getServerId();
-        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt()-1;
-        String connectedPlayer =  byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS).getAsString();
-
-        connectedPlayer = connectedPlayer.replace(player.getName()+",", "");
-
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE, value);
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS, connectedPlayer);
+        removePlayer(player.getName());
     }
     /**
      * Remove a playername from the player list in database and
@@ -132,6 +119,8 @@ public class CloudAPI {
 
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYER_ONLINE, value);
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.PLAYERS, connectedPlayer);
+
+        byteCloudCore.getCloudHandler().callCloudServerUpdateEvent(serverId, byteCloudCore.getCloudHandler().getServerGroup());
     }
 
     /**
@@ -142,14 +131,7 @@ public class CloudAPI {
      */
     @Deprecated
     public void addSpectator(Player spectator) {
-        String serverId = byteCloudCore.getCloudHandler().getServerId();
-        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt()+1;
-        String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS).getAsString();
-
-        connectedPlayer = connectedPlayer+(spectator.getName()+",");
-
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
+        addSpectator(spectator.getName());
     }
     /**
      * Add a playername to the spectator list in database and
@@ -166,6 +148,8 @@ public class CloudAPI {
 
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
+
+        byteCloudCore.getCloudHandler().callCloudServerUpdateEvent(serverId, byteCloudCore.getCloudHandler().getServerGroup());
     }
 
     /**
@@ -176,14 +160,7 @@ public class CloudAPI {
      */
     @Deprecated
     public void removeSpectator(Player spectator) {
-        String serverId = byteCloudCore.getCloudHandler().getServerId();
-        Integer value = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt()-1;
-        String connectedPlayer = byteCloudCore.getCloudHandler().getDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS).getAsString();
-
-        connectedPlayer = connectedPlayer.replace(spectator.getName()+",", "");
-
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
+        removeSpectator(spectator.getName());
     }
     /**
      * Remove a playername from the spectator list in database and
@@ -200,6 +177,8 @@ public class CloudAPI {
 
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATOR_ONLINE, value);
         byteCloudCore.getCloudHandler().editDatabaseServerValue(serverId, DatabaseServerObject.SPECTATORS, connectedPlayer);
+
+        byteCloudCore.getCloudHandler().callCloudServerUpdateEvent(serverId, byteCloudCore.getCloudHandler().getServerGroup());
     }
 
     /**
@@ -211,16 +190,8 @@ public class CloudAPI {
      * @param player
      */
     public int moveToLobby(Player player) {
-        try {
-            ByteArrayOutputStream b = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(b);
-            out.writeUTF("Connect");
-            out.writeUTF(byteCloudCore.getCloudHandler().getRandomLobbyId());
-            player.sendPluginMessage(byteCloudCore, "BungeeCord", b.toByteArray());
-            return 0;
-        } catch (IOException e) {
-            return 2;
-        }
+        moveToServer(player, byteCloudCore.getCloudHandler().getRandomLobbyId());
+        return 0;
     }
 
     /**
@@ -261,8 +232,9 @@ public class CloudAPI {
      * @param motd
      */
     public void setMotd(String motd) {
-        byteCloudCore.getCloudHandler().editDatabaseServerValue(getServerId(), DatabaseServerObject.MOTD,
-                motd);
+        byteCloudCore.getCloudHandler().editDatabaseServerValue(getServerId(), DatabaseServerObject.MOTD, motd);
+
+        byteCloudCore.getCloudHandler().callCloudServerUpdateEvent(byteCloudCore.getCloudHandler().getServerId(), byteCloudCore.getCloudHandler().getServerGroup());
     }
 
     public void shutdown() {

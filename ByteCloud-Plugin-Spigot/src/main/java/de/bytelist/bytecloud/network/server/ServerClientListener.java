@@ -47,7 +47,7 @@ public class ServerClientListener extends JsonClientListener {
                         serverGroup = jsonObject.get("serverGroup").getAsString();
                 CloudAPI.ServerState oldState = CloudAPI.ServerState.valueOf(jsonObject.get("oldState").getAsString()),
                         newState = CloudAPI.ServerState.valueOf(jsonObject.get("newState").getAsString());
-                byteCloudCore.getCloudHandler().callAsyncLobbyUpdateStateEvent(serverId, serverGroup, oldState, newState);
+                byteCloudCore.getCloudHandler().callCloudServerUpdateStateEvent(serverId, serverGroup, oldState, newState);
             }
 
             if(packet.equals(PacketOutExecuteCommand.class.getSimpleName())) {
