@@ -20,11 +20,7 @@ public class ScreenCommand extends Command {
     public void execute(String[] args) {
         if(args.length == 1) {
             if(args[0].equalsIgnoreCase("leave")) {
-//                try {
-//                    byteCloud.getConsoleReader().clearScreen();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+//                try {+
                 byteCloud.getScreenSystem().closeScreen();
 //                System.out.println("Starting cloud system."+
 //                        "\n"+ AnsiColor.CYAN +"\n" +
