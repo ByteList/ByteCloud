@@ -34,7 +34,7 @@ public class Fallback extends JavaPlugin {
 
             @EventHandler
             public void onPing(ServerListPingEvent e) {
-                e.setMotd("§6Game-Chest.de §7\u00BB §cKeine Verbindung\n§4Der Cloud-Server kann nicht erreicht werden.");
+                e.setMotd("§6Game-Chest.de §7\u00BB §cKeine Verbindung\n§cDer Cloud-Server kann nicht erreicht werden");
                 e.setMaxPlayers(0);
             }
 
