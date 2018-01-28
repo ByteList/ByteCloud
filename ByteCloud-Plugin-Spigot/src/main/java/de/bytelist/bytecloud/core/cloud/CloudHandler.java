@@ -103,7 +103,7 @@ public class CloudHandler {
 
     public String getRandomLobbyId() {
         List<String> lobbyServer = new ArrayList<>();
-        lobbyServer.addAll(getServerInDatabase("LOBBY"));
+        lobbyServer.addAll(getServerInDatabase("Lobby"));
 
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
@@ -112,7 +112,7 @@ public class CloudHandler {
 
     public String getRandomLobbyId(String excludedLobbyId) {
         List<String> lobbyServer = new ArrayList<>();
-        for(String lb : getServerInDatabase("LOBBY"))
+        for(String lb : getServerInDatabase("Lobby"))
             if(!lb.equals(excludedLobbyId)) lobbyServer.add(lb);
 
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
