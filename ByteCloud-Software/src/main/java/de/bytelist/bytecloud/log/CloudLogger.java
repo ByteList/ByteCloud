@@ -30,7 +30,7 @@ public class CloudLogger extends Logger {
             File file = new File(EnumFile.CLOUD_LOGS.getPath());
             if (!file.exists()) file.mkdirs();
             String logFileName = EnumFile.CLOUD_LOGS.getPath() +
-                    date + ":" +
+                    date + "_" +
                     (file.exists() ? file.listFiles(file1 -> file1.getName().startsWith(date)).length : 0) + ".log";
 
 
