@@ -20,6 +20,10 @@ public class FileFormatter extends Formatter {
     public String format(LogRecord record) {
         StringBuilder formatted = new StringBuilder();
 
+        if(record.getMessage().startsWith("#%scr3En%#")) {
+            return null;
+        }
+
         formatted.append(this.date.format(record.getMillis()));
         formatted.append(" | ");
 //        formatted.append(record.getLoggerName());

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class CloudLogger extends Logger {
 
     private final LogDispatcher dispatcher = new LogDispatcher(this);
+    private final String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
     public CloudLogger(String name, ConsoleReader reader) {
         super(name, null);
@@ -28,9 +29,10 @@ public class CloudLogger extends Logger {
         try {
             File file = new File(EnumFile.CLOUD_LOGS.getPath());
             if (!file.exists()) file.mkdirs();
-            String logFileName = EnumFile.CLOUD_LOGS.getPath()
-                    + new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ":"
-                    + (file.exists() ? file.list().length : 0) + ".log";
+            String logFileName = EnumFile.CLOUD_LOGS.getPath() +
+                    date + ":" +
+                    (file.exists() ? file.listFiles(file1 -> file1.getName().startsWith(date)).length : 0) + ".log";
+
 
             FileHandler fileHandler = new FileHandler(logFileName);
             fileHandler.setFormatter(new FileFormatter());
