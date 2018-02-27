@@ -100,7 +100,7 @@ public class CloudServerListener extends JsonServerListener {
         if(byteCloud.getCloudServer().isClient(patron)) {
             byteCloud.getCloudServer().unregisterClient(patron);
         } else {
-            NetworkManager.getLogger().warning("Connection "+patron.getInetAddress().getHostAddress()+":"+patron.getSocket().getPort()+" ("+patron.getID()+")  disconnected. Wasn't a client!");
+            NetworkManager.getLogger().warning("Connection "+patron.getID()+" disconnected. Wasn't a client!");
         }
     }
 }
