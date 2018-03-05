@@ -34,7 +34,7 @@ public class Fallback extends JavaPlugin {
 
             @EventHandler
             public void onPing(ServerListPingEvent e) {
-                e.setMotd("§6Game-Chest§f.§6de §7\u00BB §eSurvival §f& §eSpielmodi §8[§b1.9 §f- §c1.12§8]\n§cDer Cloud-Server kann ist momentan offline");
+                e.setMotd("§6Game-Chest§f.§6de §7\u00BB §eSurvival §f& §eSpielmodi §8[§b1.9 §f- §c1.12§8]\n§cDer Cloud-Server ist momentan offline");
                 e.setMaxPlayers(0);
             }
 
