@@ -49,7 +49,6 @@ public class ByteCloudMaster extends Plugin {
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
         getProxy().getPluginManager().registerListener(this, new ChatListener());
-        getProxy().getPluginManager().unregisterListeners(instance);
 
         NetworkManager.connect(Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port", "4213")), getLogger());
         this.bungeeClient = new BungeeClient();
