@@ -144,10 +144,16 @@ public class ByteCloud {
     @Getter
     private int maxMemory;
     /**
-     *
+     * This returns the screen system.
      */
     @Getter
     private Screen screenSystem;
+    /**
+     * The serverIdOnConnect sets the server to connect on join.
+     */
+    @Getter
+    private String serverIdOnConnect;
+
     /**
      * Initialise the cloud instance. This doesn't start anything!
      *
@@ -158,6 +164,7 @@ public class ByteCloud {
         cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
         startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
+        serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", null);
 
         cloudExecutor = new CloudExecutor();
         cloudExecutor.start();

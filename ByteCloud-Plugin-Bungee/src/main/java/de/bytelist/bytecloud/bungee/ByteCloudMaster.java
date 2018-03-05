@@ -30,6 +30,8 @@ public class ByteCloudMaster extends Plugin {
     private CloudHandler cloudHandler;
     @Getter
     private BungeeClient bungeeClient;
+    @Getter
+    private String serverIdOnConnect;
 
     @Override
     public void onEnable() {
@@ -42,9 +44,12 @@ public class ByteCloudMaster extends Plugin {
         // 2.0-23:0034258
         version = v[0]+":"+v[1].substring(0, 7);
 
+        this.serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", null);
+
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
         getProxy().getPluginManager().registerListener(this, new ChatListener());
+        getProxy().getPluginManager().unregisterListeners(instance);
 
         NetworkManager.connect(Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port", "4213")), getLogger());
         this.bungeeClient = new BungeeClient();
