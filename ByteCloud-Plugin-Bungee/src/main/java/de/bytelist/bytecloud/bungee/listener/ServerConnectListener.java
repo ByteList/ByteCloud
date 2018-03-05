@@ -25,14 +25,9 @@ public class ServerConnectListener implements Listener {
             } else {
                 serverId = ByteCloudMaster.getInstance().getCloudHandler().getRandomLobbyId();
             }
-
+            System.out.println("ServerId: "+serverId);
             if(serverId != null) {
-                try {
-                    e.setTarget(ByteCloudMaster.getInstance().getProxy().getServerInfo(serverId));
-                } catch (NullPointerException ex) {
-                    ex.printStackTrace();
-                    e.setCancelled(true);
-                }
+                e.setTarget(ByteCloudMaster.getInstance().getProxy().getServerInfo(serverId));
             } else {
                 e.setCancelled(true);
             }
