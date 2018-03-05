@@ -44,7 +44,7 @@ public class ByteCloudMaster extends Plugin {
         // 2.0-23:0034258
         version = v[0]+":"+v[1].substring(0, 7);
 
-        this.serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", null);
+        this.serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
 
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());

@@ -20,7 +20,7 @@ public class ServerConnectListener implements Listener {
 
         if(from == null) {
             String serverId;
-            if(ByteCloudMaster.getInstance().getServerIdOnConnect() != null) {
+            if(!ByteCloudMaster.getInstance().getServerIdOnConnect().equals("-1")) {
                 serverId = ByteCloudMaster.getInstance().getServerIdOnConnect();
             } else {
                 serverId = ByteCloudMaster.getInstance().getCloudHandler().getRandomLobbyId();

@@ -48,10 +48,9 @@ public class Bungee implements IScreen {
         if(!byteCloud.getCloudExecutor().execute(()-> {
             if (!isRunning()) {
                 byteCloud.getLogger().info("Bungee is starting.");
-                String connectServerId = byteCloud.getServerIdOnConnect();
                 String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M",
                         "-Xmx"+String.valueOf(ramM)+"M", "-Dde.bytelist.bytecloud.servername="+bungeeId,
-                        (connectServerId != null ? "-Dde.bytelist.bytecloud.connectServer="+connectServerId : ""),
+                        "-Dde.bytelist.bytecloud.connectServer="+byteCloud.getServerIdOnConnect(),
                         "-Djline.terminal=jline.UnsupportedTerminal", "-DIReallyKnowWhatIAmDoingISwear=true", "-jar", "BungeeCord.jar" };
                 ProcessBuilder pb = new ProcessBuilder(param);
                 pb.directory(directory);
