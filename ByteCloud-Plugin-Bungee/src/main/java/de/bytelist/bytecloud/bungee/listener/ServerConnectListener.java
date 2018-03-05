@@ -29,12 +29,13 @@ public class ServerConnectListener implements Listener {
             if(serverId != null) {
                 try {
                     e.setTarget(ByteCloudMaster.getInstance().getProxy().getServerInfo(serverId));
-                    return;
                 } catch (NullPointerException ex) {
                     ex.printStackTrace();
+                    e.setCancelled(true);
                 }
+            } else {
+                e.setCancelled(true);
             }
-            e.setCancelled(true);
         }
     }
 }
