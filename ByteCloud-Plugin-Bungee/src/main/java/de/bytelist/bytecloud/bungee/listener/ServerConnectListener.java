@@ -12,6 +12,8 @@ import net.md_5.bungee.event.EventHandler;
  */
 public class ServerConnectListener implements Listener {
 
+    private final ByteCloudMaster byteCloudMaster = ByteCloudMaster.getInstance();
+
     @EventHandler
     public void onServerConnect(ServerConnectEvent e) {
         ProxiedPlayer pp = e.getPlayer();
@@ -19,22 +21,13 @@ public class ServerConnectListener implements Listener {
 
 
         if(from == null) {
-            String serverId;
-            if(!ByteCloudMaster.getInstance().getServerIdOnConnect().equals("-1")) {
-                serverId = ByteCloudMaster.getInstance().getServerIdOnConnect();
+            String serverId = byteCloudMaster.getServerIdOnConnect();
+            if(byteCloudMaster.getProxy().getServerInfo(serverId) != null) {
+                e.setTarget(byteCloudMaster.getProxy().getServerInfo(serverId));
             } else {
-                serverId = ByteCloudMaster.getInstance().getCloudHandler().getRandomLobbyId();
+                e.setTarget(byteCloudMaster.getProxy().getServerInfo(byteCloudMaster.getCloudHandler().getRandomLobbyId()));
             }
-
-            if(serverId != null) {
-                try {
-                    e.setTarget(ByteCloudMaster.getInstance().getProxy().getServerInfo(serverId));
-                    return;
-                } catch (NullPointerException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            e.setCancelled(true);
         }
     }
+
 }
