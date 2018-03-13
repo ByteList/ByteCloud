@@ -7,8 +7,10 @@ import de.bytelist.bytecloud.network.Packet;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
+@Deprecated
 public class PacketOutKickAllPlayers extends Packet {
 
+    @Deprecated
     public PacketOutKickAllPlayers(String reason) {
         super("PacketOutKickAllPlayers");
         reason = reason.replace("§", "#&C#");

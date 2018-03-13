@@ -68,6 +68,31 @@ public class BungeeClientListener extends JsonClientListener {
                 }
             }
 
+            if(packet.equals(PacketOutKickPlayer.class.getSimpleName())) {
+                String reason = jsonObject.get("reason").getAsString();
+                String players = jsonObject.get("players").getAsString();
+
+                if(players.equals("_all")) {
+                    for(ProxiedPlayer pp : byteCloudMaster.getProxy().getPlayers()) {
+                        pp.disconnect(reason.replace("#&C#", "§"));
+                    }
+                } else {
+                    if(players.contains("#")) {
+                        for (String player : players.split("#")) {
+                            ProxiedPlayer pp = byteCloudMaster.getProxy().getPlayer(player);
+                            if (pp != null) {
+                                pp.disconnect(reason.replace("#&C#", "§"));
+                            }
+                        }
+                    } else {
+                        ProxiedPlayer pp = byteCloudMaster.getProxy().getPlayer(players);
+                        if (pp != null) {
+                            pp.disconnect(reason.replace("#&C#", "§"));
+                        }
+                    }
+                }
+            }
+
             if(packet.equals(PacketOutSendMessage.class.getSimpleName())) {
                 String player = jsonObject.get("player").getAsString();
                 String message = jsonObject.get("message").getAsString().replace("#&C#", "§");
