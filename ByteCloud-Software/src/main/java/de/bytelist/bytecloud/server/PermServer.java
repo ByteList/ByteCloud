@@ -94,7 +94,7 @@ public class PermServer extends Server {
                             byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickPlayer);
                         }
                     } else {
-                        PacketOutKickPlayer packetOutKickPlayer = new PacketOutKickPlayer("§cDas Cloud-System wird gerade gestoppt.");
+                        PacketOutKickAllPlayers packetOutKickPlayer = new PacketOutKickAllPlayers("§cDas Cloud-System wird gerade gestoppt.");
                         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickPlayer);
                     }
                     while (true) {
