@@ -23,7 +23,7 @@ public class ResilentServer {
     }
 
     public void start(int port) throws IOException {
-        this.socket = new ServerSocket(port, 50, InetAddress.getLocalHost());
+        this.socket = new ServerSocket(port, 50, InetAddress.getByName("127.0.0.1"));
         this.thread = new Thread(new ResilentServerRunnable(this), "Packet-Thread");
         this.thread.start();
     }
