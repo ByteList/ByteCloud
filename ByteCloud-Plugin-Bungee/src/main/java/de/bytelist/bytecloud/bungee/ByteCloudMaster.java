@@ -1,7 +1,6 @@
 package de.bytelist.bytecloud.bungee;
 
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
-import de.bytelist.bytecloud.bungee.listener.ChatListener;
 import de.bytelist.bytecloud.bungee.listener.LoginListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
 import de.bytelist.bytecloud.bungee.properties.CloudProperties;
@@ -48,7 +47,6 @@ public class ByteCloudMaster extends Plugin {
 
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
-        getProxy().getPluginManager().registerListener(this, new ChatListener());
 
         NetworkManager.connect(Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port", "4213")), getLogger());
         this.bungeeClient = new BungeeClient();
