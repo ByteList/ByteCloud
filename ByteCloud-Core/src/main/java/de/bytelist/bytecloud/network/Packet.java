@@ -10,15 +10,15 @@ import lombok.Getter;
  */
 public abstract class Packet {
     @Getter
-    private final String name;
+    private final PacketName name;
 
     private JsonObject jsonObject;
 
 
-    public Packet(String name) {
+    public Packet(PacketName name) {
         this.name = name;
         this.jsonObject = new JsonObject();
-        this.jsonObject.addProperty("packet", name);
+        this.jsonObject.addProperty("packet", name.getPacketName());
     }
 
     public void addProperty(String property, String value) {
@@ -29,23 +29,4 @@ public abstract class Packet {
         return jsonObject;
     }
 
-//    public enum PacketType {
-//        OUT("Out"),
-//        IN("In");
-//
-//        public String $;
-//
-//        PacketType(String $) {
-//            this.$ = $;
-//        }
-//
-////        public static PacketType getPacketTypeFromT(Class<?> clazz) {
-////            for(PacketType packetType : PacketType.values()) {
-////                if(packetType.$$ == clazz) {
-////                    return packetType;
-////                }
-////            }
-////            throw new IllegalArgumentException(clazz.getSimpleName() + "isn't a Packet Specifier!");
-////        }
-//    }
 }

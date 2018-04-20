@@ -1,6 +1,7 @@
-package de.bytelist.bytecloud.network.server.packet;
+package de.bytelist.bytecloud.network.server;
 
 import de.bytelist.bytecloud.network.Packet;
+import de.bytelist.bytecloud.network.PacketName;
 
 /**
  * Created by ByteList on 14.05.2017.
@@ -10,7 +11,7 @@ import de.bytelist.bytecloud.network.Packet;
 public class PacketInServer extends Packet {
 
     public PacketInServer(String serverId) {
-        super("PacketInServer");
+        super(PacketName.IN_SERVER);
         addProperty("serverId", serverId);
     }
 }

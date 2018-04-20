@@ -5,14 +5,7 @@ import com.voxelboxstudios.resilent.server.JsonServerListener;
 import com.voxelboxstudios.resilent.server.Patron;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.network.NetworkManager;
-import de.bytelist.bytecloud.network.bungee.packet.PacketInBungee;
-import de.bytelist.bytecloud.network.bungee.packet.PacketInBungeeStopped;
-import de.bytelist.bytecloud.network.bungee.packet.PacketInStartServer;
-import de.bytelist.bytecloud.network.bungee.packet.PacketInStopServer;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
-import de.bytelist.bytecloud.network.server.packet.PacketInChangeServerState;
-import de.bytelist.bytecloud.network.server.packet.PacketInServer;
-import de.bytelist.bytecloud.network.server.packet.PacketInStopOwnServer;
+import de.bytelist.bytecloud.network.PacketName;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.group.ServerGroup;
 
@@ -28,64 +21,89 @@ public class CloudServerListener extends JsonServerListener {
     @Override
     public void jsonReceived(Patron patron, JsonObject jsonObject) {
         if(jsonObject.has("packet")) {
-            String packet = jsonObject.get("packet").getAsString();
-            if(packet.equals(PacketInServer.class.getSimpleName())) {
-                String serverId = jsonObject.get("serverId").getAsString();
-                byteCloud.getCloudServer().registerClient(serverId, patron);
-                byteCloud.getServerHandler().getServer(serverId).onStart();
-            }
-            if(packet.equals(PacketInBungee.class.getSimpleName())) {
-                String bungeeId = jsonObject.get("bungeeId").getAsString();
-                byteCloud.getCloudServer().registerClient(bungeeId, patron);
-                byteCloud.getBungee().onStart();
-            }
-            if(packet.equals(PacketInBungeeStopped.class.getSimpleName())) {
-                byteCloud.getBungee().onStop();
-            }
-            if(packet.equals(PacketInStartServer.class.getSimpleName())) {
-                String group = jsonObject.get("group").getAsString();
-                String sender = jsonObject.get("sender").getAsString();
+            PacketName packet = PacketName.getPacketName(jsonObject.get("packet").getAsString());
+            String group, serverId, sender;
 
-                ServerGroup serverGroup = null;
-                for (ServerGroup sg : byteCloud.getServerHandler().getServerGroups().values()) {
-                    if (sg.getGroupName().equalsIgnoreCase(group)) {
-                        serverGroup = sg;
-                        break;
+            switch (packet) {
+                case IN_SERVER:
+                    serverId = jsonObject.get("serverId").getAsString();
+                    byteCloud.getCloudServer().registerClient(serverId, patron);
+                    byteCloud.getServerHandler().getServer(serverId).onStart();
+                    break;
+                case NULL:
+                    break;
+                case IN_BUNGEE:
+                    String bungeeId = jsonObject.get("bungeeId").getAsString();
+                    byteCloud.getCloudServer().registerClient(bungeeId, patron);
+                    byteCloud.getBungee().onStart();
+                    break;
+                case IN_BUNGEE_STPOPPED:
+                    byteCloud.getBungee().onStop();
+                    break;
+                case IN_START_SERVER:
+                    group = jsonObject.get("group").getAsString();
+                    sender = jsonObject.get("sender").getAsString();
+
+                    ServerGroup serverGroup = null;
+                    for (ServerGroup sg : byteCloud.getServerHandler().getServerGroups().values()) {
+                        if (sg.getGroupName().equalsIgnoreCase(group)) {
+                            serverGroup = sg;
+                            break;
+                        }
                     }
-                }
-                if(serverGroup != null) {
-                    serverGroup.startNewServer(sender);
-                } else {
-                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server group does not exist.");
-                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
-                }
-            }
-            if(packet.equals(PacketInStopServer.class.getSimpleName())) {
-                String serverId = jsonObject.get("serverId").getAsString();
-                String sender = jsonObject.get("sender").getAsString();
+                    if(serverGroup != null) {
+                        serverGroup.startNewServer(sender);
+                    } else {
+                        PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server group does not exist.");
+                        byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+                    }
+                    break;
+                case IN_STOP_SERVER:
+                    serverId = jsonObject.get("serverId").getAsString();
+                    sender = jsonObject.get("sender").getAsString();
 
-                if(byteCloud.getServerHandler().existsServer(serverId)) {
-                    Server server = byteCloud.getServerHandler().getServer(serverId);
-                    server.stopServer(sender);
-                } else {
-                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server does not exist.");
-                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
-                }
-            }
-            if(packet.equals(PacketInStopOwnServer.class.getSimpleName())) {
-                String serverId = jsonObject.get("serverId").getAsString();
-                if(byteCloud.getServerHandler().existsServer(serverId)) {
-                    Server server = byteCloud.getServerHandler().getServer(serverId);
-                    server.stopServer("_cloud");
-                }
-            }
-
-            if(packet.equals(PacketInChangeServerState.class.getSimpleName())) {
-                String serverId = jsonObject.get("serverId").getAsString();
-                if(byteCloud.getServerHandler().existsServer(serverId)) {
-                    Server server = byteCloud.getServerHandler().getServer(serverId);
-                    server.setServerState(Server.ServerState.valueOf(jsonObject.get("serverState").getAsString()));
-                }
+                    if(byteCloud.getServerHandler().existsServer(serverId)) {
+                        Server server = byteCloud.getServerHandler().getServer(serverId);
+                        server.stopServer(sender);
+                    } else {
+                        PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cThis server does not exist.");
+                        byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+                    }
+                    break;
+                case IN_CHANGE_SERVER_STATE:
+                    serverId = jsonObject.get("serverId").getAsString();
+                    if(byteCloud.getServerHandler().existsServer(serverId)) {
+                        Server server = byteCloud.getServerHandler().getServer(serverId);
+                        server.setServerState(Server.ServerState.valueOf(jsonObject.get("serverState").getAsString()));
+                    }
+                    break;
+                case IN_KICK_PLAYER:
+                    break;
+                case IN_STOP_OWN_SERVER:
+                    serverId = jsonObject.get("serverId").getAsString();
+                    if(byteCloud.getServerHandler().existsServer(serverId)) {
+                        Server server = byteCloud.getServerHandler().getServer(serverId);
+                        server.stopServer("_cloud");
+                    }
+                    break;
+                case OUT_CHANGE_SERVER_STATE:
+                    break;
+                case OUT_CLOUD_INFO:
+                    break;
+                case OUT_EXECUTE_COMMAND:
+                    break;
+                case OUT_KICK_ALL_PLAYERS:
+                    break;
+                case OUT_KICK_PLAYER:
+                    break;
+                case OUT_MOVE_PLAYER:
+                    break;
+                case OUT_REGISTER_PLAYER:
+                    break;
+                case OUT_SEND_MESSAGE:
+                    break;
+                case OUT_UNREGISTER_SERVER:
+                    break;
             }
         }
     }

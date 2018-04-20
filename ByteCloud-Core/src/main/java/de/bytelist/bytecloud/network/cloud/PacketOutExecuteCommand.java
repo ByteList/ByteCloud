@@ -1,6 +1,7 @@
-package de.bytelist.bytecloud.network.cloud.packet;
+package de.bytelist.bytecloud.network.cloud;
 
 import de.bytelist.bytecloud.network.Packet;
+import de.bytelist.bytecloud.network.PacketName;
 
 /**
  * Created by ByteList on 07.08.2017.
@@ -10,7 +11,7 @@ import de.bytelist.bytecloud.network.Packet;
 public class PacketOutExecuteCommand extends Packet {
 
     public PacketOutExecuteCommand(String command) {
-        super("PacketOutExecuteCommand");
+        super(PacketName.OUT_EXECUTE_COMMAND);
         addProperty("command", command);
     }
 }

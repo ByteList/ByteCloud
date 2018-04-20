@@ -1,6 +1,7 @@
-package de.bytelist.bytecloud.network.bungee.packet;
+package de.bytelist.bytecloud.network.bungee;
 
 import de.bytelist.bytecloud.network.Packet;
+import de.bytelist.bytecloud.network.PacketName;
 
 /**
  * Created by ByteList on 28.05.2017.
@@ -11,7 +12,7 @@ public class PacketInBungee extends Packet {
 
 
     public PacketInBungee(String bungeeId, Integer port) {
-        super("PacketInBungee");
+        super(PacketName.IN_BUNGEE);
 
         addProperty("bungeeId", bungeeId);
         addProperty("port", port.toString());

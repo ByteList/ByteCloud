@@ -1,7 +1,8 @@
-package de.bytelist.bytecloud.network.cloud.packet;
+package de.bytelist.bytecloud.network.cloud;
 
 import com.google.common.base.Joiner;
 import de.bytelist.bytecloud.network.Packet;
+import de.bytelist.bytecloud.network.PacketName;
 
 import java.util.ArrayList;
 
@@ -13,25 +14,25 @@ import java.util.ArrayList;
 public class PacketOutKickPlayer extends Packet {
 
     public PacketOutKickPlayer(String reason) {
-        super("PacketOutKickPlayer");
+        super(PacketName.OUT_KICK_PLAYER);
         addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", "_all");
     }
 
     public PacketOutKickPlayer(String reason, String player) {
-        super("PacketOutKickPlayer");
+        super(PacketName.OUT_KICK_PLAYER);
         addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", player);
     }
 
     public PacketOutKickPlayer(String reason, String... players) {
-        super("PacketOutKickPlayer");
+        super(PacketName.OUT_KICK_PLAYER);
         addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", Joiner.on("#").join(players));
     }
 
     public PacketOutKickPlayer(String reason, ArrayList<String> players) {
-        super("PacketOutKickPlayer");
+        super(PacketName.OUT_KICK_PLAYER);
         addProperty("reason", reason.replace("§", "#&C#"));
         addProperty("players", Joiner.on("#").join(players));
     }

@@ -3,7 +3,7 @@ package de.bytelist.bytecloud.console.commands;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.bungee.Bungee;
 import de.bytelist.bytecloud.console.Command;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutExecuteCommand;
+import de.bytelist.bytecloud.network.cloud.PacketOutExecuteCommand;
 
 /**
  * Created by ByteList on 24.07.2017.

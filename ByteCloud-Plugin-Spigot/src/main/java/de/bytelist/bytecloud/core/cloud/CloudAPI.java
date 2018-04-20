@@ -2,8 +2,8 @@ package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
-import de.bytelist.bytecloud.network.server.packet.PacketInChangeServerState;
-import de.bytelist.bytecloud.network.server.packet.PacketInStopOwnServer;
+import de.bytelist.bytecloud.network.server.PacketInChangeServerState;
+import de.bytelist.bytecloud.network.server.PacketInStopOwnServer;
 import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CloudAPI {
 
-    public final ByteCloudCore byteCloudCore = ByteCloudCore.getInstance();
+    private final ByteCloudCore byteCloudCore = ByteCloudCore.getInstance();
 
     /**
      * Gets all active server id's in a string list.
@@ -56,7 +56,7 @@ public class CloudAPI {
      * If you have a server name for example lb-01
      * you can get the id from this server.
      *
-     * @param serverName
+     * @param serverName name of the server
      * @return String - server id
      */
     public String getServerUniqueId(String serverName) {
@@ -68,7 +68,7 @@ public class CloudAPI {
      * Add a playername to the player list in database and
      * add 1 to the online player value.
      *
-     * @param player
+     * @param player player object
      */
     @Deprecated
     public void addPlayer(Player player) {
@@ -79,7 +79,7 @@ public class CloudAPI {
      * Add a playername to the player list in database and
      * add 1 to the online player value.
      *
-     * @param player
+     * @param player player object
      */
     public void addPlayer(String player) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
@@ -98,7 +98,7 @@ public class CloudAPI {
      * Remove a playername from the player list in database and
      * remove 1 from the online player value.
      *
-     * @param player
+     * @param player player object
      */
     @Deprecated
     public void removePlayer(Player player) {
@@ -108,7 +108,7 @@ public class CloudAPI {
      * Remove a playername from the player list in database and
      * remove 1 from the online player value.
      *
-     * @param player
+     * @param player player object
      */
     public void removePlayer(String player) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
@@ -127,7 +127,7 @@ public class CloudAPI {
      * Add a playername to the spectator list in database and
      * add 1 to the online spectator value.
      *
-     * @param spectator
+     * @param spectator player object
      */
     @Deprecated
     public void addSpectator(Player spectator) {
@@ -137,7 +137,7 @@ public class CloudAPI {
      * Add a playername to the spectator list in database and
      * add 1 to the online spectator value.
      *
-     * @param spectator
+     * @param spectator player object
      */
     public void addSpectator(String spectator) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
@@ -156,7 +156,7 @@ public class CloudAPI {
      * Remove a playername from the spectator list in database and
      * remove 1 from the online spectator value.
      *
-     * @param spectator
+     * @param spectator player object
      */
     @Deprecated
     public void removeSpectator(Player spectator) {
@@ -166,7 +166,7 @@ public class CloudAPI {
      * Remove a playername from the spectator list in database and
      * remove 1 from the online spectator value.
      *
-     * @param spectator
+     * @param spectator player object
      */
     public void removeSpectator(String spectator) {
         String serverId = byteCloudCore.getCloudHandler().getServerId();
@@ -187,7 +187,7 @@ public class CloudAPI {
      * <p>
      * The player will be moved to a random online lobby server.
      *
-     * @param player
+     * @param player player object
      */
     public int moveToLobby(Player player) {
         moveToServer(player, byteCloudCore.getCloudHandler().getRandomLobbyId());
@@ -198,8 +198,8 @@ public class CloudAPI {
      * If you'll move a player from this server to an other,
      * you can use this method.
      *
-     * @param player
-     * @param serverId
+     * @param player player object
+     * @param serverId server id
      */
     public void moveToServer(Player player, String serverId) {
         try {
@@ -229,7 +229,7 @@ public class CloudAPI {
      * If this server is a game server you can change the server motd.
      * That will be displayed at the server signs.
      *
-     * @param motd
+     * @param motd message of the day
      */
     public void setMotd(String motd) {
         byteCloudCore.getCloudHandler().editDatabaseServerValue(getServerId(), DatabaseServerObject.MOTD, motd);

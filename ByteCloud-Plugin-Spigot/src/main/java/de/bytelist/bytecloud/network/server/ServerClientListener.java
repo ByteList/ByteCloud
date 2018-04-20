@@ -5,10 +5,7 @@ import com.voxelboxstudios.resilent.client.JsonClientListener;
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.core.cloud.CloudAPI;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutChangeServerState;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutExecuteCommand;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutKickAllPlayers;
+import de.bytelist.bytecloud.network.PacketName;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -24,36 +21,67 @@ public class ServerClientListener extends JsonClientListener {
     @Override
     public void jsonReceived(JsonObject jsonObject) {
         if(jsonObject.has("packet")) {
-            String packet = jsonObject.get("packet").getAsString();
-            if(packet.equals(PacketOutKickAllPlayers.class.getSimpleName())) {
-                String reason = jsonObject.get("reason").getAsString();
-                new Thread("Async Player Kick Thread") {
-                    @Override
-                    public void run() {
-                        for(Player player : Bukkit.getOnlinePlayers()) {
-                            player.kickPlayer("§7"+reason.replace("#&C#", "§"));
-                        }
-                    }
-                }.start();
-            }
-            if(packet.equals(PacketOutCloudInfo.class.getSimpleName())) {
-                CloudHandler cloudHandler = byteCloudCore.getCloudHandler();
-                cloudHandler.setCloudVersion(jsonObject.get("cloudVersion").getAsString());
-                cloudHandler.setCloudStarted(jsonObject.get("cloudStarted").getAsString());
-                cloudHandler.setCloudRunning(jsonObject.get("cloudRunning").getAsBoolean());
-            }
-            if(packet.equals(PacketOutChangeServerState.class.getSimpleName())) {
-                String serverId = jsonObject.get("serverId").getAsString(),
-                        serverGroup = jsonObject.get("serverGroup").getAsString();
-                CloudAPI.ServerState oldState = CloudAPI.ServerState.valueOf(jsonObject.get("oldState").getAsString()),
-                        newState = CloudAPI.ServerState.valueOf(jsonObject.get("newState").getAsString());
-                byteCloudCore.getCloudHandler().callCloudServerUpdateStateEvent(serverId, serverGroup, oldState, newState);
-            }
+            PacketName packet = PacketName.getPacketName(jsonObject.get("packet").getAsString());
+            String serverId, serverGroup, sender, reason, players;
 
-            if(packet.equals(PacketOutExecuteCommand.class.getSimpleName())) {
-                String cmd = jsonObject.get("command").getAsString();
-                byteCloudCore.getLogger().info("Execute cmd from cloud: "+cmd);
-                byteCloudCore.getServer().dispatchCommand(byteCloudCore.getServer().getConsoleSender(), cmd);
+            switch (packet) {
+                case NULL:
+                    break;
+                case IN_BUNGEE:
+                    break;
+                case IN_BUNGEE_STPOPPED:
+                    break;
+                case IN_START_SERVER:
+                    break;
+                case IN_STOP_SERVER:
+                    break;
+                case IN_CHANGE_SERVER_STATE:
+                    break;
+                case IN_KICK_PLAYER:
+                    break;
+                case IN_SERVER:
+                    break;
+                case IN_STOP_OWN_SERVER:
+                    break;
+                case OUT_CHANGE_SERVER_STATE:
+                    serverId = jsonObject.get("serverId").getAsString();
+                    serverGroup = jsonObject.get("serverGroup").getAsString();
+                    CloudAPI.ServerState oldState = CloudAPI.ServerState.valueOf(jsonObject.get("oldState").getAsString()),
+                            newState = CloudAPI.ServerState.valueOf(jsonObject.get("newState").getAsString());
+                    byteCloudCore.getCloudHandler().callCloudServerUpdateStateEvent(serverId, serverGroup, oldState, newState);
+                    break;
+                case OUT_CLOUD_INFO:
+                    CloudHandler cloudHandler = byteCloudCore.getCloudHandler();
+                    cloudHandler.setCloudVersion(jsonObject.get("cloudVersion").getAsString());
+                    cloudHandler.setCloudStarted(jsonObject.get("cloudStarted").getAsString());
+                    cloudHandler.setCloudRunning(jsonObject.get("cloudRunning").getAsBoolean());
+                    break;
+                case OUT_EXECUTE_COMMAND:
+                    String cmd = jsonObject.get("command").getAsString();
+                    byteCloudCore.getLogger().info("Execute cmd from cloud: "+cmd);
+                    byteCloudCore.getServer().dispatchCommand(byteCloudCore.getServer().getConsoleSender(), cmd);
+                    break;
+                case OUT_KICK_ALL_PLAYERS:
+                    reason = jsonObject.get("reason").getAsString();
+                    new Thread("Async Player Kick Thread") {
+                        @Override
+                        public void run() {
+                            for(Player player : Bukkit.getOnlinePlayers()) {
+                                player.kickPlayer("§7"+reason.replace("#&C#", "§"));
+                            }
+                        }
+                    }.start();
+                    break;
+                case OUT_KICK_PLAYER:
+                    break;
+                case OUT_MOVE_PLAYER:
+                    break;
+                case OUT_REGISTER_PLAYER:
+                    break;
+                case OUT_SEND_MESSAGE:
+                    break;
+                case OUT_UNREGISTER_SERVER:
+                    break;
             }
         }
     }

@@ -2,7 +2,7 @@ package de.bytelist.bytecloud.server.group;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutSendMessage;
+import de.bytelist.bytecloud.network.cloud.PacketOutSendMessage;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.TempServer;
 import lombok.Getter;

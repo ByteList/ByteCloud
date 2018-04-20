@@ -5,7 +5,7 @@ import de.bytelist.bytecloud.core.cloud.CloudHandler;
 import de.bytelist.bytecloud.core.properties.CloudProperties;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.server.ServerClient;
-import de.bytelist.bytecloud.network.server.packet.PacketInServer;
+import de.bytelist.bytecloud.network.server.PacketInServer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

@@ -2,8 +2,8 @@ package de.bytelist.bytecloud.bungee;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutCloudInfo;
-import de.bytelist.bytecloud.network.cloud.packet.PacketOutRegisterServer;
+import de.bytelist.bytecloud.network.cloud.PacketOutCloudInfo;
+import de.bytelist.bytecloud.network.cloud.PacketOutRegisterServer;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
