@@ -57,8 +57,7 @@ public class ByteCloudCore extends JavaPlugin {
         this.serverClient.sendPacket(packetInServer);
 
         getCommand("cloud").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage(prefix+"§fSpigot: v"+version);
-            sender.sendMessage(prefix+"§fCloud started: "+cloudHandler.getCloudStarted()+", developed by ByteList");
+            sender.sendMessage("This server is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
             return true;
         });
     }
