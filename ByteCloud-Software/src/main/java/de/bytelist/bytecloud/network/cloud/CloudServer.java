@@ -80,14 +80,14 @@ public class CloudServer {
     }
 
     public void sendPacket(Patron patron, Packet packet) {
-        if(packet.getName().startsWith("PacketOut")) {
+        if(packet.getName().getPacketName().startsWith("PacketIn")) {
             patron.sendPacket(packet.toJson());
         } else
             throw new IllegalArgumentException(packet.getName()+" can't sent to server.");
     }
 
     public void sendPacket(String serverId, Packet packet) {
-        if(packet.getName().startsWith("PacketOut")) {
+        if(packet.getName().getPacketName().startsWith("PacketOut")) {
             if(clients.containsKey(serverId)) {
                 patrons.get(clients.get(serverId)).sendPacket(packet.toJson());
             }
