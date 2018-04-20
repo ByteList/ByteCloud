@@ -28,7 +28,7 @@ public class BungeeClient {
     }
 
     public void sendPacket(Packet packet) {
-        if(packet.getName().startsWith("PacketIn")) {
+        if(packet.getName().getPacketName().startsWith("PacketIn")) {
             this.client.sendPacket(packet.toJson());
         } else
             throw new IllegalArgumentException(packet.getName()+" can't sent to cloud.");
