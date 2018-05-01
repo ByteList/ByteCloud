@@ -17,11 +17,12 @@ public class ServerHandleTask implements Runnable {
         while (byteCloud.isRunning) {
             for (ServerGroup serverGroup : byteCloud.getServerHandler().getServerGroups().values()) {
                 serverGroup.checkAndStartNewServer();
-                try {
-                    Thread.sleep(2000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            }
+
+            try {
+                Thread.sleep(2000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

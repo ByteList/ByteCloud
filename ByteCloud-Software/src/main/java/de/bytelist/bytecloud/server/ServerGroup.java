@@ -104,6 +104,8 @@ public class ServerGroup {
                 if(!sender.equals("_cloud")) {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cToo much servers are currently online!");
                     byteCloud.getCloudServer().sendPacket("Bungee-1", packetOutSendMessage);
+                } else {
+                    System.out.println("ServerGroup "+this.groupName+": Too much servers are currently online!");
                 }
             }
         }
