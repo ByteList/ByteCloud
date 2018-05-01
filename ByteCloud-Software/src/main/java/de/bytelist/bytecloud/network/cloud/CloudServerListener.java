@@ -7,7 +7,7 @@ import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.PacketName;
 import de.bytelist.bytecloud.server.Server;
-import de.bytelist.bytecloud.server.group.ServerGroup;
+import de.bytelist.bytecloud.server.ServerGroup;
 
 /**
  * Created by ByteList on 26.05.2017.

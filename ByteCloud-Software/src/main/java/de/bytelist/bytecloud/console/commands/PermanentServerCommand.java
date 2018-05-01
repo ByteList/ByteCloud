@@ -4,8 +4,8 @@ import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.server.PermServer;
-import de.bytelist.bytecloud.server.PermServerObject;
 import de.bytelist.bytecloud.server.Server;
+import de.bytelist.bytecloud.server.ServerDocument;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -116,11 +116,11 @@ public class PermanentServerCommand extends Command {
                         permServer.startServer("_cloud");
                     }
                 } else if(byteCloud.getServerHandler().existsPermanentServer(serverName)) {
-                    final PermServerObject permServerObject = new PermServerObject(serverName);
-                    PermServer permServer = new PermServer(serverName, permServerObject.get("port").getAsInt(),
-                            permServerObject.get("ram").getAsInt(),
-                            permServerObject.get("player").getAsInt(),
-                            permServerObject.get("spectator").getAsInt());
+                    final ServerDocument serverDocument = new ServerDocument(new File(EnumFile.SERVERS_PERMANENT.getPath(), serverName));
+                    PermServer permServer = new PermServer(serverName, serverDocument.get("port").getAsInt(),
+                            serverDocument.get("ram").getAsInt(),
+                            serverDocument.get("player").getAsInt(),
+                            serverDocument.get("spectator").getAsInt());
                     byteCloud.getServerHandler().getPermanentServers().add(permServer);
                     permServer.startServer("_cloud");
                 } else {

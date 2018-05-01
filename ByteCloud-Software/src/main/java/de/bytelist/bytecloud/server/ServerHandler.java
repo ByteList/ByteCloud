@@ -3,8 +3,7 @@ package de.bytelist.bytecloud.server;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.server.group.ServerGroup;
-import de.bytelist.bytecloud.server.group.ServerGroupObject;
+import de.bytelist.bytecloud.task.ServerHandleTask;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
@@ -33,33 +32,36 @@ public class ServerHandler {
 
     private HashMap<String, Server> servers;
 
+    private ServerHandleTask serverHandleTask;
     private boolean areServersRunning;
 
     public ServerHandler() {
         this.serverGroups = new HashMap<>();
         this.permanentServers = new ArrayList<>();
         this.servers = new HashMap<>();
+
+        this.serverHandleTask = new ServerHandleTask();
         this.areServersRunning = false;
 
         final File servGroups = new File(EnumFile.TEMPLATES.getPath());
         final File permServs = new File(EnumFile.SERVERS_PERMANENT.getPath());
 
         if(servGroups.list().length > 0) {
-            for(String templates : servGroups.list()) {
-                final ServerGroupObject serverGroupObject = new ServerGroupObject(templates);
-                ServerGroup serverGroup = new ServerGroup(templates, serverGroupObject);
-                this.serverGroups.put(templates, serverGroup);
+            for(String template : servGroups.list()) {
+                final ServerDocument serverDocument = new ServerDocument(new File(EnumFile.TEMPLATES.getPath(), template));
+                ServerGroup serverGroup = new ServerGroup(template, serverDocument);
+                this.serverGroups.put(template, serverGroup);
             }
         }
 
         if(permServs.list().length > 0) {
             for(String servs : permServs.list()) {
-                final PermServerObject permServerObject = new PermServerObject(servs);
-                if(permServerObject.get("autoStart").getAsBoolean()) {
-                    PermServer permServer = new PermServer(servs, permServerObject.get("port").getAsInt(),
-                            permServerObject.get("ram").getAsInt(),
-                            permServerObject.get("player").getAsInt(),
-                            permServerObject.get("spectator").getAsInt());
+                final ServerDocument serverDocument = new ServerDocument(new File(EnumFile.SERVERS_PERMANENT.getPath(), servs));
+                if(serverDocument.get("autoStart").getAsBoolean()) {
+                    PermServer permServer = new PermServer(servs, serverDocument.get("port").getAsInt(),
+                            serverDocument.get("ram").getAsInt(),
+                            serverDocument.get("player").getAsInt(),
+                            serverDocument.get("spectator").getAsInt());
                     this.permanentServers.add(permServer);
                     this.servers.put(servs, permServer);
                 }
@@ -72,27 +74,26 @@ public class ServerHandler {
 
     public void start() {
         System.out.println("Starting servers...");
-        for(PermServer permServer : permanentServers) {
-            permServer.startServer("_cloud");
-        }
         if(serverGroups.containsKey("LOBBY")) {
             ByteCloud.getInstance().getLogger().info("** Startup changed. Run lobbies first.");
             ServerGroup lobbyGroup = serverGroups.get("LOBBY");
-            lobbyGroup.onStart();
+            lobbyGroup.start();
             try {
                 Thread.sleep(3000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        for(ServerGroup serverGroup : serverGroups.values()) {
-            serverGroup.onStart();
+
+        for(PermServer permServer : permanentServers) {
+            permServer.startServer("_cloud");
         }
-        if(!ByteCloud.getInstance().getCloudExecutor().execute(()-> {
-            for(ServerGroup serverGroup : serverGroups.values()) {
-                serverGroup.start();
-            }
-        }, 10)) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server groups.");
+
+        for(ServerGroup serverGroup : serverGroups.values()) {
+            serverGroup.start();
+        }
+        if (!ByteCloud.getInstance().getCloudExecutor().execute(() -> this.serverHandleTask.run(), 10))
+            byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server groups.");
     }
 
     public void stop() {
@@ -156,11 +157,11 @@ public class ServerHandler {
         return false;
     }
 
-    public void registerServer(Server server) {
+    void registerServer(Server server) {
         this.servers.put(server.getServerId(), server);
     }
 
-    public void unregisterServer(Server server) {
+    void unregisterServer(Server server) {
         if(server instanceof TempServer) {
             ((TempServer) server).getServerGroup().removeServer((TempServer) server);
         } else if(server instanceof PermServer) {
@@ -183,7 +184,7 @@ public class ServerHandler {
         return lobbyServer.get(i);
     }
 
-    public String getRandomLobbyId(String excludeLobby) {
+    String getRandomLobbyId(String excludeLobby) {
         List<String> lobbyServer = new ArrayList<>();
         lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("Lobby"));
         if(lobbyServer.contains(excludeLobby)) {

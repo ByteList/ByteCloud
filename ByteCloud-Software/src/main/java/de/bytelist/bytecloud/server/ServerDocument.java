@@ -1,6 +1,5 @@
 package de.bytelist.bytecloud.server;
 
-import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
@@ -11,22 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ByteList on 17.03.2017.
- *
+ * Created by ByteList on 01.05.2018.
+ * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class PermServerObject {
+public class ServerDocument {
 
-    private PermServerObject permanentServerObject;
+    private ServerDocument serverDocument;
     private List<String> elements;
 
     private Object element;
-    private
     @Getter
-    String elementName;
+    private String elementName;
 
-    public PermServerObject(String server) {
-        File dir = new File(EnumFile.SERVERS_PERMANENT.getPath(), server);
+    public ServerDocument(File dir) {
         File file = new File(dir, "settings.bci");
         if (!file.exists())
             try {
@@ -41,13 +38,13 @@ public class PermServerObject {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        permanentServerObject = this;
+        serverDocument = this;
     }
 
 
-    public PermServerObject get(String element) {
+    public ServerDocument get(String element) {
         elementName = element;
-        for (String parm : permanentServerObject.elements) {
+        for (String parm : serverDocument.elements) {
             if (parm.split("=")[0].equalsIgnoreCase(element))
                 this.element = parm.split("=")[1];
         }

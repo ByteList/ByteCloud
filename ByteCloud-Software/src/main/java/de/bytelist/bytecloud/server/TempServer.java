@@ -4,7 +4,6 @@ import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.network.cloud.*;
-import de.bytelist.bytecloud.server.group.ServerGroup;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
@@ -25,7 +24,7 @@ public class TempServer extends Server {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
-    public TempServer(String serverId, int port, int ramM, int maxPlayer, int maxSpectator, ServerGroup serverGroup) {
+    TempServer(String serverId, int port, int ramM, int maxPlayer, int maxSpectator, ServerGroup serverGroup) {
         super(serverId, port, ramM, maxPlayer, maxSpectator, ServerState.STARTING, EnumFile.SERVERS_RUNNING.getPath());
         this.serverGroup = serverGroup;
 
@@ -50,10 +49,27 @@ public class TempServer extends Server {
             if (process == null) {
                 byteCloud.getLogger().info("Server " + serverId + " is starting on port " + port + ".");
                 byteCloud.getServerHandler().registerServer(this);
-                String[] param =
-                        {"java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername=" + serverId, "-Dde.bytelist.bytecloud.servergroup="+serverGroup.getGroupName(), "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
-                                "-jar", byteCloud.getCloudProperties().getProperty("jar-name") + ".jar", "-s",
-                                String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
+                String[] param = { "java",
+                        "-XX:+UseG1GC",
+                        "-XX:MaxGCPauseMillis=50",
+                        "-XX:MaxPermSize=256M",
+                        "-XX:-UseAdaptiveSizePolicy",
+                        "-Dfile.encoding=UTF-8",
+                        "-Dcom.mojang.eula.agree=true",
+                        "-Dio.netty.recycler.maxCapacity=0",
+                        "-Dio.netty.recycler.maxCapacity.default=0",
+                        "-Djline.terminal=jline.UnsupportedTerminal",
+                        "-Dde.bytelist.bytecloud.servername=" + serverId,
+                        "-Dde.bytelist.bytecloud.servergroup="+serverGroup.getGroupName(),
+
+                        "-Xmx" + ramM + "M",
+                        "-jar", byteCloud.getCloudProperties().getProperty("jar-name") + ".jar",
+
+                        "-s", String.valueOf((maxPlayer + maxSpectator)),
+                        "-o", "false",
+                        "-p", String.valueOf(port),
+                        "nogui"
+                        };
                 ProcessBuilder pb = new ProcessBuilder(param);
                 pb.directory(directory);
                 try {

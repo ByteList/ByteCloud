@@ -43,10 +43,27 @@ public class PermServer extends Server {
                 if (process == null) {
                     byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
                     byteCloud.getServerHandler().registerServer(this);
-                    String[] param =
-                            {"java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M", "-Xmx" + ramM + "M", "-Dde.bytelist.bytecloud.servername=" + serverId, "-Dde.bytelist.bytecloud.servergroup=PERMANENT", "-Dfile.encoding=UTF-8", "-Dcom.mojang.eula.agree=true",
-                                    "-jar", byteCloud.getCloudProperties().getProperty("jar-name") + ".jar", "-s",
-                                    String.valueOf((maxPlayer + maxSpectator)), "-o", "false", "-p", String.valueOf(port), "nogui"};
+                    String[] param = { "java",
+                            "-XX:+UseG1GC",
+                            "-XX:MaxGCPauseMillis=50",
+                            "-XX:MaxPermSize=256M",
+                            "-XX:-UseAdaptiveSizePolicy",
+                            "-Dfile.encoding=UTF-8",
+                            "-Dcom.mojang.eula.agree=true",
+                            "-Dio.netty.recycler.maxCapacity=0",
+                            "-Dio.netty.recycler.maxCapacity.default=0",
+                            "-Djline.terminal=jline.UnsupportedTerminal",
+                            "-Dde.bytelist.bytecloud.servername=" + serverId,
+                            "-Dde.bytelist.bytecloud.servergroup=PERMANENT",
+
+                            "-Xmx" + ramM + "M",
+                            "-jar", byteCloud.getCloudProperties().getProperty("jar-name") + ".jar",
+
+                            "-s", String.valueOf((maxPlayer + maxSpectator)),
+                            "-o", "false",
+                            "-p", String.valueOf(port),
+                            "nogui"
+                    };
                     ProcessBuilder pb = new ProcessBuilder(param);
                     pb.directory(directory);
                     try {

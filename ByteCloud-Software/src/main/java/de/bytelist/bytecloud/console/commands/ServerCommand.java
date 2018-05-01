@@ -3,7 +3,7 @@ package de.bytelist.bytecloud.console.commands;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.server.Server;
-import de.bytelist.bytecloud.server.group.ServerGroup;
+import de.bytelist.bytecloud.server.ServerGroup;
 
 import java.util.logging.Logger;
 

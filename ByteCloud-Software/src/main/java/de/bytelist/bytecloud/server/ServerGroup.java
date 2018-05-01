@@ -1,10 +1,8 @@
-package de.bytelist.bytecloud.server.group;
+package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.network.cloud.PacketOutSendMessage;
-import de.bytelist.bytecloud.server.Server;
-import de.bytelist.bytecloud.server.TempServer;
 import lombok.Getter;
 
 import java.io.File;
@@ -14,7 +12,9 @@ import java.util.Random;
 /**
  * Created by ByteList on 18.02.2017.
  */
-public class ServerGroup extends Thread {
+public class ServerGroup {
+
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     private static final char[] POOL = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private static final Random rnd = new Random();
@@ -30,8 +30,6 @@ public class ServerGroup extends Thread {
         }
         return kb.toString();
     }
-
-    private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     @Getter
     private String groupName, prefix;
@@ -51,33 +49,20 @@ public class ServerGroup extends Thread {
     @Getter
     private ArrayList<Integer> usedPorts = new ArrayList<>();
 
-    public ServerGroup(String group, ServerGroupObject serverGroupObject) {
-        super(group+"-Thread");
-        this.groupName = serverGroupObject.get("name").getAsString();
-        this.prefix = serverGroupObject.get("prefix").getAsString();
-        this.amount = serverGroupObject.get("amount").getAsInt();
-        this.max = serverGroupObject.get("max").getAsInt();
-        this.startPort = serverGroupObject.get("port").getAsInt();
-        this.player = serverGroupObject.get("player").getAsInt();
-        this.spectator = serverGroupObject.get("spectator").getAsInt();
-        this.ram = serverGroupObject.get("ram").getAsInt();
+    ServerGroup(String group, ServerDocument serverDocument) {
+        this.groupName = serverDocument.get("name").getAsString();
+        this.prefix = serverDocument.get("prefix").getAsString();
+        this.amount = serverDocument.get("amount").getAsInt();
+        this.max = serverDocument.get("max").getAsInt();
+        this.startPort = serverDocument.get("port").getAsInt();
+        this.player = serverDocument.get("player").getAsInt();
+        this.spectator = serverDocument.get("spectator").getAsInt();
+        this.ram = serverDocument.get("ram").getAsInt();
 
         this.directory = new File(EnumFile.TEMPLATES.getPath(), group.toUpperCase());
     }
 
-    @Override
-    public void run() {
-        while (byteCloud.isRunning) {
-            checkAndStartNewServer();
-            try {
-                Thread.sleep(2000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void onStart() {
+    void start() {
         if(!started) {
             this.started = true;
             int i = 0;
@@ -124,13 +109,13 @@ public class ServerGroup extends Thread {
         }
     }
 
-    public void removeServer(TempServer tempServer) {
+    void removeServer(TempServer tempServer) {
         this.usedIds.remove(Integer.valueOf(tempServer.getServerId().split("-")[1]));
         this.usedPorts.remove(Integer.valueOf(tempServer.getPort()));
         this.servers.remove(tempServer.getServerId());
     }
 
-    private void checkAndStartNewServer() {
+    public void checkAndStartNewServer() {
         if(byteCloud.isRunning) {
             boolean b = false;
             for (String server : servers) {
