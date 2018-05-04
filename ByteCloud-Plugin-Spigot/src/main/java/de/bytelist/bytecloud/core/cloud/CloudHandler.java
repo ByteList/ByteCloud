@@ -23,7 +23,6 @@ public class CloudHandler {
     private final ByteCloudCore byteCloudCore = ByteCloudCore.getInstance();
 
     private DatabaseServer databaseServer;
-    private DatabaseManager databaseManager;
     @Getter
     private String serverId, serverGroup;
 
@@ -33,18 +32,18 @@ public class CloudHandler {
     private boolean cloudRunning;
 
     public CloudHandler() {
-        String host = byteCloudCore.getConfig().getString("mongo-host");
-        String database = byteCloudCore.getConfig().getString("mongo-database");
-        String user = byteCloudCore.getConfig().getString("mongo-user");
-        String password = byteCloudCore.getConfig().getString("mongo-password");
+        String host = byteCloudCore.getCloudConfig().getString("mongo-host");
+        String database = byteCloudCore.getCloudConfig().getString("mongo-database");
+        String user = byteCloudCore.getCloudConfig().getString("mongo-user");
+        String password = byteCloudCore.getCloudConfig().getString("mongo-password");
 
         this.serverId = System.getProperty("de.bytelist.bytecloud.servername", Bukkit.getServerName());
         this.serverGroup = System.getProperty("de.bytelist.bytecloud.servergroup", "null");
 
         try {
-            this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
-            Bukkit.getConsoleSender().sendMessage(ByteCloudCore.getInstance().prefix+"§eDatabase - §aConnected!");
-            this.databaseServer = this.databaseManager.getDatabaseServer();
+            DatabaseManager databaseManager = new DatabaseManager(host, 27017, user, password, database);
+            Bukkit.getConsoleSender().sendMessage(byteCloudCore.prefix+"§eDatabase - §aConnected!");
+            this.databaseServer = databaseManager.getDatabaseServer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,7 +51,7 @@ public class CloudHandler {
     }
 
     public Integer getSocketPort() {
-        return byteCloudCore.getConfig().getInt("socket-port");
+        return byteCloudCore.getCloudConfig().getInt("socket-port");
     }
 
     /**

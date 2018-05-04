@@ -28,12 +28,12 @@ public class ByteCloudCore extends JavaPlugin {
     @Getter
     private ServerClient serverClient;
     @Getter
-    private Config config;
+    private Config cloudConfig;
     @Getter
     private File configFile;
 
     public String prefix = "§bCloud §8\u00BB ";
-
+    @Getter
     private String version = "unknown";
 
     @Override
@@ -47,8 +47,8 @@ public class ByteCloudCore extends JavaPlugin {
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        this.configFile = new File("plugins/ByteCloud", "config.json");
-        this.config = Config.loadDocument(this.configFile);
+        this.configFile = new File("plugins/ByteCloud", "cloudConfig.json");
+        this.cloudConfig = Config.loadDocument(this.configFile);
 
         cloudHandler = new CloudHandler();
         cloudAPI = new CloudAPI();
@@ -74,9 +74,5 @@ public class ByteCloudCore extends JavaPlugin {
     public void onDisable() {
         this.serverClient.disconnect();
         Bukkit.getConsoleSender().sendMessage(prefix + "§cDisabled!");
-    }
-
-    public String getVersion() {
-        return version;
     }
 }
