@@ -22,7 +22,7 @@ public class Updater {
     public Updater() {
         this.jenkinsAPI = new JenkinsAPI("apiUser", "Uf6UYSqSrgOGby01fSIe7dAkd1eSzVYggqH");
 
-        String loginCheck = jenkinsAPI.getLoginCorrect("https://vs.bytelist.de/jenkins/");
+        String loginCheck = jenkinsAPI.getLoginCorrect("https://kvm.bytelist.de/jenkins/");
         if(!loginCheck.equals(JenkinsAPI.CORRECT_LOGIN_VARIABLE)) {
             byteCloud.getLogger().warning("Cannot check for updates:");
             byteCloud.getLogger().warning(loginCheck);
