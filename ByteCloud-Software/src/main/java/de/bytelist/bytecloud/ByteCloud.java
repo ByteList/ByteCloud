@@ -47,6 +47,70 @@ public class ByteCloud {
     @Getter
     private static ByteCloud instance;
     /**
+     * The ConsoleReader is used to optimize the console out- and input.
+     */
+    @Getter
+    private ConsoleReader consoleReader;
+    /**
+     * The Logger is used to perform information's and so on to the log.
+     */
+    @Getter
+    private CloudLogger logger;
+    /**
+     * The ServerHandler manages server groups and permanently servers.
+     * Server groups manage servers like game-servers or lobby-servers.
+     * Permanent-servers are good for survival servers, build servers or something like this.
+     */
+    @Getter
+    private ServerHandler serverHandler;
+    /**
+     * The Bungee manages the bungee instance from the cloud.
+     * It's only used to start and stop the bungee instance.
+     * This instance can be managed in the Bungee folder like a normal bungee server.
+     */
+    @Getter
+    private Bungee bungee;
+    /**
+     * The DatabaseManager is used to manage all database things.
+     * Here you can find all mongodb data's.
+     */
+    @Getter
+    private DatabaseManager databaseManager;
+    /**
+     * The DatabaseServer put's all data's from servers in it and load this data any time.
+     * You can get information's like player count and
+     * server id from the cloudAPI in the bungee or spigot plugin.
+     */
+    @Getter
+    private DatabaseServer databaseServer;
+    /**
+     * This returns the correct version from the cloud.
+     * It contains information's about git commit and jenkins build number.
+     * If you doesn't build the software with jenkins you would get and "unknown" version.
+     */
+    @Getter
+    private final String version;
+    /**
+     * This handler is used to register commands for the console input.
+     */
+    @Getter
+    private CommandHandler commandHandler;
+    /**
+     * This string returns the cloud start date with time.
+     */
+    @Getter
+    private final String cloudStarted;
+    /**
+     * The CloudServer manages all incoming connections.
+     * It's the packet server.
+     * You get an information in the console when a connection comes in.
+     * If this connection comes from a game server or from a bungee
+     * you will see this and get informed about this.
+     */
+    @Getter
+    private CloudServer cloudServer;
+
+    /**
      * This string represents a time who the cloud should be stopped.
      * Set this to false to disable it.
      * <p>
@@ -63,37 +127,35 @@ public class ByteCloud {
      * Arg: -Dde.bytelist.bytecloud.startFallback=false
      */
     private String startFallback;
-
-    @Getter
-    private ConsoleReader consoleReader;
-    @Getter
-    private CloudLogger logger;
-    @Getter
-    private ServerHandler serverHandler;
-    @Getter
-    private Bungee bungee;
-    @Getter
-    private DatabaseManager databaseManager;
-    @Getter
-    private DatabaseServer databaseServer;
-    @Getter
-    private CommandHandler commandHandler;
-    @Getter
-    private CloudServer cloudServer;
+    /**
+     * The cloudExecutor executes all runnable's.
+     */
     @Getter
     private CloudExecutor cloudExecutor;
-    @Getter
-    private final String version;
-    @Getter
-    private final String cloudStarted;
+    /**
+     * This returns the max memory value.
+     * It can be changed in the config or with the system priority -Dde.bytelist.bytecloud.maxMem=*memoryInMB*
+     */
     @Getter
     private int maxMemory;
+    /**
+     * This returns the screen system.
+     */
     @Getter
     private Screen screenSystem;
+    /**
+     * The serverIdOnConnect sets the server to connect on join.
+     */
     @Getter
     private String serverIdOnConnect;
+    /**
+     * Returns the configuration.
+     */
     @Getter
     private CloudConfig cloudConfig;
+    /**
+     * Returns the configuration file.
+     */
     @Getter
     private File configFile;
 
