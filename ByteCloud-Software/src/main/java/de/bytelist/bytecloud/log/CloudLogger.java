@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -30,7 +31,7 @@ public class CloudLogger extends Logger {
             File file = new File(EnumFile.CLOUD_LOGS.getPath());
             if (!file.exists()) file.mkdirs();
             String logFileName = EnumFile.CLOUD_LOGS.getPath() + date + "_" +
-                    (file.exists() ? file.listFiles(file1 -> file1.getName().startsWith(date)).length : 0) + ".log";
+                    (file.exists() ? Objects.requireNonNull(file.listFiles(file1 -> file1.getName().startsWith(date))).length : 0) + ".log";
 
 
             FileHandler fileHandler = new FileHandler(logFileName);

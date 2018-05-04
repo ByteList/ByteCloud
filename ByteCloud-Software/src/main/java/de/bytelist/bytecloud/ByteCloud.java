@@ -34,7 +34,7 @@ import java.util.logging.Level;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class ByteCloud implements IByteCloud {
+public class ByteCloud {
 
     /**
      * This boolean returns the running status from the cloud instance.
@@ -77,15 +77,15 @@ public class ByteCloud implements IByteCloud {
     @Getter
     private DatabaseServer databaseServer;
     @Getter
-    private final String version;
-    @Getter
     private CommandHandler commandHandler;
-    @Getter
-    private final String cloudStarted;
     @Getter
     private CloudServer cloudServer;
     @Getter
     private CloudExecutor cloudExecutor;
+    @Getter
+    private final String version;
+    @Getter
+    private final String cloudStarted;
     @Getter
     private int maxMemory;
     @Getter
@@ -104,19 +104,6 @@ public class ByteCloud implements IByteCloud {
     public ByteCloud() {
         instance = this;
         isRunning = false;
-
-        System.out.println("Starting cloud system."+
-                "\n"+ AnsiColor.CYAN +"\n" +
-                "   ____        _        _____ _                 _ \n" +
-                "  |  _ \\      | |      / ____| |               | |\n" +
-                "  | |_) |_   _| |_ ___| |    | | ___  _   _  __| |\n" +
-                "  |  _ <| | | | __/ _ \\ |    | |/ _ \\| | | |/ _` |\n" +
-                "  | |_) | |_| | ||  __/ |____| | (_) | |_| | (_| |\n" +
-                "  |____/ \\__, |\\__\\___|\\_____|_|\\___/ \\__,_|\\__,_|\n" +
-                "          __/ | T I G E R\n" +
-                "         |___/                 b y   B y t e L i s t\n" +
-                "\n\n");
-
         cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
         startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
@@ -151,6 +138,18 @@ public class ByteCloud implements IByteCloud {
         logger = new CloudLogger("ByteCloud", consoleReader);
         System.setErr(new PrintStream(new LoggingOutPutStream(logger, Level.SEVERE), true));
         System.setOut(new PrintStream(new LoggingOutPutStream(logger, Level.INFO), true));
+
+        System.out.println("Starting cloud system."+
+                "\n"+ AnsiColor.CYAN +"\n" +
+                "   ____        _        _____ _                 _ \n" +
+                "  |  _ \\      | |      / ____| |               | |\n" +
+                "  | |_) |_   _| |_ ___| |    | | ___  _   _  __| |\n" +
+                "  |  _ <| | | | __/ _ \\ |    | |/ _ \\| | | |/ _` |\n" +
+                "  | |_) | |_| | ||  __/ |____| | (_) | |_| | (_| |\n" +
+                "  |____/ \\__, |\\__\\___|\\_____|_|\\___/ \\__,_|\\__,_|\n" +
+                "          __/ | T I G E R\n" +
+                "         |___/                 b y   B y t e L i s t\n" +
+                "\n\n");
 
         for (EnumFile enumFile : EnumFile.values()) {
             File file = new File(enumFile.getPath());

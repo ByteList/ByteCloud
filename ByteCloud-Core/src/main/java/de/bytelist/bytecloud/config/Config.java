@@ -19,8 +19,8 @@ import java.util.*;
  */
 public class Config {
 
-    public static Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
-    protected static final JsonParser PARSER = new JsonParser();
+    private static Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final JsonParser PARSER = new JsonParser();
 
     @Getter
     @Setter
@@ -29,7 +29,7 @@ public class Config {
     @Setter
     private File file;
 
-    protected JsonObject dataCatcher;
+    private JsonObject dataCatcher;
 
     public Config(String name)
     {
