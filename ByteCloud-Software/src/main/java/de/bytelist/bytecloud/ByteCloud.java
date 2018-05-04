@@ -139,7 +139,7 @@ public class ByteCloud implements IByteCloud {
         System.setErr(new PrintStream(new LoggingOutPutStream(logger, Level.SEVERE), true));
         System.setOut(new PrintStream(new LoggingOutPutStream(logger, Level.INFO), true));
 
-        System.out.println("Starting cloud system."+
+        logger.info("Starting cloud system."+
                 "\n"+ AnsiColor.CYAN +"\n" +
                         "   ____        _        _____ _                 _ \n" +
                         "  |  _ \\      | |      / ____| |               | |\n" +
@@ -197,7 +197,9 @@ public class ByteCloud implements IByteCloud {
             this.config.saveAsConfig(this.configFile);
         }
 
-        new Updater();
+        if(System.getProperty("update", "true").equals("true")) {
+            new Updater();
+        }
 
         try {
             String host = this.config.getString("mongo-host");
