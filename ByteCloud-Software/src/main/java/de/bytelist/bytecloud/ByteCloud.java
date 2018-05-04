@@ -69,8 +69,6 @@ public class ByteCloud implements IByteCloud {
     @Getter
     private CloudLogger logger;
     @Getter
-    private CloudProperties cloudProperties;
-    @Getter
     private ServerHandler serverHandler;
     @Getter
     private Bungee bungee;
@@ -113,8 +111,6 @@ public class ByteCloud implements IByteCloud {
 
         cloudExecutor = new CloudExecutor();
         cloudExecutor.start();
-
-        this.screenSystem = new Screen();
 
         // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
@@ -160,16 +156,10 @@ public class ByteCloud implements IByteCloud {
             if (!file.exists())
                 file.mkdirs();
         }
-        this.cloudProperties = new CloudProperties();
-
         this.configFile = new File(EnumFile.CLOUD.getPath(), "config.json");
         if(!this.configFile.exists()) {
+            logger.info("Can not find config! Creating one...");
             Config cfg = new Config()
-                    .append("version", this.version)
-                    .append("version-type", (isCurrentDevBuild() ? "dev" : "stable"))
-                    .append("last-version", "-")
-                    .append("last-version-type", "-")
-                    .append("last-version-stable", "-")
                     .append("update-channel", "stable")
                     .append("mongo-host", "host")
                     .append("mongo-user", "user")
@@ -178,20 +168,42 @@ public class ByteCloud implements IByteCloud {
                     .append("web-port", "8090")
                     .append("jar-name", "paperclip")
                     .append("socket-port", "4213")
-                    .append("max-memory", "13795");
+                    .append("max-memory", "13795")
+                    .append("version", this.version)
+                    .append("version-type", (isCurrentDevBuild() ? "dev" : "stable"))
+                    .append("last-version", "-")
+                    .append("last-version-type", "-")
+                    .append("last-version-stable", (isCurrentDevBuild() ? "-" : this.version));
             cfg.saveAsConfig(this.configFile);
-            this.config = cfg;
+            logger.info("****************");
+            logger.info(" ");
+            logger.info(" ");
+            logger.info("Config created! Please, setup the config.");
+            logger.info("Cloud instance will shutdown in 5 seconds.");
+            logger.info(" ");
+            logger.info(" ");
+            logger.info("****************");
+            try {
+                Thread.sleep(5000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            cleanStop();
+            return;
         } else {
-            this.config = Config.loadDocument(this.configFile);
+            this.config = Config.loadDocument(this.configFile).append("version", this.version);
+            if(!isCurrentDevBuild()) this.config.append("last-version-stable", this.version);
+
+            this.config.saveAsConfig(this.configFile);
         }
 
         new Updater();
 
         try {
-            String host = this.cloudProperties.getProperty("mongo-host");
-            String database = this.cloudProperties.getProperty("mongo-database");
-            String user = this.cloudProperties.getProperty("mongo-user");
-            String password = this.cloudProperties.getProperty("mongo-password");
+            String host = this.config.getString("mongo-host");
+            String database = this.config.getString("mongo-database");
+            String user = this.config.getString("mongo-user");
+            String password = this.config.getString("mongo-password");
 
             this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
             this.databaseServer = this.databaseManager.getDatabaseServer();
@@ -207,7 +219,7 @@ public class ByteCloud implements IByteCloud {
             return;
         }
 
-        NetworkManager.connect(Integer.valueOf(cloudProperties.getProperty("socket-port", "4213")), this.logger);
+        NetworkManager.connect(this.config.getInt("socket-port"), this.logger);
         this.cloudServer = new CloudServer();
         if(!this.cloudServer.startPacketServer()) {
             cleanStop();
@@ -215,7 +227,8 @@ public class ByteCloud implements IByteCloud {
         }
 
         try {
-            maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.cloudProperties.getProperty("max-memory", "-1")));
+            maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.config.getString("max-memory")));
+            logger.info("Max memory size is set to: "+maxMemory);
         } catch (NumberFormatException ex) {
             System.err.println("Max memory size must be a number!");
             cleanStop();
@@ -239,6 +252,7 @@ public class ByteCloud implements IByteCloud {
 
         this.bungee = new Bungee();
         this.serverHandler = new ServerHandler();
+        this.screenSystem = new Screen();
     }
 
     public void start() {

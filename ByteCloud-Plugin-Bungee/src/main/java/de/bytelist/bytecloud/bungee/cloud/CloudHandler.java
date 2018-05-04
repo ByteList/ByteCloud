@@ -1,7 +1,6 @@
 package de.bytelist.bytecloud.bungee.cloud;
 
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
-import de.bytelist.bytecloud.bungee.properties.CloudProperties;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
 import lombok.Getter;
@@ -18,6 +17,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class CloudHandler {
 
+    private final ByteCloudMaster byteCloudMaster = ByteCloudMaster.getInstance();
+
     @Getter
     private DatabaseServer databaseServer;
     @Getter
@@ -31,10 +32,10 @@ public class CloudHandler {
     private boolean cloudRunning;
 
     public CloudHandler() {
-        String host = CloudProperties.getCloudProperties().getProperty("mongo-host");
-        String database = CloudProperties.getCloudProperties().getProperty("mongo-database");
-        String user = CloudProperties.getCloudProperties().getProperty("mongo-user");
-        String password = CloudProperties.getCloudProperties().getProperty("mongo-password");
+        String host = byteCloudMaster.getConfig().getString("mongo-host");
+        String database = byteCloudMaster.getConfig().getString("mongo-database");
+        String user = byteCloudMaster.getConfig().getString("mongo-user");
+        String password = byteCloudMaster.getConfig().getString("mongo-password");
 
         this.bungeeId = System.getProperty("de.bytelist.bytecloud.servername", "Bungee-0");
 
@@ -48,7 +49,7 @@ public class CloudHandler {
     }
 
     public Integer getSocketPort() {
-        return Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port"));
+        return byteCloudMaster.getConfig().getInt("socket-port");
     }
 
     public String getCloudAddress() {

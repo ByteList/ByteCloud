@@ -38,7 +38,7 @@ public class Bungee implements IScreen {
         this.directory = new File(EnumFile.BUNGEE.getPath());
         this.ramM = 1024;
         try {
-            FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "cloud.properties"), new File(this.getDirectory(), "plugins/ByteCloud/cloud.properties"));
+            FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "config.json"), new File(this.getDirectory(), "plugins/ByteCloud/config.json"));
         } catch (IOException e) {
             e.printStackTrace();
         }

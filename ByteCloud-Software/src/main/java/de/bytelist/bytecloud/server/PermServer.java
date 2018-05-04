@@ -25,7 +25,7 @@ public class PermServer extends Server {
 
         try {
             FileUtils.copyDirectory(new File(EnumFile.GENERALS.getPath(), "plugins"), new File(this.getDirectory(), "plugins"));
-            FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "cloud.properties"), new File(this.getDirectory(), "plugins/ByteCloud/cloud.properties"));
+            FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "config.json"), new File(this.getDirectory(), "plugins/ByteCloud/config.json"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ public class PermServer extends Server {
             if(byteCloud.getUsedMemory()+ramM < byteCloud.getMaxMemory()) {
                 if (!sender.equals("_cloud")) {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
-                    byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
                 }
                 if (process == null) {
                     byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
@@ -57,7 +57,7 @@ public class PermServer extends Server {
                             "-Dde.bytelist.bytecloud.servergroup=PERMANENT",
 
                             "-Xmx" + ramM + "M",
-                            "-jar", byteCloud.getCloudProperties().getProperty("jar-name") + ".jar",
+                            "-jar", byteCloud.getConfig().getString("jar-name") + ".jar",
 
                             "-s", String.valueOf((maxPlayer + maxSpectator)),
                             "-o", "false",

@@ -95,6 +95,10 @@ public class Updater {
             if(byteCloud.isCurrentDevBuild()) {
                 if(currentBuildNumber < lastStableDevBuildNumber) {
                     byteCloud.getLogger().info("Update found! [channel: dev] Current build: "+currentBuildNumber+" - New build: "+lastStableDevBuildNumber);
+                    byteCloud.getConfig()
+                            .append("last-version", byteCloud.getVersion())
+                            .append("last-version-type", "dev")
+                            .saveAsConfig(byteCloud.getConfigFile());
                     return urlDev;
                 }
             } else {
@@ -115,16 +119,28 @@ public class Updater {
 
                             if(lastVersionBuildNumber < lastStableDevBuildNumber) {
                                 byteCloud.getLogger().info("Update found! [channel: dev] Last build: "+lastVersionBuildNumber+" - New build: "+lastStableDevBuildNumber);
+                                byteCloud.getConfig()
+                                        .append("last-version", byteCloud.getVersion())
+                                        .append("last-version-type", "stable")
+                                        .saveAsConfig(byteCloud.getConfigFile());
                                 return urlStable;
                             }
                             break;
                         case "stable":
                             byteCloud.getLogger().warning("Last version type (eq. channel) is stable!");
                             byteCloud.getLogger().info("Now the last dev build is downloading. ("+lastStableDevBuildNumber+")");
+                            byteCloud.getConfig()
+                                    .append("last-version", byteCloud.getVersion())
+                                    .append("last-version-type", "stable")
+                                    .saveAsConfig(byteCloud.getConfigFile());
                             return urlDev;
                         default:
                             byteCloud.getLogger().warning("Unknown last version type (eq. channel)!");
                             byteCloud.getLogger().info("Now the last dev build is downloading. ("+lastStableDevBuildNumber+")");
+                            byteCloud.getConfig()
+                                    .append("last-version", byteCloud.getVersion())
+                                    .append("last-version-type", "stable")
+                                    .saveAsConfig(byteCloud.getConfigFile());
                             return urlDev;
                     }
                 }
@@ -144,6 +160,10 @@ public class Updater {
                         case "dev":
                             byteCloud.getLogger().warning("Last version type (eq. channel) is dev!");
                             byteCloud.getLogger().info("Now the last stable build is downloading. ("+lastStableBuildNumber+")");
+                            byteCloud.getConfig()
+                                    .append("last-version", byteCloud.getVersion())
+                                    .append("last-version-type", "dev")
+                                    .saveAsConfig(byteCloud.getConfigFile());
                             return urlStable;
                         case "stable":
                             byteCloud.getLogger().info("Last version type (eq. channel) is stable!");
@@ -153,6 +173,10 @@ public class Updater {
 
                             if(lastVersionBuildNumber < lastStableBuildNumber) {
                                 byteCloud.getLogger().info("Update found! [channel: stable] Last build: "+lastVersionBuildNumber+" - New build: "+lastStableBuildNumber);
+                                byteCloud.getConfig()
+                                        .append("last-version", byteCloud.getVersion())
+                                        .append("last-version-type", "dev")
+                                        .saveAsConfig(byteCloud.getConfigFile());
                                 return urlStable;
                             }
                             break;
@@ -167,6 +191,10 @@ public class Updater {
 
                                 if(lastVersionStableBuildNumber < lastStableBuildNumber) {
                                     byteCloud.getLogger().info("Update found! [channel: stable] Last build: "+lastVersionStableBuildNumber+" - New build: "+lastStableBuildNumber);
+                                    byteCloud.getConfig()
+                                            .append("last-version", byteCloud.getVersion())
+                                            .append("last-version-type", "dev")
+                                            .saveAsConfig(byteCloud.getConfigFile());
                                     return urlStable;
                                 }
                             }
@@ -176,6 +204,10 @@ public class Updater {
             } else {
                 if(currentBuildNumber < lastStableBuildNumber) {
                     byteCloud.getLogger().info("Update found! [channel: stable] Current build: "+currentBuildNumber+" - New build: "+lastStableBuildNumber);
+                    byteCloud.getConfig()
+                            .append("last-version", byteCloud.getVersion())
+                            .append("last-version-type", "stable")
+                            .saveAsConfig(byteCloud.getConfigFile());
                     return urlStable;
                 }
             }

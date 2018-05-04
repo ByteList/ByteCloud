@@ -31,12 +31,6 @@ public interface IByteCloud {
     public CloudLogger getLogger();
 
     /**
-     * The CloudProperties are used to save data's for mongodb and communication systems.
-     * In the future maybe replaced by a json format.
-     */
-    public CloudProperties getCloudProperties();
-
-    /**
      * The ServerHandler manages server groups and permanently servers.
      * Server groups manage servers like game-servers or lobby-servers.
      * Permanent-servers are good for survival servers, build servers or something like this.

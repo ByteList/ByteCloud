@@ -2,13 +2,15 @@ package de.bytelist.bytecloud.core;
 
 import de.bytelist.bytecloud.core.cloud.CloudAPI;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
-import de.bytelist.bytecloud.core.properties.CloudProperties;
+import de.bytelist.bytecloud.config.Config;
 import de.bytelist.bytecloud.network.NetworkManager;
-import de.bytelist.bytecloud.network.server.ServerClient;
 import de.bytelist.bytecloud.network.server.PacketInServer;
+import de.bytelist.bytecloud.network.server.ServerClient;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 /**
  * Created by ByteList on 20.12.2016.
@@ -25,6 +27,10 @@ public class ByteCloudCore extends JavaPlugin {
     private CloudAPI cloudAPI;
     @Getter
     private ServerClient serverClient;
+    @Getter
+    private Config config;
+    @Getter
+    private File configFile;
 
     public String prefix = "§bCloud §8\u00BB ";
 
@@ -41,11 +47,13 @@ public class ByteCloudCore extends JavaPlugin {
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        CloudProperties.load();
+        this.configFile = new File("plugins/ByteCloud", "config.json");
+        this.config = Config.loadDocument(this.configFile);
+
         cloudHandler = new CloudHandler();
         cloudAPI = new CloudAPI();
 
-        NetworkManager.connect(Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port", "4213")), getLogger());
+        NetworkManager.connect(this.cloudHandler.getSocketPort(), getLogger());
         this.serverClient = new ServerClient();
         this.serverClient.connect();
 

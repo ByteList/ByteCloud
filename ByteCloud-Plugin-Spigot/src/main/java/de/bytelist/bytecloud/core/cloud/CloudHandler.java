@@ -3,7 +3,6 @@ package de.bytelist.bytecloud.core.cloud;
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.core.event.CloudServerUpdateEvent;
 import de.bytelist.bytecloud.core.event.CloudServerUpdateStateEvent;
-import de.bytelist.bytecloud.core.properties.CloudProperties;
 import de.bytelist.bytecloud.database.DatabaseElement;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
@@ -21,6 +20,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class CloudHandler {
 
+    private final ByteCloudCore byteCloudCore = ByteCloudCore.getInstance();
+
     private DatabaseServer databaseServer;
     private DatabaseManager databaseManager;
     @Getter
@@ -32,10 +33,10 @@ public class CloudHandler {
     private boolean cloudRunning;
 
     public CloudHandler() {
-        String host = CloudProperties.getCloudProperties().getProperty("mongo-host");
-        String database = CloudProperties.getCloudProperties().getProperty("mongo-database");
-        String user = CloudProperties.getCloudProperties().getProperty("mongo-user");
-        String password = CloudProperties.getCloudProperties().getProperty("mongo-password");
+        String host = byteCloudCore.getConfig().getString("mongo-host");
+        String database = byteCloudCore.getConfig().getString("mongo-database");
+        String user = byteCloudCore.getConfig().getString("mongo-user");
+        String password = byteCloudCore.getConfig().getString("mongo-password");
 
         this.serverId = System.getProperty("de.bytelist.bytecloud.servername", Bukkit.getServerName());
         this.serverGroup = System.getProperty("de.bytelist.bytecloud.servergroup", "null");
@@ -51,7 +52,7 @@ public class CloudHandler {
     }
 
     public Integer getSocketPort() {
-        return Integer.valueOf(CloudProperties.getCloudProperties().getProperty("socket-port"));
+        return byteCloudCore.getConfig().getInt("socket-port");
     }
 
     /**

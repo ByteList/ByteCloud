@@ -31,7 +31,7 @@ public class TempServer extends Server {
         try {
             FileUtils.copyDirectory(new File(EnumFile.GENERALS.getPath(), "spigot"), this.getDirectory());
             FileUtils.copyDirectory(new File(EnumFile.GENERALS.getPath(), "plugins"), new File(this.getDirectory(), "plugins"));
-            FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "cloud.properties"), new File(this.getDirectory(), "plugins/ByteCloud/cloud.properties"));
+            FileUtils.copyFile(new File(EnumFile.CLOUD.getPath(), "config.json"), new File(this.getDirectory(), "plugins/ByteCloud/config.json"));
             FileUtils.copyDirectory(new File(EnumFile.TEMPLATES.getPath(), serverGroup.getGroupName().toUpperCase()), this.getDirectory());
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,7 +63,7 @@ public class TempServer extends Server {
                         "-Dde.bytelist.bytecloud.servergroup="+serverGroup.getGroupName(),
 
                         "-Xmx" + ramM + "M",
-                        "-jar", byteCloud.getCloudProperties().getProperty("jar-name") + ".jar",
+                        "-jar", byteCloud.getConfig().getString("jar-name") + ".jar",
 
                         "-s", String.valueOf((maxPlayer + maxSpectator)),
                         "-o", "false",

@@ -16,7 +16,7 @@ public class NetworkManager {
     private static Logger logger;
 
     public static int getSocketPort() {
-        if(socketPort < 4100 && socketPort > 6000) {
+        if(socketPort < 4100 || socketPort > 6000) {
             System.out.println("[NetworkManager] Socket-Port must be higher than 4100 and lower than 6000! Using standard: 4213");
             return 4213;
         } else return socketPort;
