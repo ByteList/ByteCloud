@@ -3,7 +3,7 @@ package de.bytelist.bytecloud.bungee;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.bungee.listener.LoginListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
-import de.bytelist.bytecloud.config.Config;
+import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.bungee.BungeeClient;
 import de.bytelist.bytecloud.network.bungee.PacketInBungee;
@@ -34,7 +34,7 @@ public class ByteCloudMaster extends Plugin {
     @Getter
     private String serverIdOnConnect;
     @Getter
-    private Config config;
+    private CloudConfig cloudConfig;
     @Getter
     private File configFile;
 
@@ -43,7 +43,7 @@ public class ByteCloudMaster extends Plugin {
         instance = this;
 
         this.configFile = new File("plugins/ByteCloud", "config.json");
-        this.config = Config.loadDocument(this.configFile);
+        this.cloudConfig = CloudConfig.loadDocument(this.configFile);
 
         this.cloudHandler = new CloudHandler();
 

@@ -1,7 +1,7 @@
 package de.bytelist.bytecloud;
 
 import de.bytelist.bytecloud.bungee.Bungee;
-import de.bytelist.bytecloud.config.Config;
+import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
 import de.bytelist.bytecloud.console.commands.*;
@@ -93,7 +93,7 @@ public class ByteCloud {
     @Getter
     private String serverIdOnConnect;
     @Getter
-    private Config config;
+    private CloudConfig cloudConfig;
     @Getter
     private File configFile;
 
@@ -116,6 +116,12 @@ public class ByteCloud {
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
         // 2.0.23:0034258
         version = v[0]+":"+v[1].substring(0, 7);
+
+        for (EnumFile enumFile : EnumFile.values()) {
+            File file = new File(enumFile.getPath());
+            if (!file.exists())
+                file.mkdirs();
+        }
 
         // This is a workaround for quite possibly the weirdest bug I have ever encountered in my life!
         // When jansi attempts to extract its natives, by default it tries to extract a specific version,
@@ -151,15 +157,10 @@ public class ByteCloud {
                 "         |___/                 b y   B y t e L i s t\n" +
                 "\n\n");
 
-        for (EnumFile enumFile : EnumFile.values()) {
-            File file = new File(enumFile.getPath());
-            if (!file.exists())
-                file.mkdirs();
-        }
         this.configFile = new File(EnumFile.CLOUD.getPath(), "config.json");
         if(!this.configFile.exists()) {
             logger.info("Can not find config! Creating one...");
-            Config cfg = new Config()
+            CloudConfig cfg = new CloudConfig()
                     .append("update-channel", "stable")
                     .append("mongo-host", "host")
                     .append("mongo-user", "user")
@@ -191,10 +192,10 @@ public class ByteCloud {
             cleanStop();
             return;
         } else {
-            this.config = Config.loadDocument(this.configFile).append("version", this.version);
-            if(!isCurrentDevBuild()) this.config.append("last-version-stable", this.version);
+            this.cloudConfig = CloudConfig.loadDocument(this.configFile).append("version", this.version);
+            if(!isCurrentDevBuild()) this.cloudConfig.append("last-version-stable", this.version);
 
-            this.config.saveAsConfig(this.configFile);
+            this.cloudConfig.saveAsConfig(this.configFile);
         }
 
         if(System.getProperty("update", "true").equals("true")) {
@@ -202,10 +203,10 @@ public class ByteCloud {
         }
 
         try {
-            String host = this.config.getString("mongo-host");
-            String database = this.config.getString("mongo-database");
-            String user = this.config.getString("mongo-user");
-            String password = this.config.getString("mongo-password");
+            String host = this.cloudConfig.getString("mongo-host");
+            String database = this.cloudConfig.getString("mongo-database");
+            String user = this.cloudConfig.getString("mongo-user");
+            String password = this.cloudConfig.getString("mongo-password");
 
             this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
             this.databaseServer = this.databaseManager.getDatabaseServer();
@@ -221,7 +222,7 @@ public class ByteCloud {
             return;
         }
 
-        NetworkManager.connect(this.config.getInt("socket-port"), this.logger);
+        NetworkManager.connect(this.cloudConfig.getInt("socket-port"), this.logger);
         this.cloudServer = new CloudServer();
         if(!this.cloudServer.startPacketServer()) {
             cleanStop();
@@ -229,7 +230,7 @@ public class ByteCloud {
         }
 
         try {
-            maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.config.getString("max-memory")));
+            maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.cloudConfig.getString("max-memory")));
             logger.info("Max memory size is set to: "+maxMemory);
         } catch (NumberFormatException ex) {
             System.err.println("Max memory size must be a number!");

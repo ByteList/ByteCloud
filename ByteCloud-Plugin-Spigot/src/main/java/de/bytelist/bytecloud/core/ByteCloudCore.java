@@ -2,7 +2,7 @@ package de.bytelist.bytecloud.core;
 
 import de.bytelist.bytecloud.core.cloud.CloudAPI;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
-import de.bytelist.bytecloud.config.Config;
+import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.server.PacketInServer;
 import de.bytelist.bytecloud.network.server.ServerClient;
@@ -28,7 +28,7 @@ public class ByteCloudCore extends JavaPlugin {
     @Getter
     private ServerClient serverClient;
     @Getter
-    private Config cloudConfig;
+    private CloudConfig cloudConfig;
     @Getter
     private File configFile;
 
@@ -48,7 +48,7 @@ public class ByteCloudCore extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         this.configFile = new File("plugins/ByteCloud", "cloudConfig.json");
-        this.cloudConfig = Config.loadDocument(this.configFile);
+        this.cloudConfig = CloudConfig.loadDocument(this.configFile);
 
         cloudHandler = new CloudHandler();
         cloudAPI = new CloudAPI();

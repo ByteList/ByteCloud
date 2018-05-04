@@ -1,7 +1,7 @@
 package de.bytelist.bytecloud;
 
 import de.bytelist.bytecloud.bungee.Bungee;
-import de.bytelist.bytecloud.config.Config;
+import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.CommandHandler;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
@@ -131,7 +131,7 @@ public interface IByteCloud {
     /**
      * Returns the configuration.
      */
-    public Config getConfig();
+    public CloudConfig getConfig();
     /**
      * Returns the configuration file.
      */

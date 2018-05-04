@@ -85,17 +85,17 @@ public class Updater {
         String urlDev = "https://kvm.bytelist.de/jenkins/job/ByteCloud-v2-dev/lastSuccessfulBuild/";
         int lastStableBuildNumber = Integer.parseInt(jenkinsAPI.getBuildNumber(urlStable));
         int lastStableDevBuildNumber = Integer.parseInt(jenkinsAPI.getBuildNumber(urlDev));
-        String lastVersion = byteCloud.getConfig().getString("last-version");
-        String lastVersionType = byteCloud.getConfig().getString("last-version-type");
-        String lastVersionStable = byteCloud.getConfig().getString("last-version-stable");
-        String updateChannel = byteCloud.getConfig().getString("update-channel");
+        String lastVersion = byteCloud.getCloudConfig().getString("last-version");
+        String lastVersionType = byteCloud.getCloudConfig().getString("last-version-type");
+        String lastVersionStable = byteCloud.getCloudConfig().getString("last-version-stable");
+        String updateChannel = byteCloud.getCloudConfig().getString("update-channel");
 
 
         if(updateChannel.equals("dev")) {
             if(byteCloud.isCurrentDevBuild()) {
                 if(currentBuildNumber < lastStableDevBuildNumber) {
                     byteCloud.getLogger().info("Update found! [channel: dev] Current build: "+currentBuildNumber+" - New build: "+lastStableDevBuildNumber);
-                    byteCloud.getConfig()
+                    byteCloud.getCloudConfig()
                             .append("last-version", byteCloud.getVersion())
                             .append("last-version-type", "dev")
                             .saveAsConfig(byteCloud.getConfigFile());
@@ -119,7 +119,7 @@ public class Updater {
 
                             if(lastVersionBuildNumber < lastStableDevBuildNumber) {
                                 byteCloud.getLogger().info("Update found! [channel: dev] Last build: "+lastVersionBuildNumber+" - New build: "+lastStableDevBuildNumber);
-                                byteCloud.getConfig()
+                                byteCloud.getCloudConfig()
                                         .append("last-version", byteCloud.getVersion())
                                         .append("last-version-type", "stable")
                                         .saveAsConfig(byteCloud.getConfigFile());
@@ -129,7 +129,7 @@ public class Updater {
                         case "stable":
                             byteCloud.getLogger().warning("Last version type (eq. channel) is stable!");
                             byteCloud.getLogger().info("Now the last dev build is downloading. ("+lastStableDevBuildNumber+")");
-                            byteCloud.getConfig()
+                            byteCloud.getCloudConfig()
                                     .append("last-version", byteCloud.getVersion())
                                     .append("last-version-type", "stable")
                                     .saveAsConfig(byteCloud.getConfigFile());
@@ -137,7 +137,7 @@ public class Updater {
                         default:
                             byteCloud.getLogger().warning("Unknown last version type (eq. channel)!");
                             byteCloud.getLogger().info("Now the last dev build is downloading. ("+lastStableDevBuildNumber+")");
-                            byteCloud.getConfig()
+                            byteCloud.getCloudConfig()
                                     .append("last-version", byteCloud.getVersion())
                                     .append("last-version-type", "stable")
                                     .saveAsConfig(byteCloud.getConfigFile());
@@ -160,7 +160,7 @@ public class Updater {
                         case "dev":
                             byteCloud.getLogger().warning("Last version type (eq. channel) is dev!");
                             byteCloud.getLogger().info("Now the last stable build is downloading. ("+lastStableBuildNumber+")");
-                            byteCloud.getConfig()
+                            byteCloud.getCloudConfig()
                                     .append("last-version", byteCloud.getVersion())
                                     .append("last-version-type", "dev")
                                     .saveAsConfig(byteCloud.getConfigFile());
@@ -173,7 +173,7 @@ public class Updater {
 
                             if(lastVersionBuildNumber < lastStableBuildNumber) {
                                 byteCloud.getLogger().info("Update found! [channel: stable] Last build: "+lastVersionBuildNumber+" - New build: "+lastStableBuildNumber);
-                                byteCloud.getConfig()
+                                byteCloud.getCloudConfig()
                                         .append("last-version", byteCloud.getVersion())
                                         .append("last-version-type", "dev")
                                         .saveAsConfig(byteCloud.getConfigFile());
@@ -191,7 +191,7 @@ public class Updater {
 
                                 if(lastVersionStableBuildNumber < lastStableBuildNumber) {
                                     byteCloud.getLogger().info("Update found! [channel: stable] Last build: "+lastVersionStableBuildNumber+" - New build: "+lastStableBuildNumber);
-                                    byteCloud.getConfig()
+                                    byteCloud.getCloudConfig()
                                             .append("last-version", byteCloud.getVersion())
                                             .append("last-version-type", "dev")
                                             .saveAsConfig(byteCloud.getConfigFile());
@@ -204,7 +204,7 @@ public class Updater {
             } else {
                 if(currentBuildNumber < lastStableBuildNumber) {
                     byteCloud.getLogger().info("Update found! [channel: stable] Current build: "+currentBuildNumber+" - New build: "+lastStableBuildNumber);
-                    byteCloud.getConfig()
+                    byteCloud.getCloudConfig()
                             .append("last-version", byteCloud.getVersion())
                             .append("last-version-type", "stable")
                             .saveAsConfig(byteCloud.getConfigFile());

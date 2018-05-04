@@ -57,7 +57,7 @@ public class PermServer extends Server {
                             "-Dde.bytelist.bytecloud.servergroup=PERMANENT",
 
                             "-Xmx" + ramM + "M",
-                            "-jar", byteCloud.getConfig().getString("jar-name") + ".jar",
+                            "-jar", byteCloud.getCloudConfig().getString("jar-name") + ".jar",
 
                             "-s", String.valueOf((maxPlayer + maxSpectator)),
                             "-o", "false",

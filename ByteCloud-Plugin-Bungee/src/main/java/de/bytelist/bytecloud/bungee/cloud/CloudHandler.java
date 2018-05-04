@@ -32,10 +32,10 @@ public class CloudHandler {
     private boolean cloudRunning;
 
     public CloudHandler() {
-        String host = byteCloudMaster.getConfig().getString("mongo-host");
-        String database = byteCloudMaster.getConfig().getString("mongo-database");
-        String user = byteCloudMaster.getConfig().getString("mongo-user");
-        String password = byteCloudMaster.getConfig().getString("mongo-password");
+        String host = byteCloudMaster.getCloudConfig().getString("mongo-host");
+        String database = byteCloudMaster.getCloudConfig().getString("mongo-database");
+        String user = byteCloudMaster.getCloudConfig().getString("mongo-user");
+        String password = byteCloudMaster.getCloudConfig().getString("mongo-password");
 
         this.bungeeId = System.getProperty("de.bytelist.bytecloud.servername", "Bungee-0");
 
@@ -49,7 +49,7 @@ public class CloudHandler {
     }
 
     public Integer getSocketPort() {
-        return byteCloudMaster.getConfig().getInt("socket-port");
+        return byteCloudMaster.getCloudConfig().getInt("socket-port");
     }
 
     public String getCloudAddress() {

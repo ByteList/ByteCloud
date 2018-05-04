@@ -17,7 +17,7 @@ import java.util.*;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class Config {
+public class CloudConfig {
 
     private static Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
     private static final JsonParser PARSER = new JsonParser();
@@ -31,59 +31,59 @@ public class Config {
 
     private JsonObject dataCatcher;
 
-    public Config(String name)
+    public CloudConfig(String name)
     {
         this.name = name;
         this.dataCatcher = new JsonObject();
     }
 
-    public Config(String name, JsonObject source)
+    public CloudConfig(String name, JsonObject source)
     {
         this.name = name;
         this.dataCatcher = source;
     }
 
-    public Config(File file, JsonObject jsonObject)
+    public CloudConfig(File file, JsonObject jsonObject)
     {
         this.file = file;
         this.dataCatcher = jsonObject;
     }
 
-    public Config(String key, String value)
+    public CloudConfig(String key, String value)
     {
         this.dataCatcher = new JsonObject();
         this.append(key, value);
     }
 
-    public Config(String key, Object value)
+    public CloudConfig(String key, Object value)
     {
         this.dataCatcher = new JsonObject();
         this.append(key, value);
     }
 
-    public Config(String key, Number value)
+    public CloudConfig(String key, Number value)
     {
         this.dataCatcher = new JsonObject();
         this.append(key, value);
     }
 
-    public Config(Config defaults)
+    public CloudConfig(CloudConfig defaults)
     {
         this.dataCatcher = defaults.dataCatcher;
     }
 
-    public Config(Config defaults, String name)
+    public CloudConfig(CloudConfig defaults, String name)
     {
         this.dataCatcher = defaults.dataCatcher;
         this.name = name;
     }
 
-    public Config()
+    public CloudConfig()
     {
         this.dataCatcher = new JsonObject();
     }
 
-    public Config(JsonObject source)
+    public CloudConfig(JsonObject source)
     {
         this.dataCatcher = source;
     }
@@ -98,49 +98,49 @@ public class Config {
         return this.dataCatcher.has(key);
     }
 
-    public Config append(String key, String value)
+    public CloudConfig append(String key, String value)
     {
         if (value == null) return this;
         this.dataCatcher.addProperty(key, value);
         return this;
     }
 
-    public Config append(String key, Number value)
+    public CloudConfig append(String key, Number value)
     {
         if (value == null) return this;
         this.dataCatcher.addProperty(key, value);
         return this;
     }
 
-    public Config append(String key, Boolean value)
+    public CloudConfig append(String key, Boolean value)
     {
         if (value == null) return this;
         this.dataCatcher.addProperty(key, value);
         return this;
     }
 
-    public Config append(String key, JsonElement value)
+    public CloudConfig append(String key, JsonElement value)
     {
         if (value == null) return this;
         this.dataCatcher.add(key, value);
         return this;
     }
 
-    public Config append(String key, Config value)
+    public CloudConfig append(String key, CloudConfig value)
     {
         if (value == null) return this;
         this.dataCatcher.add(key, value.dataCatcher);
         return this;
     }
 
-    public Config append(String key, Object value)
+    public CloudConfig append(String key, Object value)
     {
         if (value == null) return this;
         this.dataCatcher.add(key, GSON.toJsonTree(value));
         return this;
     }
 
-    public Config appendValues(Map<String, Object> values)
+    public CloudConfig appendValues(Map<String, Object> values)
     {
         for(Map.Entry<String, Object> valuess : values.entrySet())
         {
@@ -149,7 +149,7 @@ public class Config {
         return this;
     }
 
-    public Config remove(String key)
+    public CloudConfig remove(String key)
     {
         this.dataCatcher.remove(key);
         return this;
@@ -223,12 +223,12 @@ public class Config {
         return GSON.fromJson(element, class_);
     }
 
-    public Config getDocument(String key)
+    public CloudConfig getDocument(String key)
     {
-        return new Config(dataCatcher.get(key).getAsJsonObject());
+        return new CloudConfig(dataCatcher.get(key).getAsJsonObject());
     }
 
-    public Config clear()
+    public CloudConfig clear()
     {
         for(String key : keys())
         {
@@ -237,7 +237,7 @@ public class Config {
         return this;
     }
 
-    public Config loadProperies(Properties properties)
+    public CloudConfig loadProperies(Properties properties)
     {
         Enumeration<?> enumeration = properties.propertyNames();
         while (enumeration.hasMoreElements())
@@ -301,34 +301,34 @@ public class Config {
         return saveAsConfig(Paths.get(path));
     }
 
-    public static Config loadDocument(File backend)
+    public static CloudConfig loadDocument(File backend)
     {
         return loadDocument(backend.toPath());
     }
 
-    public static Config $loadDocument(File backend) throws Exception
+    public static CloudConfig $loadDocument(File backend) throws Exception
     {
         try
         {
-            return new Config(PARSER.parse(new String(Files.readAllBytes(backend.toPath()), StandardCharsets.UTF_8)).getAsJsonObject());
+            return new CloudConfig(PARSER.parse(new String(Files.readAllBytes(backend.toPath()), StandardCharsets.UTF_8)).getAsJsonObject());
         }catch (Exception ex) {
             throw new Exception(ex);
         }
     }
 
-    public static Config loadDocument(Path backend)
+    public static CloudConfig loadDocument(Path backend)
     {
 
         try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(backend), "UTF-8");
              BufferedReader bufferedReader = new BufferedReader(reader))
         {
             JsonObject object = PARSER.parse(bufferedReader).getAsJsonObject();
-            return new Config(object);
+            return new CloudConfig(object);
         } catch (Exception ex)
         {
             ex.getStackTrace();
         }
-        return new Config();
+        return new CloudConfig();
 
         /*
         try
@@ -341,7 +341,7 @@ public class Config {
         */
     }
 
-    public Config loadToExistingDocument(File backend)
+    public CloudConfig loadToExistingDocument(File backend)
     {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(backend), "UTF-8"))
         {
@@ -353,10 +353,10 @@ public class Config {
         {
             ex.getStackTrace();
         }
-        return new Config();
+        return new CloudConfig();
     }
 
-    public Config loadToExistingDocument(Path path)
+    public CloudConfig loadToExistingDocument(Path path)
     {
         try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(path), "UTF-8"))
         {
@@ -367,19 +367,19 @@ public class Config {
         {
             ex.getStackTrace();
         }
-        return new Config();
+        return new CloudConfig();
     }
 
-    public static Config load(String input)
+    public static CloudConfig load(String input)
     {
         try (InputStreamReader reader = new InputStreamReader(new StringBufferInputStream(input), "UTF-8"))
         {
-            return new Config(PARSER.parse(new BufferedReader(reader)).getAsJsonObject());
+            return new CloudConfig(PARSER.parse(new BufferedReader(reader)).getAsJsonObject());
         } catch (IOException e)
         {
             e.printStackTrace();
         }
-        return new Config();
+        return new CloudConfig();
     }
 
     @Override
@@ -388,9 +388,9 @@ public class Config {
         return convertToJsonString();
     }
 
-    public static Config load(JsonObject input)
+    public static CloudConfig load(JsonObject input)
     {
-        return new Config(input);
+        return new CloudConfig(input);
     }
 
     public <T> T getObject(String key, Type type)
