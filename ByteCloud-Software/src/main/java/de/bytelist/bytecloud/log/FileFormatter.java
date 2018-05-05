@@ -21,7 +21,7 @@ public class FileFormatter extends Formatter {
         StringBuilder formatted = new StringBuilder();
 
         if(record.getMessage().startsWith("#%scr3En%#")) {
-            return "";
+            return "#%i$Sc3en%#";
         }
 
         formatted.append(this.date.format(record.getMillis()));

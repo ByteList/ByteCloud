@@ -16,16 +16,17 @@ public class LogWriter extends Handler {
 
     private final ConsoleReader console;
 
-    public LogWriter(ConsoleReader console) {
+    LogWriter(ConsoleReader console) {
         this.console = console;
     }
 
-    public void print(String s) {
+    private void print(String s) {
         try {
             console.print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + ConsoleReader.RESET_LINE + s + Ansi.ansi().reset().toString());
             console.drawLine();
             console.flush();
         } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 

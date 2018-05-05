@@ -39,7 +39,9 @@ public class LogDispatcher extends Thread {
 
     void queue(LogRecord record) {
         if (!isInterrupted()) {
-            queue.add(record);
+            if(!record.getMessage().equals("#%i$Sc3en%#")) {
+                queue.add(record);
+            }
         }
     }
 }
