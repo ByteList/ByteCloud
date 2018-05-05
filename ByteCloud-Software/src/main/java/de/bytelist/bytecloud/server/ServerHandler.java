@@ -126,7 +126,7 @@ public class ServerHandler {
                     .filter(file -> file.getName().contains(".") && file.getName().endsWith(".zip")).count();
         }
 
-        compressZipFile(EnumFile.SERVERS_LOGS.getPath()+new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime())+":"+ length, files);
+        compressZipFile(EnumFile.SERVERS_LOGS.getPath()+new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())+":"+ length, files);
         deleteFiles(files);
         System.out.println("Servers stopped!");
     }

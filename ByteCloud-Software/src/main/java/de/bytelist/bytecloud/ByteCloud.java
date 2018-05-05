@@ -172,7 +172,6 @@ public class ByteCloud {
         serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
 
         cloudExecutor = new CloudExecutor();
-        cloudExecutor.start();
 
         // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
@@ -197,10 +196,10 @@ public class ByteCloud {
 
         AnsiConsole.systemInstall();
         try {
-            consoleReader = new ConsoleReader();
-            consoleReader.setExpandEvents(false);
+            this.consoleReader = new ConsoleReader();
+            this.consoleReader.setExpandEvents(false);
 
-            logger = new CloudLogger("ByteCloud", consoleReader);
+            this.logger = new CloudLogger("ByteCloud", consoleReader);
             System.setErr(new PrintStream(new LoggingOutPutStream(logger, Level.SEVERE), true));
             System.setOut(new PrintStream(new LoggingOutPutStream(logger, Level.INFO), true));
 
@@ -219,9 +218,10 @@ public class ByteCloud {
             e.printStackTrace();
         }
 
+        logger.info("Loading config.json...");
         this.configFile = new File(EnumFile.CLOUD.getPath(), "config.json");
         if(!this.configFile.exists()) {
-            logger.info("Can not find config! Creating one...");
+            logger.info("Can not find config.json! Creating one...");
             CloudConfig cfg = new CloudConfig()
                     .append("update-channel", "stable")
                     .append("mongo-host", "host")
@@ -254,7 +254,6 @@ public class ByteCloud {
             cleanStop();
             return;
         } else {
-            logger.info("Loading config.json...");
             this.cloudConfig = CloudConfig.loadDocument(this.configFile);
             this.cloudConfig.append("version", this.version);
             if(!isCurrentDevBuild()) this.cloudConfig.append("last-version-stable", this.version);
@@ -326,6 +325,7 @@ public class ByteCloud {
     public void start() {
         isRunning = true;
 
+        this.cloudExecutor.start();
         this.bungee.startBungee();
         try {
             Thread.sleep(7000L);
