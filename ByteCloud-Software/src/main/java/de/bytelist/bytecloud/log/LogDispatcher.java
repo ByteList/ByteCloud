@@ -15,7 +15,7 @@ public class LogDispatcher extends Thread {
     private final CloudLogger logger;
     private final BlockingQueue<LogRecord> queue = new LinkedBlockingQueue<>();
 
-    public LogDispatcher(CloudLogger logger) {
+    LogDispatcher(CloudLogger logger) {
         super("Cloud Logger Thread");
         this.logger = logger;
     }
@@ -37,11 +37,9 @@ public class LogDispatcher extends Thread {
         }
     }
 
-    public void queue(LogRecord record) {
+    void queue(LogRecord record) {
         if (!isInterrupted()) {
-            if(!record.getMessage().equals("#%i$Sc3en%#")) {
-                queue.add(record);
-            }
+            queue.add(record);
         }
     }
 }
