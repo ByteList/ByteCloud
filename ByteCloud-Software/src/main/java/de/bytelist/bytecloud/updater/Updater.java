@@ -102,7 +102,7 @@ public class Updater {
                     return urlDev;
                 }
             } else {
-                byteCloud.getLogger().warning("Current channel is set to dev, but current version isn't a dev-build!");
+                byteCloud.getLogger().warning("Current channel is set to dev, but current version is a stable-build!");
                 byteCloud.getLogger().warning("Try to look up for last version...");
 
                 if(lastVersion.equals("-") || lastVersionType.equals("-")) {
@@ -147,7 +147,7 @@ public class Updater {
             }
         } else {
             if(byteCloud.isCurrentDevBuild()) {
-                byteCloud.getLogger().warning("Current channel isn't set to dev, but current version is a dev-build!");
+                byteCloud.getLogger().warning("Current channel is set to stable, but current version is a dev-build!");
                 byteCloud.getLogger().warning("Try to look up for last version...");
 
                 if(lastVersion.equals("-") || lastVersionType.equals("-")) {

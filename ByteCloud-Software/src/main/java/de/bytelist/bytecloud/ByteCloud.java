@@ -227,8 +227,8 @@ public class ByteCloud {
             CloudConfig cfg = new CloudConfig()
                     .append("version", this.version)
                     .append("version-type", (isCurrentDevBuild() ? "dev" : "stable"))
-                    .append("last-version", "-")
-                    .append("last-version-type", "-")
+                    .append("last-version", this.version)
+                    .append("last-version-type", (isCurrentDevBuild() ? "dev" : "stable"))
                     .append("last-version-stable", (isCurrentDevBuild() ? "-" : this.version))
                     .append("update-channel", "stable")
                     .append("mongo-host", "host")
@@ -256,8 +256,9 @@ public class ByteCloud {
             cleanStop();
             return;
         } else {
-            this.cloudConfig = CloudConfig.loadDocument(this.configFile);
-            this.cloudConfig.append("version", this.version);
+            this.cloudConfig = CloudConfig.loadDocument(this.configFile)
+                    .append("version", this.version)
+                    .append("version-type", (isCurrentDevBuild() ? "dev" : "stable"));
             if(!isCurrentDevBuild()) this.cloudConfig.append("last-version-stable", this.version);
 
             this.cloudConfig.saveAsConfig(this.configFile);
