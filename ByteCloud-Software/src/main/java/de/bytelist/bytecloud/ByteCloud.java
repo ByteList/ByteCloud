@@ -225,6 +225,11 @@ public class ByteCloud {
         if(!this.configFile.exists()) {
             logger.info("Can not find config.json! Creating one...");
             CloudConfig cfg = new CloudConfig()
+                    .append("version", this.version)
+                    .append("version-type", (isCurrentDevBuild() ? "dev" : "stable"))
+                    .append("last-version", "-")
+                    .append("last-version-type", "-")
+                    .append("last-version-stable", (isCurrentDevBuild() ? "-" : this.version))
                     .append("update-channel", "stable")
                     .append("mongo-host", "host")
                     .append("mongo-user", "user")
@@ -233,12 +238,7 @@ public class ByteCloud {
                     .append("web-port", "8090")
                     .append("jar-name", "paperclip")
                     .append("socket-port", "4213")
-                    .append("max-memory", "13795")
-                    .append("version", this.version)
-                    .append("version-type", (isCurrentDevBuild() ? "dev" : "stable"))
-                    .append("last-version", "-")
-                    .append("last-version-type", "-")
-                    .append("last-version-stable", (isCurrentDevBuild() ? "-" : this.version));
+                    .append("max-memory", "13795");
             cfg.saveAsConfig(this.configFile);
             logger.info("****************");
             logger.info(" ");
@@ -297,7 +297,7 @@ public class ByteCloud {
 
         try {
             maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.cloudConfig.getString("max-memory")));
-            logger.info("Max memory size is set to: "+maxMemory);
+            logger.info("Max memory size is set to: "+maxMemory+"MB");
         } catch (NumberFormatException ex) {
             System.err.println("Max memory size must be a number!");
             cleanStop();
