@@ -192,7 +192,7 @@ public class ByteCloud {
         // For example test-test works fine, but test-test-test does not! In order to avoid this all together but
         // still keep our versions the same as they were, we set the override property to the essentially garbage version
         // ByteCloud. This version is only used when extracting the libraries to their temp folder.
-        System.setProperty("library.jansi.version", "ByteCloud");
+//        System.setProperty("library.jansi.version", "ByteCloud");
 
         AnsiConsole.systemInstall();
         try {
