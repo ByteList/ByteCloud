@@ -165,18 +165,20 @@ public class ByteCloud {
      */
     public ByteCloud() {
         instance = this;
-        isRunning = false;
-        cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
-        stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
-        startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
-        serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
+        this.isRunning = false;
+        this.cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
+        this.stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
+        this.startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
+        this.serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
 
-        cloudExecutor = new CloudExecutor();
+        this.cloudExecutor = new CloudExecutor();
+        this.screenSystem = new Screen();
 
         // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
         // 2.0.23:0034258
-        version = v[0]+":"+v[1].substring(0, 7);
+        this.version = v[0]+":"+v[1].substring(0, 7);
+
 
         for (EnumFile enumFile : EnumFile.values()) {
             File file = new File(enumFile.getPath());
@@ -192,7 +194,7 @@ public class ByteCloud {
         // For example test-test works fine, but test-test-test does not! In order to avoid this all together but
         // still keep our versions the same as they were, we set the override property to the essentially garbage version
         // ByteCloud. This version is only used when extracting the libraries to their temp folder.
-//        System.setProperty("library.jansi.version", "ByteCloud");
+        System.setProperty("library.jansi.version", "ByteCloud");
 
         AnsiConsole.systemInstall();
         try {
@@ -202,9 +204,9 @@ public class ByteCloud {
             e.printStackTrace();
         }
 
-        this.logger = new CloudLogger("ByteCloud", consoleReader);
-        System.setErr(new PrintStream(new LoggingOutPutStream(logger, Level.SEVERE), true));
-        System.setOut(new PrintStream(new LoggingOutPutStream(logger, Level.INFO), true));
+        this.logger = new CloudLogger("ByteCloud", this.consoleReader);
+        System.setErr(new PrintStream(new LoggingOutPutStream(this.logger, Level.SEVERE), true));
+        System.setOut(new PrintStream(new LoggingOutPutStream(this.logger, Level.INFO), true));
 
         logger.info("Starting cloud system."+
                 "\n"+ AnsiColor.CYAN +"\n" +
@@ -319,7 +321,6 @@ public class ByteCloud {
 
         this.bungee = new Bungee();
         this.serverHandler = new ServerHandler();
-        this.screenSystem = new Screen();
     }
 
     public void start() {
