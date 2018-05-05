@@ -47,7 +47,7 @@ public class ByteCloudCore extends JavaPlugin {
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        this.configFile = new File("plugins/ByteCloud", "cloudConfig.json");
+        this.configFile = new File("plugins/ByteCloud", "config.json");
         this.cloudConfig = CloudConfig.loadDocument(this.configFile);
 
         cloudHandler = new CloudHandler();

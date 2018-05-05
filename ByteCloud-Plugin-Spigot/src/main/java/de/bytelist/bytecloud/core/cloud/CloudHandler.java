@@ -40,14 +40,9 @@ public class CloudHandler {
         this.serverId = System.getProperty("de.bytelist.bytecloud.servername", Bukkit.getServerName());
         this.serverGroup = System.getProperty("de.bytelist.bytecloud.servergroup", "null");
 
-        try {
-            DatabaseManager databaseManager = new DatabaseManager(host, 27017, user, password, database);
-            Bukkit.getConsoleSender().sendMessage(byteCloudCore.prefix+"§eDatabase - §aConnected!");
-            this.databaseServer = databaseManager.getDatabaseServer();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        DatabaseManager databaseManager = new DatabaseManager(host, 27017, user, password, database);
+        Bukkit.getConsoleSender().sendMessage(byteCloudCore.prefix+"§eDatabase - §aConnected!");
+        this.databaseServer = databaseManager.getDatabaseServer();
     }
 
     public Integer getSocketPort() {

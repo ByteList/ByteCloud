@@ -38,7 +38,7 @@ public class DatabaseManager {
     @Getter
     private Executor executor;
 
-    public DatabaseManager(String host, int port, String username, String password, String database) throws Exception {
+    public DatabaseManager(String host, int port, String username, String password, String database) {
         // Disable the stupid log messages from mongodb
         Logger mongoLog = Logger.getLogger("org.mongodb.driver");
         mongoLog.setLevel(Level.OFF);
