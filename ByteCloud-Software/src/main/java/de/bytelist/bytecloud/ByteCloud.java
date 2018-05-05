@@ -198,26 +198,26 @@ public class ByteCloud {
         AnsiConsole.systemInstall();
         try {
             consoleReader = new ConsoleReader();
+            consoleReader.setExpandEvents(false);
+
+            logger = new CloudLogger("ByteCloud", consoleReader);
+            System.setErr(new PrintStream(new LoggingOutPutStream(logger, Level.SEVERE), true));
+            System.setOut(new PrintStream(new LoggingOutPutStream(logger, Level.INFO), true));
+
+            System.out.println("Starting cloud system."+
+                    "\n"+ AnsiColor.CYAN +"\n" +
+                    "   ____        _        _____ _                 _ \n" +
+                    "  |  _ \\      | |      / ____| |               | |\n" +
+                    "  | |_) |_   _| |_ ___| |    | | ___  _   _  __| |\n" +
+                    "  |  _ <| | | | __/ _ \\ |    | |/ _ \\| | | |/ _` |\n" +
+                    "  | |_) | |_| | ||  __/ |____| | (_) | |_| | (_| |\n" +
+                    "  |____/ \\__, |\\__\\___|\\_____|_|\\___/ \\__,_|\\__,_|\n" +
+                    "          __/ | T I G E R\n" +
+                    "         |___/                 b y   B y t e L i s t\n" +
+                    "\n\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        consoleReader.setExpandEvents(false);
-
-        logger = new CloudLogger("ByteCloud", consoleReader);
-        System.setErr(new PrintStream(new LoggingOutPutStream(logger, Level.SEVERE), true));
-        System.setOut(new PrintStream(new LoggingOutPutStream(logger, Level.INFO), true));
-
-        System.out.println("Starting cloud system."+
-                "\n"+ AnsiColor.CYAN +"\n" +
-                "   ____        _        _____ _                 _ \n" +
-                "  |  _ \\      | |      / ____| |               | |\n" +
-                "  | |_) |_   _| |_ ___| |    | | ___  _   _  __| |\n" +
-                "  |  _ <| | | | __/ _ \\ |    | |/ _ \\| | | |/ _` |\n" +
-                "  | |_) | |_| | ||  __/ |____| | (_) | |_| | (_| |\n" +
-                "  |____/ \\__, |\\__\\___|\\_____|_|\\___/ \\__,_|\\__,_|\n" +
-                "          __/ | T I G E R\n" +
-                "         |___/                 b y   B y t e L i s t\n" +
-                "\n\n");
 
         this.configFile = new File(EnumFile.CLOUD.getPath(), "config.json");
         if(!this.configFile.exists()) {

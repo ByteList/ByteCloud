@@ -31,53 +31,6 @@ public class CloudConfig {
 
     private JsonObject dataCatcher;
 
-    public CloudConfig(String name)
-    {
-        this.name = name;
-        this.dataCatcher = new JsonObject();
-    }
-
-    public CloudConfig(String name, JsonObject source)
-    {
-        this.name = name;
-        this.dataCatcher = source;
-    }
-
-    public CloudConfig(File file, JsonObject jsonObject)
-    {
-        this.file = file;
-        this.dataCatcher = jsonObject;
-    }
-
-    public CloudConfig(String key, String value)
-    {
-        this.dataCatcher = new JsonObject();
-        this.append(key, value);
-    }
-
-    public CloudConfig(String key, Object value)
-    {
-        this.dataCatcher = new JsonObject();
-        this.append(key, value);
-    }
-
-    public CloudConfig(String key, Number value)
-    {
-        this.dataCatcher = new JsonObject();
-        this.append(key, value);
-    }
-
-    public CloudConfig(CloudConfig defaults)
-    {
-        this.dataCatcher = defaults.dataCatcher;
-    }
-
-    public CloudConfig(CloudConfig defaults, String name)
-    {
-        this.dataCatcher = defaults.dataCatcher;
-        this.name = name;
-    }
-
     public CloudConfig()
     {
         this.dataCatcher = new JsonObject();
