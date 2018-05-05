@@ -254,10 +254,13 @@ public class ByteCloud {
             cleanStop();
             return;
         } else {
-            this.cloudConfig = CloudConfig.loadDocument(this.configFile).append("version", this.version);
+            logger.info("Loading config.json...");
+            this.cloudConfig = CloudConfig.loadDocument(this.configFile);
+            this.cloudConfig.append("version", this.version);
             if(!isCurrentDevBuild()) this.cloudConfig.append("last-version-stable", this.version);
 
             this.cloudConfig.saveAsConfig(this.configFile);
+            logger.info("Config loaded.");
         }
 
         if(System.getProperty("update", "true").equals("true")) {
