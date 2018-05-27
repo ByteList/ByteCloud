@@ -27,11 +27,6 @@ public class CloudExecutor extends Thread {
                 continue;
             }
             runnable.run();
-            try {
-                Thread.sleep(2000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         for(Runnable runnable : queue) {
             runnable.run();
