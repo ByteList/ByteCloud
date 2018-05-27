@@ -19,18 +19,21 @@ public class FileFormatter extends Formatter {
     @Override
     public String format(LogRecord record) {
         StringBuilder formatted = new StringBuilder();
+        String level = record.getLevel().getName();
 
         if(record.getMessage().startsWith("#%scr3En%#")) {
-            return "#%i$Sc3en%#";
+            return "";
+        }
+
+        if(record.getMessage().startsWith("#%§DEbuG§#%")) {
+            level = "DEBUG";
         }
 
         formatted.append(this.date.format(record.getMillis()));
         formatted.append(" | ");
-//        formatted.append(record.getLoggerName());
-//        formatted.append(" | ");
-        formatted.append(record.getLevel().getName());
+        formatted.append(level);
         formatted.append(" | ");
-        formatted.append(formatMessage(record));
+        formatted.append(formatMessage(record).replaceFirst("#%§DEbuG§#%", ""));
         formatted.append('\n');
 
         if (record.getThrown() != null) {

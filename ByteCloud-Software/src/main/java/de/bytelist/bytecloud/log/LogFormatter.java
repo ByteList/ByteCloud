@@ -21,39 +21,53 @@ public class LogFormatter extends Formatter {
     @Override
     public String format(LogRecord record) {
         if(ByteCloud.getInstance().getScreenSystem().getScreen() == null) {
-            return formatted(record, true);
+            return formatted(record, Mode.NORMAL);
         } else {
-            if(record.getMessage().startsWith("#%scr3En%#")) {
-                return formatted(record, false);
+            if(record.getMessage().startsWith("#%§DEbuG§#%")) {
+                return formatted(record, Mode.DEBUG);
+            } else if(record.getMessage().startsWith("#%scr3En%#")) {
+                return formatted(record, Mode.SCREEN);
             } else {
-                return formatted(record, true);
+                return formatted(record, Mode.NORMAL);
             }
         }
     }
 
-    private String formatted(LogRecord record, boolean normal) {
+    private String formatted(LogRecord record, Mode mode) {
         StringBuilder formatted = new StringBuilder();
 
         formatted.append(" ");
-        if(normal) {
-            formatted.append(AnsiColor.GREEN);
-            formatted.append(this.date.format(record.getMillis()));
-            formatted.append(AnsiColor.GRAY);
-            formatted.append(" | ");
-            if(record.getLevel().getName().startsWith("INFO")) {
-                formatted.append(AnsiColor.YELLOW);
-            } else {
+
+        switch (mode) {
+            case DEBUG:
+                formatted.append(AnsiColor.GREEN);
+                formatted.append(this.date.format(record.getMillis()));
+                formatted.append(AnsiColor.GRAY);
+                formatted.append(" | ");
                 formatted.append(AnsiColor.RED);
-            }
-            formatted.append(record.getLevel().getName());
-        } else {
-            formatted.append(AnsiColor.RED);
-            formatted.append(ByteCloud.getInstance().getScreenSystem().getScreen().getServerId());
+                formatted.append("DEBUG");
+                break;
+            case SCREEN:
+                formatted.append(AnsiColor.RED);
+                formatted.append(ByteCloud.getInstance().getScreenSystem().getScreen().getServerId());
+                break;
+            case NORMAL:
+                formatted.append(AnsiColor.GREEN);
+                formatted.append(this.date.format(record.getMillis()));
+                formatted.append(AnsiColor.GRAY);
+                formatted.append(" | ");
+                if(record.getLevel().getName().startsWith("INFO")) {
+                    formatted.append(AnsiColor.YELLOW);
+                } else {
+                    formatted.append(AnsiColor.RED);
+                }
+                formatted.append(record.getLevel().getName());
+                break;
         }
         formatted.append(AnsiColor.GRAY);
         formatted.append(" | ");
         formatted.append(AnsiColor.WHITE);
-        formatted.append(formatMessage(record).replaceFirst("#%scr3En%#", ""));
+        formatted.append(formatMessage(record).replaceFirst("#%scr3En%#", "").replaceFirst("#%§DEbuG§#%", ""));
         formatted.append(AnsiColor.DEFAULT);
         formatted.append('\n');
 
@@ -63,5 +77,9 @@ public class LogFormatter extends Formatter {
             formatted.append(writer);
         }
         return formatted.toString();
+    }
+
+    private enum Mode {
+        DEBUG, SCREEN, NORMAL
     }
 }
