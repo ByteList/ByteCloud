@@ -36,6 +36,8 @@ public class PermServer extends Server {
         this.starter = sender;
         boolean b = byteCloud.getCloudExecutor().execute(()-> {
             if(byteCloud.getUsedMemory()+ramM < byteCloud.getMaxMemory()) {
+                if(!byteCloud.isRunning) return;
+
                 if (!sender.equals("_cloud")) {
                     PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
                     byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
