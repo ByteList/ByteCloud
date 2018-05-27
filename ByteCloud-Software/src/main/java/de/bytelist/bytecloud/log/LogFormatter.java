@@ -34,9 +34,7 @@ public class LogFormatter extends Formatter {
     }
 
     private String formatted(LogRecord record, Mode mode) {
-        StringBuilder formatted = new StringBuilder();
-
-        formatted.append(" ");
+        StringBuilder formatted = new StringBuilder(" ");
 
         switch (mode) {
             case DEBUG:
