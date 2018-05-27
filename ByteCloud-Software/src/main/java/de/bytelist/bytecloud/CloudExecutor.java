@@ -13,6 +13,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class CloudExecutor extends Thread {
 
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+
     private final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
     @Getter @Setter
     private boolean extendedDebug;
@@ -49,11 +51,11 @@ public class CloudExecutor extends Thread {
     }
 
     public boolean execute(Runnable runnable, long sleepSeconds) {
+        long check = System.currentTimeMillis() / 1000 + sleepSeconds;
+
         return execute(()-> {
-            try {
-                Thread.sleep(sleepSeconds*1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            while (byteCloud.isRunning) {
+                if(System.currentTimeMillis() / 1000 >= check) break;
             }
             runnable.run();
         });
