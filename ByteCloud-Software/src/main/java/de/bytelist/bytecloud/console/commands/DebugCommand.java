@@ -10,13 +10,23 @@ import de.bytelist.bytecloud.console.Command;
  */
 public class DebugCommand extends Command {
 
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+
     public DebugCommand() {
         super("debug", "enable/disable the debug mode");
     }
 
     @Override
     public void execute(String[] args) {
-        ByteCloud.getInstance().setDebug(!ByteCloud.getInstance().isDebug());
-        System.out.println("Debug-Mode: "+ByteCloud.getInstance().isDebug()+".");
+
+        if(args.length == 1) {
+            if(args[0].equalsIgnoreCase("queue")) {
+                byteCloud.getCloudExecutor().setExtendedDebug(!byteCloud.getCloudExecutor().isExtendedDebug());
+                System.out.println("Debug-Mode: (queue) "+byteCloud.getCloudExecutor().isExtendedDebug()+".");
+                return;
+            }
+        }
+        byteCloud.setDebug(!byteCloud.isDebug());
+        System.out.println("Debug-Mode: "+byteCloud.isDebug()+".");
     }
 }

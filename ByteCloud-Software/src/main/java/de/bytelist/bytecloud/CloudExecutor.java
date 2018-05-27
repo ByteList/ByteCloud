@@ -1,5 +1,8 @@
 package de.bytelist.bytecloud;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -11,15 +14,21 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class CloudExecutor extends Thread {
 
     private final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+    @Getter @Setter
+    private boolean extendedDebug;
 
     CloudExecutor() {
         super("Cloud Executor Thread");
         setDaemon(true);
+        this.extendedDebug = false;
     }
 
     @Override
     public void run() {
         while (!isInterrupted()) {
+            if(extendedDebug) {
+                ByteCloud.getInstance().debug("queue size: "+queue.size());
+            }
             Runnable runnable;
             try {
                 runnable = queue.take();
