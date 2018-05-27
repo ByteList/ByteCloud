@@ -447,6 +447,6 @@ public class ByteCloud {
      * @param message the debug message
      */
     public void debug(String message) {
-        if(isDebug()) this.logger.info("#%§DEbuG§#%"+message);
+        if(isDebug()) this.logger.warning("#%§DEbuG§#%"+message);
     }
 }
