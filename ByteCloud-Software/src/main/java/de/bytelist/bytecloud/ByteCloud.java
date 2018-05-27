@@ -19,6 +19,7 @@ import de.bytelist.bytecloud.server.screen.Screen;
 import de.bytelist.bytecloud.updater.Updater;
 import jline.console.ConsoleReader;
 import lombok.Getter;
+import lombok.Setter;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
@@ -160,12 +161,19 @@ public class ByteCloud {
     private File configFile;
 
     /**
+     * If enabled you get more information about some tasks or somthing like this.
+     */
+    @Getter @Setter
+    private boolean debug;
+
+    /**
      * Initialise the cloud instance. This doesn't start anything!
      *
      */
     public ByteCloud() {
         instance = this;
         this.isRunning = false;
+        this.debug = false;
         this.cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         this.stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
         this.startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
@@ -314,7 +322,8 @@ public class ByteCloud {
                 new ServerCommand(),
                 new BungeeCommand(),
                 new EndCommand(),
-                new ScreenCommand()
+                new ScreenCommand(),
+                new DebugCommand()
         };
         for(Command command : commands) {
             this.commandHandler.registerCommand(command);
@@ -431,5 +440,13 @@ public class ByteCloud {
 
         // 2:1:{buildNumber}:dev:{commit}
         return ver.length == 5 && ver[3].equals("dev");
+    }
+
+    /**
+     * Send a debug formatted message to the cloud logger.
+     * @param message the debug message
+     */
+    public void debug(String message) {
+        this.logger.log(Level.SEVERE, "DEBUG | "+message);
     }
 }
