@@ -20,6 +20,7 @@ public class FileFormatter extends Formatter {
     public String format(LogRecord record) {
         StringBuilder formatted = new StringBuilder();
         String level = record.getLevel().getName();
+        String message = formatMessage(record);
 
         if(record.getMessage().startsWith("#%scr3En%#")) {
             return "";
@@ -33,7 +34,7 @@ public class FileFormatter extends Formatter {
         formatted.append(" | ");
         formatted.append(level);
         formatted.append(" | ");
-        formatted.append(formatMessage(record).replaceFirst("#%§DEbuG§#%", ""));
+        formatted.append(message.replaceFirst("#%§DEbuG§#%", ""));
         formatted.append('\n');
 
         if (record.getThrown() != null) {

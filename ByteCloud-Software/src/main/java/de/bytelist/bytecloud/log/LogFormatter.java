@@ -23,9 +23,7 @@ public class LogFormatter extends Formatter {
         if(ByteCloud.getInstance().getScreenSystem().getScreen() == null) {
             return formatted(record, Mode.NORMAL);
         } else {
-            if(record.getMessage().startsWith("#%§DEbuG§#%")) {
-                return formatted(record, Mode.DEBUG);
-            } else if(record.getMessage().startsWith("#%scr3En%#")) {
+            if(record.getMessage().startsWith("#%scr3En%#")) {
                 return formatted(record, Mode.SCREEN);
             } else {
                 return formatted(record, Mode.NORMAL);
@@ -35,19 +33,20 @@ public class LogFormatter extends Formatter {
 
     private String formatted(LogRecord record, Mode mode) {
         StringBuilder formatted = new StringBuilder(" ");
+        String message = formatMessage(record);
+        String level = record.getLevel().getName();
+
+        if(message.startsWith("#%§DEbuG§#%")) {
+            level = "DEBUG";
+            message = message.replaceFirst("#%§DEbuG§#%", "");
+        }
 
         switch (mode) {
-            case DEBUG:
-                formatted.append(AnsiColor.GREEN);
-                formatted.append(this.date.format(record.getMillis()));
-                formatted.append(AnsiColor.GRAY);
-                formatted.append(" | ");
-                formatted.append(AnsiColor.RED);
-                formatted.append("DEBUG");
-                break;
             case SCREEN:
                 formatted.append(AnsiColor.RED);
                 formatted.append(ByteCloud.getInstance().getScreenSystem().getScreen().getServerId());
+
+                message = message.replaceFirst("#%scr3En%#", "");
                 break;
             case NORMAL:
                 formatted.append(AnsiColor.GREEN);
@@ -59,13 +58,13 @@ public class LogFormatter extends Formatter {
                 } else {
                     formatted.append(AnsiColor.RED);
                 }
-                formatted.append(record.getLevel().getName());
+                formatted.append(level);
                 break;
         }
         formatted.append(AnsiColor.GRAY);
         formatted.append(" | ");
         formatted.append(AnsiColor.WHITE);
-        formatted.append(formatMessage(record).replaceFirst("#%scr3En%#", "").replaceFirst("#%§DEbuG§#%", ""));
+        formatted.append(message);
         formatted.append(AnsiColor.DEFAULT);
         formatted.append('\n');
 
@@ -78,6 +77,6 @@ public class LogFormatter extends Formatter {
     }
 
     private enum Mode {
-        DEBUG, SCREEN, NORMAL
+        SCREEN, NORMAL
     }
 }
