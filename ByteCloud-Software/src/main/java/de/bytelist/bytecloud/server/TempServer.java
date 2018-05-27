@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -42,12 +43,14 @@ public class TempServer extends Server {
     public boolean startServer(String sender) {
         this.starter = sender;
         boolean b = byteCloud.getCloudExecutor().execute(() -> {
+            byteCloud.debug(toString()+" - start - begin ===========");
             if(!byteCloud.isRunning) return;
 
             if (!sender.equals("_cloud")) {
                 PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
                 byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
             }
+            byteCloud.debug(toString()+" - start - process ?0 -> "+(process != null));
             if (process == null) {
                 byteCloud.getLogger().info("Server " + serverId + " is starting on port " + port + ".");
                 byteCloud.getServerHandler().registerServer(this);
@@ -72,6 +75,7 @@ public class TempServer extends Server {
                         "-p", String.valueOf(port),
                         "nogui"
                         };
+                byteCloud.debug(toString()+" - start - param: "+(Arrays.toString(param)));
                 ProcessBuilder pb = new ProcessBuilder(param);
                 pb.directory(directory);
                 try {
@@ -80,7 +84,9 @@ public class TempServer extends Server {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                byteCloud.debug(toString()+" - start - process ?0 -> "+(process != null));
             }
+            byteCloud.debug(toString()+" - start - end ===========");
         });
 
         if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server "+serverId);

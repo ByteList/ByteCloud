@@ -24,9 +24,7 @@ public class CloudExecutor extends Thread {
             try {
                 runnable = queue.take();
             } catch (InterruptedException ex) {
-                if(ByteCloud.getInstance().isDebug()) {
-                    ByteCloud.getInstance().debug(ex.getMessage());
-                }
+                ByteCloud.getInstance().debug(ex.getMessage());
                 continue;
             }
             runnable.run();
@@ -37,9 +35,7 @@ public class CloudExecutor extends Thread {
     }
 
     public boolean execute(Runnable runnable) {
-        if(ByteCloud.getInstance().isDebug()) {
-            ByteCloud.getInstance().debug("queue size before add: "+queue.size());
-        }
+        ByteCloud.getInstance().debug("queue size before add: "+queue.size());
         return !isInterrupted() && queue.add(runnable);
     }
 

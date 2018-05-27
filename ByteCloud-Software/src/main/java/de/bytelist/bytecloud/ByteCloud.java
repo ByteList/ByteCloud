@@ -447,6 +447,6 @@ public class ByteCloud {
      * @param message the debug message
      */
     public void debug(String message) {
-        this.logger.log(Level.SEVERE, "DEBUG | "+message);
+        if(isDebug()) this.logger.log(Level.SEVERE, "DEBUG | "+message);
     }
 }

@@ -43,6 +43,11 @@ public abstract class Server implements IScreen, Executable {
         return this.process != null && this.process.isAlive();
     }
 
+    @Override
+    public String toString() {
+        return "Server[id="+serverId+",port="+port+",ram="+ramM+",running="+isRunning()+"]";
+    }
+
     public enum ServerState {
         STARTING,
         LOBBY,
