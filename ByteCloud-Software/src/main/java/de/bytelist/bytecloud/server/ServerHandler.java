@@ -3,7 +3,6 @@ package de.bytelist.bytecloud.server;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.task.ServerHandleTask;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
@@ -32,7 +31,7 @@ public class ServerHandler {
 
     private HashMap<String, Server> servers;
 
-    private ServerHandleTask serverHandleTask;
+    private ServerCheckThread serverCheckThread;
     private boolean areServersRunning;
 
     public ServerHandler() {
@@ -40,7 +39,7 @@ public class ServerHandler {
         this.permanentServers = new ArrayList<>();
         this.servers = new HashMap<>();
 
-        this.serverHandleTask = new ServerHandleTask();
+        this.serverCheckThread = new ServerCheckThread();
         this.areServersRunning = false;
 
         final File servGroups = new File(EnumFile.TEMPLATES.getPath());
@@ -92,7 +91,7 @@ public class ServerHandler {
         for(ServerGroup serverGroup : serverGroups.values()) {
             serverGroup.start();
         }
-        if (!ByteCloud.getInstance().getCloudExecutor().execute(() -> this.serverHandleTask.run(), 10))
+        if (!ByteCloud.getInstance().getCloudExecutor().execute(() -> this.serverCheckThread.start(), 10))
             byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server groups.");
     }
 

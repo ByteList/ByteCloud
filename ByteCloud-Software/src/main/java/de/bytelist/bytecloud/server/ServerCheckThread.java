@@ -1,16 +1,19 @@
-package de.bytelist.bytecloud.task;
+package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
-import de.bytelist.bytecloud.server.ServerGroup;
 
 /**
  * Created by ByteList on 01.05.2018.
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class ServerHandleTask implements Runnable {
+public class ServerCheckThread extends Thread {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
+
+    public ServerCheckThread() {
+        super("Server Check Thread");
+    }
 
     @Override
     public void run() {
