@@ -41,6 +41,10 @@ public class CloudExecutor extends Thread {
     }
 
     public boolean execute(Runnable runnable) {
+        if(!byteCloud.isRunning) {
+            runnable.run();
+            return true;
+        }
         byteCloud.debug("queue size before add: "+queue.size());
         return queue.add(runnable);
     }
