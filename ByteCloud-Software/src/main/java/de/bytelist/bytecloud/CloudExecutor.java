@@ -27,9 +27,9 @@ public class CloudExecutor extends Thread {
 
     @Override
     public void run() {
-        while (!isInterrupted()) {
+        while (byteCloud.isRunning) {
             if(extendedDebug) {
-                ByteCloud.getInstance().debug("queue size: "+queue.size());
+                byteCloud.debug("queue size: "+queue.size());
             }
             Runnable runnable;
             try {
