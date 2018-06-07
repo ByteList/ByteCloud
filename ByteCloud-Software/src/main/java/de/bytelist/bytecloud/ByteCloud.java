@@ -173,13 +173,15 @@ public class ByteCloud {
     public ByteCloud() {
         instance = this;
         this.isRunning = false;
-        this.debug = false;
+        this.debug = Boolean.valueOf(System.getProperty("de.bytelist.bytecloud.debug", "false"));
         this.cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         this.stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
         this.startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
         this.serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
 
         this.cloudExecutor = new CloudExecutor();
+        this.cloudExecutor.setExtendedDebug(Boolean.valueOf(System.getProperty("de.bytelist.bytecloud.debug", "false")));
+
         this.screenSystem = new Screen();
 
         // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
