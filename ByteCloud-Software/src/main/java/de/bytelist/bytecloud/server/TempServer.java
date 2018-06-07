@@ -95,13 +95,13 @@ public class TempServer extends Server {
 
     @Override
     public boolean stopServer(String sender) {
-        byteCloud.getLogger().info("Server " + serverId + " is stopping.");
         this.stopper = sender;
-        if (!sender.equals("_cloud")) {
-            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e" + getServerId() + "§7.");
-            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
-        }
         boolean b = byteCloud.getCloudExecutor().execute(() -> {
+            byteCloud.getLogger().info("Server " + serverId + " is stopping.");
+            if (!sender.equals("_cloud")) {
+                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e" + getServerId() + "§7.");
+                byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+            }
             if (this.process != null) {
                 if (this.process.isAlive()) {
                     if(byteCloud.isRunning) {

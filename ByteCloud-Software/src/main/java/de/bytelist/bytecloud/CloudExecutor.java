@@ -21,7 +21,7 @@ public class CloudExecutor extends Thread {
 
     CloudExecutor() {
         super("Cloud Executor Thread");
-        setDaemon(true);
+//        setDaemon(true);
         this.extendedDebug = false;
     }
 
@@ -46,8 +46,8 @@ public class CloudExecutor extends Thread {
     }
 
     public boolean execute(Runnable runnable) {
-        ByteCloud.getInstance().debug("queue size before add: "+queue.size());
-        return !isInterrupted() && queue.add(runnable);
+        byteCloud.debug("queue size before add: "+queue.size());
+        return queue.add(runnable);
     }
 
     public boolean execute(Runnable runnable, long sleepSeconds) {

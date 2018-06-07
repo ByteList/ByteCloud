@@ -91,13 +91,13 @@ public class PermServer extends Server {
 
     @Override
     public boolean stopServer(String sender) {
-        byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
         this.stopper = sender;
-        if(!sender.equals("_cloud")) {
-            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent server §e"+getServerId()+"§7.");
-            byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
-        }
         boolean b = byteCloud.getCloudExecutor().execute(()-> {
+            byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
+            if(!sender.equals("_cloud")) {
+                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent server §e"+getServerId()+"§7.");
+                byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
+            }
             if(this.process != null) {
                 if(this.process.isAlive()) {
                     if(byteCloud.isRunning) {
