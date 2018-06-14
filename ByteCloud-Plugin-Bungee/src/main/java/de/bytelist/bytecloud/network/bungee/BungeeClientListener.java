@@ -43,8 +43,6 @@ public class BungeeClientListener extends JsonClientListener {
                     break;
                 case IN_STOP_OWN_SERVER:
                     break;
-                case OUT_CHANGE_SERVER_STATE:
-                    break;
                 case OUT_CLOUD_INFO:
                     CloudHandler cloudHandler = byteCloudMaster.getCloudHandler();
                     cloudHandler.setCloudVersion(jsonObject.get("cloudVersion").getAsString());
@@ -130,6 +128,8 @@ public class BungeeClientListener extends JsonClientListener {
                 case OUT_UNREGISTER_SERVER:
                     serverId = jsonObject.get("serverId").getAsString();
                     byteCloudMaster.getProxy().getServers().remove(serverId);
+                    break;
+                case OUT_CALL_CLOUD_EVENT:
                     break;
             }
 

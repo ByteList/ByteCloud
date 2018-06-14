@@ -4,10 +4,14 @@ import com.google.gson.JsonObject;
 import com.voxelboxstudios.resilent.server.JsonServerListener;
 import com.voxelboxstudios.resilent.server.Patron;
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.core.event.CloudEvent;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.PacketName;
 import de.bytelist.bytecloud.server.Server;
+import de.bytelist.bytecloud.server.Server.ServerState;
 import de.bytelist.bytecloud.server.ServerGroup;
+
+import static de.bytelist.bytecloud.core.event.CloudEvent.createEventString;
 
 /**
  * Created by ByteList on 26.05.2017.
@@ -70,11 +74,20 @@ public class CloudServerListener extends JsonServerListener {
                         byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
                     }
                     break;
+                case IN_PLAYER_CHANGED_SERVER:
+                    String player = jsonObject.get("player").getAsString();
+                    serverId = jsonObject.get("target").getAsString();
+                    String old = jsonObject.get("old").getAsString();
+
+                    String event = createEventString(CloudEvent.PLAYER_CONNECT, player, serverId, old);
+                    PacketOutCallCloudEvent packetOutCallCloudEvent = new PacketOutCallCloudEvent(event);
+                    byteCloud.getServerHandler().getServers().forEach(server -> byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutCallCloudEvent));
+                    break;
                 case IN_CHANGE_SERVER_STATE:
                     serverId = jsonObject.get("serverId").getAsString();
                     if(byteCloud.getServerHandler().existsServer(serverId)) {
                         Server server = byteCloud.getServerHandler().getServer(serverId);
-                        server.setServerState(Server.ServerState.valueOf(jsonObject.get("serverState").getAsString()));
+                        server.setServerState(ServerState.valueOf(jsonObject.get("serverState").getAsString()));
                     }
                     break;
                 case IN_KICK_PLAYER:
@@ -85,8 +98,6 @@ public class CloudServerListener extends JsonServerListener {
                         Server server = byteCloud.getServerHandler().getServer(serverId);
                         server.stopServer("_cloud");
                     }
-                    break;
-                case OUT_CHANGE_SERVER_STATE:
                     break;
                 case OUT_CLOUD_INFO:
                     break;
@@ -103,6 +114,8 @@ public class CloudServerListener extends JsonServerListener {
                 case OUT_SEND_MESSAGE:
                     break;
                 case OUT_UNREGISTER_SERVER:
+                    break;
+                case OUT_CALL_CLOUD_EVENT:
                     break;
             }
         }

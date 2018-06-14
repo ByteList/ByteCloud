@@ -18,6 +18,7 @@ public enum PacketName {
     IN_BUNGEE_STPOPPED(PacketType.BUNGEE, "PacketInBungeeStopped"),
     IN_START_SERVER(PacketType.BUNGEE, "PacketInStartServer"),
     IN_STOP_SERVER(PacketType.BUNGEE, "PacketInStopServer"),
+    IN_PLAYER_CHANGED_SERVER(PacketType.BUNGEE, "PacketInPlayerChangedServer"),
 
     /**
      package: de.bytelist.bytecloud.network.server
@@ -30,7 +31,6 @@ public enum PacketName {
     /**
      package: de.bytelist.bytecloud.network.cloud
      */
-    OUT_CHANGE_SERVER_STATE(PacketType.CLOUD, "PacketOutChangeServerState"),
     OUT_CLOUD_INFO(PacketType.CLOUD, "PacketOutCloudInfo"),
     OUT_EXECUTE_COMMAND(PacketType.CLOUD, "PacketOutExecuteCommand"),
     @Deprecated OUT_KICK_ALL_PLAYERS(PacketType.CLOUD, "PacketOutKickAllPlayers"),
@@ -38,7 +38,8 @@ public enum PacketName {
     OUT_MOVE_PLAYER(PacketType.CLOUD, "PacketOutMovePlayer"),
     OUT_REGISTER_PLAYER(PacketType.CLOUD, "PacketOutRegisterServer"),
     OUT_SEND_MESSAGE(PacketType.CLOUD, "PacketOutSendMessage"),
-    OUT_UNREGISTER_SERVER(PacketType.CLOUD, "PacketOutUnregisterServer");
+    OUT_UNREGISTER_SERVER(PacketType.CLOUD, "PacketOutUnregisterServer"),
+    OUT_CALL_CLOUD_EVENT(PacketType.CLOUD, "PacketOutCallCloudEvent");
 
 
     @Getter

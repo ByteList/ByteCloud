@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.core.event.CloudEvent;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.network.cloud.*;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static de.bytelist.bytecloud.core.event.CloudEvent.createEventString;
 
 /**
  * Created by ByteList on 28.05.2017.
@@ -189,13 +192,10 @@ public class TempServer extends Server {
 
     @Override
     public void setServerState(ServerState serverState) {
-        ServerGroup serverGroup = byteCloud.getServerHandler().getServerGroups().getOrDefault("LOBBY", null);
-        if (serverGroup != null) {
-            PacketOutChangeServerState packetOutChangeServerState = new PacketOutChangeServerState(this.getServerId(), this.serverGroup.getGroupName(), getServerState().name(), serverState.name());
-            for (String server : serverGroup.getServers()) {
-                byteCloud.getCloudServer().sendPacket(server, packetOutChangeServerState);
-            }
-        }
+        String event = createEventString(CloudEvent.SERVER_UPDATE_STATE, this.serverId, this.serverGroup.getGroupName(), this.serverState.name(), serverState.name());
+        PacketOutCallCloudEvent packetOutCallCloudEvent = new PacketOutCallCloudEvent(event);
+
+        byteCloud.getServerHandler().getServers().forEach(server -> byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutCallCloudEvent));
         super.setServerState(serverState);
     }
 
@@ -206,8 +206,8 @@ public class TempServer extends Server {
             try {
                 this.process.getOutputStream().write(x.getBytes());
                 this.process.getOutputStream().flush();
-            } catch (IOException var4) {
-                var4.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
 
         }

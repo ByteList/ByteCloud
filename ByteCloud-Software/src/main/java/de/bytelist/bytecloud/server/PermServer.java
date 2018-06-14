@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.core.event.CloudEvent;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.network.cloud.*;
@@ -10,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import static de.bytelist.bytecloud.core.event.CloudEvent.createEventString;
 
 /**
  * Created by ByteList on 28.05.2017.
@@ -170,6 +173,15 @@ public class PermServer extends Server {
             PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(starter, "§aServer §e"+getServerId()+"§a started.");
             byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
         }
+    }
+
+    @Override
+    public void setServerState(ServerState serverState) {
+        String event = createEventString(CloudEvent.SERVER_UPDATE_STATE, this.serverId, "PERMANENT", this.serverState.name(), serverState.name());
+        PacketOutCallCloudEvent packetOutCallCloudEvent = new PacketOutCallCloudEvent(event);
+
+        byteCloud.getServerHandler().getServers().forEach(server -> byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutCallCloudEvent));
+        super.setServerState(serverState);
     }
 
 

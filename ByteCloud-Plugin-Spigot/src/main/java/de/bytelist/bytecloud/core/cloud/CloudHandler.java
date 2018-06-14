@@ -1,6 +1,8 @@
 package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.core.ByteCloudCore;
+import de.bytelist.bytecloud.core.cloud.CloudAPI.ServerState;
+import de.bytelist.bytecloud.core.event.CloudPlayerConnectToServerEvent;
 import de.bytelist.bytecloud.core.event.CloudServerUpdateEvent;
 import de.bytelist.bytecloud.core.event.CloudServerUpdateStateEvent;
 import de.bytelist.bytecloud.database.DatabaseElement;
@@ -129,14 +131,16 @@ public class CloudHandler {
     }
 
     public void callCloudServerUpdateEvent(String serverId, String serverGroup) {
-        CloudServerUpdateEvent event = new CloudServerUpdateEvent(serverId, serverGroup);
-        Bukkit.getPluginManager().callEvent(event);
+        Bukkit.getPluginManager().callEvent(new CloudServerUpdateEvent(serverId, serverGroup));
     }
 
-    public void callCloudServerUpdateStateEvent(String serverId, String serverGroup, CloudAPI.ServerState oldState, CloudAPI.ServerState newState) {
-        CloudServerUpdateStateEvent event = new CloudServerUpdateStateEvent(serverId, serverGroup, oldState, newState);
-        Bukkit.getPluginManager().callEvent(event);
+    public void callCloudServerUpdateStateEvent(String serverId, String serverGroup, String oldState, String newState) {
+        Bukkit.getPluginManager().callEvent(new CloudServerUpdateStateEvent(serverId, serverGroup, ServerState.valueOf(oldState), ServerState.valueOf(newState)));
     }
 
+    public void callCloudPlayerConnectToServerEvent(String player, String oldServer, String targetServer) {
+        if(oldServer.equals("null")) oldServer = null;
 
+        Bukkit.getPluginManager().callEvent(new CloudPlayerConnectToServerEvent(player, oldServer, targetServer));
+    }
 }

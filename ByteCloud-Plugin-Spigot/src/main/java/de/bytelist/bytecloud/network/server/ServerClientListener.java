@@ -3,8 +3,8 @@ package de.bytelist.bytecloud.network.server;
 import com.google.gson.JsonObject;
 import com.voxelboxstudios.resilent.client.JsonClientListener;
 import de.bytelist.bytecloud.core.ByteCloudCore;
-import de.bytelist.bytecloud.core.cloud.CloudAPI;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
+import de.bytelist.bytecloud.core.event.CloudEvent;
 import de.bytelist.bytecloud.network.PacketName;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -43,13 +43,6 @@ public class ServerClientListener extends JsonClientListener {
                     break;
                 case IN_STOP_OWN_SERVER:
                     break;
-                case OUT_CHANGE_SERVER_STATE:
-                    serverId = jsonObject.get("serverId").getAsString();
-                    serverGroup = jsonObject.get("serverGroup").getAsString();
-                    CloudAPI.ServerState oldState = CloudAPI.ServerState.valueOf(jsonObject.get("oldState").getAsString()),
-                            newState = CloudAPI.ServerState.valueOf(jsonObject.get("newState").getAsString());
-                    byteCloudCore.getCloudHandler().callCloudServerUpdateStateEvent(serverId, serverGroup, oldState, newState);
-                    break;
                 case OUT_CLOUD_INFO:
                     CloudHandler cloudHandler = byteCloudCore.getCloudHandler();
                     cloudHandler.setCloudVersion(jsonObject.get("cloudVersion").getAsString());
@@ -81,6 +74,24 @@ public class ServerClientListener extends JsonClientListener {
                 case OUT_SEND_MESSAGE:
                     break;
                 case OUT_UNREGISTER_SERVER:
+                    break;
+                case OUT_CALL_CLOUD_EVENT:
+                    String[] event = jsonObject.get("event").getAsString().split(":");
+                    CloudEvent cloudEvent = CloudEvent.getCloudEventFromId(Integer.valueOf(event[0]));
+
+                    switch (cloudEvent) {
+                        case UNKNOWN:
+                            break;
+                        case SERVER_UPDATE:
+                            byteCloudCore.getCloudHandler().callCloudServerUpdateEvent(event[1], event[2]);
+                            break;
+                        case SERVER_UPDATE_STATE:
+                            byteCloudCore.getCloudHandler().callCloudServerUpdateStateEvent(event[1], event[2], event[3], event[4]);
+                            break;
+                        case PLAYER_CONNECT:
+                            byteCloudCore.getCloudHandler().callCloudPlayerConnectToServerEvent(event[1], event[2], event[3]);
+                        break;
+                    }
                     break;
             }
         }
