@@ -10,6 +10,7 @@ import de.bytelist.bytecloud.network.PacketName;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.Server.ServerState;
 import de.bytelist.bytecloud.server.ServerGroup;
+import de.bytelist.bytecloud.server.TempServer;
 
 import static de.bytelist.bytecloud.core.event.CloudEvent.createEventString;
 
@@ -75,11 +76,18 @@ public class CloudServerListener extends JsonServerListener {
                     }
                     break;
                 case IN_PLAYER_CHANGED_SERVER:
+                    String oldGroup = "null", targetGroup = "null";
                     String player = jsonObject.get("player").getAsString();
-                    serverId = jsonObject.get("target").getAsString();
                     String old = jsonObject.get("old").getAsString();
+                    serverId = jsonObject.get("target").getAsString();
 
-                    String event = createEventString(CloudEvent.PLAYER_CONNECT, player, serverId, old);
+                    if(byteCloud.getServerHandler().getServer(old) instanceof TempServer)
+                        oldGroup = ((TempServer) byteCloud.getServerHandler().getServer(old)).getServerGroup().getGroupName();
+                    if(byteCloud.getServerHandler().getServer(serverId) instanceof TempServer)
+                        targetGroup = ((TempServer) byteCloud.getServerHandler().getServer(serverId)).getServerGroup().getGroupName();
+
+
+                    String event = createEventString(CloudEvent.PLAYER_CONNECT, player, old, oldGroup, serverId, targetGroup);
                     PacketOutCallCloudEvent packetOutCallCloudEvent = new PacketOutCallCloudEvent(event);
                     byteCloud.getServerHandler().getServers().forEach(server -> byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutCallCloudEvent));
                     break;

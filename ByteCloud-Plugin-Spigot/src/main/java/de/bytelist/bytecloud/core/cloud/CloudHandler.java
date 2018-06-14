@@ -138,9 +138,12 @@ public class CloudHandler {
         Bukkit.getPluginManager().callEvent(new CloudServerUpdateStateEvent(serverId, serverGroup, ServerState.valueOf(oldState), ServerState.valueOf(newState)));
     }
 
-    public void callCloudPlayerConnectToServerEvent(String player, String oldServer, String targetServer) {
-        if(oldServer.equals("null")) oldServer = null;
+    public void callCloudPlayerConnectToServerEvent(String player, String oldServer, String oldServerGroup, String targetServer, String targetServerGroup) {
+        if(oldServer.equals("null")) {
+            oldServer = null;
+            oldServerGroup = null;
+        }
 
-        Bukkit.getPluginManager().callEvent(new CloudPlayerConnectToServerEvent(player, oldServer, targetServer));
+        Bukkit.getPluginManager().callEvent(new CloudPlayerConnectToServerEvent(player, oldServer, oldServerGroup, targetServer, targetServerGroup));
     }
 }

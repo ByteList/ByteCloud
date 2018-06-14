@@ -89,7 +89,7 @@ public class ServerClientListener extends JsonClientListener {
                             byteCloudCore.getCloudHandler().callCloudServerUpdateStateEvent(event[1], event[2], event[3], event[4]);
                             break;
                         case PLAYER_CONNECT:
-                            byteCloudCore.getCloudHandler().callCloudPlayerConnectToServerEvent(event[1], event[2], event[3]);
+                            byteCloudCore.getCloudHandler().callCloudPlayerConnectToServerEvent(event[1], event[2], event[3], event[4], event[5]);
                         break;
                     }
                     break;

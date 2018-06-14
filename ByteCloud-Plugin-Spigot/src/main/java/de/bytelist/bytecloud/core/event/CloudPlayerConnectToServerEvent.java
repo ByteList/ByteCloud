@@ -19,12 +19,18 @@ public class CloudPlayerConnectToServerEvent extends Event {
     @Getter
     private String oldServer;
     @Getter
+    private String oldServerGroup;
+    @Getter
     private String targetServer;
+    @Getter
+    private String targetServerGroup;
 
-    public CloudPlayerConnectToServerEvent(String player, String oldServer, String targetServer) {
+    public CloudPlayerConnectToServerEvent(String player, String oldServer, String oldServerGroup, String targetServer, String targetServerGroup) {
         this.player = player;
         this.oldServer = oldServer;
+        this.oldServerGroup = oldServerGroup;
         this.targetServer = targetServer;
+        this.targetServerGroup = targetServerGroup;
     }
 
 
