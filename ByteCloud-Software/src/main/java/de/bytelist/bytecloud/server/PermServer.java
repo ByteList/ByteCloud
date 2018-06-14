@@ -180,7 +180,10 @@ public class PermServer extends Server {
         String event = createEventString(CloudEvent.SERVER_UPDATE_STATE, this.serverId, "PERMANENT", this.serverState.name(), serverState.name());
         PacketOutCallCloudEvent packetOutCallCloudEvent = new PacketOutCallCloudEvent(event);
 
-        byteCloud.getServerHandler().getServers().forEach(server -> byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutCallCloudEvent));
+        byteCloud.getServerHandler().getServers().forEach(server -> {
+            if(server.getServerState() != ServerState.STARTING)
+                byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutCallCloudEvent);
+        });
         super.setServerState(serverState);
     }
 
