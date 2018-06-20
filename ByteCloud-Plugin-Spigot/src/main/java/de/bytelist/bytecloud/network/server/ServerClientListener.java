@@ -82,7 +82,8 @@ public class ServerClientListener extends JsonClientListener {
                     try {
                         id = Integer.valueOf(event[0]);
                     } catch (NumberFormatException ex) {
-                        byteCloudCore.getLogger().warning(PacketName.OUT_CALL_CLOUD_EVENT.getPacketName()+" throws: "+ex.getMessage());
+                        byteCloudCore.getLogger().warning(PacketName.OUT_CALL_CLOUD_EVENT.getPacketName()+" throws "+ex.getClass().getSimpleName()+": "+ex.getMessage());
+                        byteCloudCore.getLogger().warning("event: "+jsonObject.get("event").getAsString());
                         break;
                     }
 
