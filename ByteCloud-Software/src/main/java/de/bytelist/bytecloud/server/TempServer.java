@@ -48,7 +48,7 @@ public class TempServer extends Server {
         boolean b = byteCloud.getCloudExecutor().execute(() -> {
             byteCloud.debug(toString()+" - start - begin ===========");
             if(!byteCloud.isRunning) return;
-
+            setServerState(ServerState.STARTING);
             if (!sender.equals("_cloud")) {
                 PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
                 byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
@@ -105,6 +105,7 @@ public class TempServer extends Server {
                 PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping server §e" + getServerId() + "§7.");
                 byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
             }
+            setServerState(ServerState.STOPPED);
             if (this.process != null) {
                 if (this.process.isAlive()) {
                     if(byteCloud.isRunning) {
