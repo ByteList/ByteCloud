@@ -29,7 +29,8 @@ public enum CloudEvent {
     }
 
     public static String createEventString(CloudEvent event, String... args) {
-        StringBuilder stringBuilder = new StringBuilder(event.getId());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.valueOf(event.getId()));
         for(String a : args) stringBuilder.append(":").append(a);
 
         return stringBuilder.toString();
