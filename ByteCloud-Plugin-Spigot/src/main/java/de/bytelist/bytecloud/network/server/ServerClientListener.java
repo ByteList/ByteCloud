@@ -77,7 +77,16 @@ public class ServerClientListener extends JsonClientListener {
                     break;
                 case OUT_CALL_CLOUD_EVENT:
                     String[] event = jsonObject.get("event").getAsString().split(":");
-                    CloudEvent cloudEvent = CloudEvent.getCloudEventFromId(Integer.valueOf(event[0]));
+                    int id;
+
+                    try {
+                        id = Integer.valueOf(event[0]);
+                    } catch (NumberFormatException ex) {
+                        byteCloudCore.getLogger().warning(PacketName.OUT_CALL_CLOUD_EVENT.getPacketName()+" throws: "+ex.getMessage());
+                        break;
+                    }
+
+                    CloudEvent cloudEvent = CloudEvent.getCloudEventFromId(id);
 
                     switch (cloudEvent) {
                         case UNKNOWN:
