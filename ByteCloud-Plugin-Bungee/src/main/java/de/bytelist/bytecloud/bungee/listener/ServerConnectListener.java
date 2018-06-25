@@ -7,6 +7,7 @@ import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 
 /**
  * Created by ByteList on 29.01.2017.
@@ -15,7 +16,7 @@ public class ServerConnectListener implements Listener {
 
     private final ByteCloudMaster byteCloudMaster = ByteCloudMaster.getInstance();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onServerConnect(ServerConnectEvent e) {
         ProxiedPlayer pp = e.getPlayer();
         Server from = pp.getServer();

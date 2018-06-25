@@ -99,6 +99,10 @@ public class CloudServerListener extends JsonServerListener {
                     }
                     break;
                 case IN_KICK_PLAYER:
+                    player = jsonObject.get("player").getAsString();
+                    String reason = jsonObject.get("reason").getAsString();
+                    PacketOutKickPlayer packetOutKickPlayer = new PacketOutKickPlayer(reason, player);
+                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickPlayer);
                     break;
                 case IN_STOP_OWN_SERVER:
                     serverId = jsonObject.get("serverId").getAsString();
