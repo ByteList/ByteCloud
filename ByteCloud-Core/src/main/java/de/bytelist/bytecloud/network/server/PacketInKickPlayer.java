@@ -13,6 +13,6 @@ public class PacketInKickPlayer extends Packet {
     public PacketInKickPlayer(String player, String reason) {
         super(PacketName.IN_KICK_PLAYER);
         addProperty("player", player);
-        addProperty("reason", reason);
+        addProperty("reason", reason.replace("§", "#&C#"));
     }
 }
