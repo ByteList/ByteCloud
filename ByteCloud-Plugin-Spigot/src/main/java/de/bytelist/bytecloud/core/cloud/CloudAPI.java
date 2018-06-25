@@ -3,6 +3,7 @@ package de.bytelist.bytecloud.core.cloud;
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.network.server.PacketInChangeServerState;
+import de.bytelist.bytecloud.network.server.PacketInKickPlayer;
 import de.bytelist.bytecloud.network.server.PacketInStopOwnServer;
 import org.bukkit.entity.Player;
 
@@ -223,6 +224,10 @@ public class CloudAPI {
         byteCloudCore.getCloudHandler().editDatabaseServerValue(getServerId(), DatabaseServerObject.STATE,
                 serverState.toString());
         byteCloudCore.getServerClient().sendPacket(new PacketInChangeServerState(getServerId(), serverState.name()));
+    }
+
+    public void kickPlayer(String name, String reason) {
+        byteCloudCore.getServerClient().sendPacket(new PacketInKickPlayer(name, reason));
     }
 
     /**
