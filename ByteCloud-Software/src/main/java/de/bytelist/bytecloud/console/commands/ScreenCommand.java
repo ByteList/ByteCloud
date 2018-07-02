@@ -32,7 +32,7 @@ public class ScreenCommand extends Command {
 //                        "          __/ | T I G E R\n" +
 //                        "         |___/                 b y   B y t e L i s t\n" +
 //                        "\n\n");
-                byteCloud.getLogger().info("** You leaved the screen.");
+                byteCloud.getLogger().info("** You left the screen.");
             }
         }
     }
