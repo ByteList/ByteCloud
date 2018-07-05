@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -429,7 +430,8 @@ public class ByteCloud {
 
     public int getUsedMemory() {
         int mem = 128;
-        for (Server server : serverHandler.getServers()) {
+        Collection<Server> servers = serverHandler.getServers();
+        for (Server server : servers) {
             mem = mem + server.getRamM();
         }
 
