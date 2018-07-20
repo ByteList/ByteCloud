@@ -9,8 +9,14 @@ import lombok.Getter;
  */
 public abstract class Command {
 
+    /**
+     * Gets the name from this command.
+     */
     @Getter
     private final String name;
+    /**
+     * Gets the description from this command.
+     */
     @Getter
     private final String description;
 

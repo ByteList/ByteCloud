@@ -12,14 +12,14 @@ import java.nio.charset.StandardCharsets;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class Screen {
+public class ScreenManager {
 
     @Getter
     private IScreen screen;
     @Getter
     private Thread handled;
 
-    public Screen() {
+    public ScreenManager() {
         this.screen = null;
         this.handled = null;
     }
@@ -48,7 +48,7 @@ public class Screen {
         this.handled.start();
     }
 
-    public Screen closeScreen() {
+    public ScreenManager closeScreen() {
         if (this.handled != null) {
             this.handled.stop();
             this.handled = null;
@@ -61,7 +61,7 @@ public class Screen {
         return this;
     }
 
-    public Screen checkAndRemove(IScreen screen) {
+    public ScreenManager checkAndRemove(IScreen screen) {
         return this.screen != null && this.screen.getServerId().equals(screen.getServerId()) ? this.closeScreen() : this;
     }
 

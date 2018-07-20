@@ -140,7 +140,7 @@ public class PermServer extends Server {
                         e.printStackTrace();
                     }
                 }
-                byteCloud.getScreenSystem().checkAndRemove(this);
+                byteCloud.getScreenManager().checkAndRemove(this);
                 this.process.destroy();
             }
 

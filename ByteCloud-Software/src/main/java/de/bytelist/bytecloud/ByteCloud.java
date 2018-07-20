@@ -15,7 +15,7 @@ import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.cloud.CloudServer;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.ServerHandler;
-import de.bytelist.bytecloud.server.screen.Screen;
+import de.bytelist.bytecloud.server.screen.ScreenManager;
 import de.bytelist.bytecloud.updater.Updater;
 import jline.console.ConsoleReader;
 import lombok.Getter;
@@ -54,7 +54,7 @@ public class ByteCloud {
     @Getter
     private ConsoleReader consoleReader;
     /**
-     * The Logger is used to perform information's and so on to the log.
+     * The {@link CloudLogger} is used to perform information's and so on to the log.
      */
     @Getter
     private CloudLogger logger;
@@ -81,7 +81,7 @@ public class ByteCloud {
     @Getter
     private DatabaseManager databaseManager;
     /**
-     * The DatabaseServer put's all data's from servers in it and load this data any time.
+     * The {@link DatabaseServer} put's all data's from servers in it and load this data any time.
      * You can get information's like player count and
      * server id from the in the bungee or spigot plugin.
      */
@@ -90,12 +90,12 @@ public class ByteCloud {
     /**
      * This returns the correct version from the cloud.
      * It contains information's about git commit and jenkins build number.
-     * If you doesn't build the software with jenkins you would get and "unknown" version.
+     * If you doesn't build the software with jenkins you will get the maven version.
      */
     @Getter
     private final String version;
     /**
-     * This handler is used to register commands for the console input.
+     * The {@link CommandHandler} is used to register commands for the console input.
      */
     @Getter
     private CommandHandler commandHandler;
@@ -105,7 +105,7 @@ public class ByteCloud {
     @Getter
     private final String cloudStarted;
     /**
-     * The CloudServer manages all incoming connections.
+     * The {@link CloudServer} manages all incoming connections.
      * It's the packet server.
      * You get an information in the console when a connection comes in.
      * If this connection comes from a game server or from a bungee
@@ -132,28 +132,31 @@ public class ByteCloud {
      */
     private String startFallback;
     /**
-     * The cloudExecutor executes all runnable's.
+     * The {@link CloudExecutor} executes all runnable's.
      */
     @Getter
     private CloudExecutor cloudExecutor;
     /**
      * This returns the max memory value.
-     * It can be changed in the config or with the system priority -Dde.bytelist.bytecloud.maxMem=*memoryInMB*
+     * It can be changed in the config or with the system property <code>de.bytelist.bytecloud.maxMem</code>
+     * The unit is mb.
      */
     @Getter
     private int maxMemory;
     /**
-     * This returns the screen system.
+     * This returns the {@link ScreenManager}.
+     * It's a manager to output the process log from a {@link de.bytelist.bytecloud.server.screen.IScreen} to the console.
      */
     @Getter
-    private Screen screenSystem;
+    private ScreenManager screenManager;
     /**
-     * The serverIdOnConnect sets the server to connect on join.
+     * Sets the force server to connect on join.
+     * This can be set in the system property <code>de.bytelist.bytecloud.connectServer</code>
      */
     @Getter
     private String serverIdOnConnect;
     /**
-     * Returns the configuration.
+     * Returns the current {@link CloudConfig}.
      */
     @Getter
     private CloudConfig cloudConfig;
@@ -185,7 +188,7 @@ public class ByteCloud {
         this.cloudExecutor = new CloudExecutor();
         this.cloudExecutor.setExtendedDebug(Boolean.valueOf(System.getProperty("de.bytelist.bytecloud.debug", "false")));
 
-        this.screenSystem = new Screen();
+        this.screenManager = new ScreenManager();
 
         // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
@@ -338,19 +341,19 @@ public class ByteCloud {
         this.serverHandler = new ServerHandler();
     }
 
+    /**
+     * Starts {@link CloudExecutor}, {@link Bungee} and {@link ServerHandler}.
+     */
     public void start() {
         isRunning = true;
 
         this.cloudExecutor.start();
-        this.bungee.startBungee();
-        try {
-            Thread.sleep(7000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.serverHandler.start();
+        this.bungee.startBungee(()-> this.serverHandler.start());
     }
 
+    /**
+     * Stops all running processes.
+     */
     public void stop() {
         this.isRunning = false;
         new Thread("Shutdown Thread") {
@@ -370,6 +373,10 @@ public class ByteCloud {
         }.start();
     }
 
+    /**
+     * Closes all handlers from {@link CloudLogger#getHandlers()}.
+     * Start the fallback server if it's set to true and exit the system.
+     */
     private void cleanStop() {
         for (Handler handler : getLogger().getHandlers()) {
             handler.close();
@@ -389,6 +396,11 @@ public class ByteCloud {
         System.exit( 0 );
     }
 
+    /**
+     * Starts the auto stop thread.
+     * This thread looks every minute for the current time.
+     * If the current time equal the stop date the cloud will stop.
+     */
     public void startAutoStopThread() {
         if(stopDate.equals("false")) {
             this.logger.info("Automatic Stop is disabled.");
@@ -424,6 +436,10 @@ public class ByteCloud {
         }.start();
     }
 
+    /**
+     * Gets the current max used memory size from all processes.
+     * @return the current max used memory size from all processes
+     */
     public int getUsedMemory() {
         int mem = 128;
         Collection<Server> servers = serverHandler.getServers();
@@ -435,6 +451,10 @@ public class ByteCloud {
         return mem;
     }
 
+    /**
+     * Gets is the current instance a dev-build from the version string.
+     * @return is the current instance a dev-build
+     */
     public boolean isCurrentDevBuild() {
         String[] ver = this.version.replace(".", ":").split(":");
 

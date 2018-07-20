@@ -15,6 +15,12 @@ import java.util.zip.ZipOutputStream;
  */
 public class FileMethods {
 
+    /**
+     * Put all files into a zip file.
+     * @param zipFile the final file path
+     * @param files all files
+     * @return if the compress was successful
+     */
     public static boolean compressZipFile(String zipFile, List<File> files) {
         byte[] buffer = new byte[1024];
 
@@ -45,10 +51,13 @@ public class FileMethods {
         return false;
     }
 
-    public static boolean deleteFiles(List<File> files) {
+    /**
+     * Deletes all listed files
+     * @param files to get deleted
+     */
+    public static void deleteFiles(List<File> files) {
         for(File file : files) {
             file.delete();
         }
-        return true;
     }
 }

@@ -20,7 +20,7 @@ public class LogFormatter extends Formatter {
 
     @Override
     public String format(LogRecord record) {
-        if(ByteCloud.getInstance().getScreenSystem().getScreen() == null) {
+        if(ByteCloud.getInstance().getScreenManager().getScreen() == null) {
             return formatted(record, Mode.NORMAL);
         } else {
             if(record.getMessage().startsWith("#%scr3En%#")) {
@@ -44,7 +44,7 @@ public class LogFormatter extends Formatter {
         switch (mode) {
             case SCREEN:
                 formatted.append(AnsiColor.RED);
-                formatted.append(ByteCloud.getInstance().getScreenSystem().getScreen().getServerId());
+                formatted.append(ByteCloud.getInstance().getScreenManager().getScreen().getServerId());
 
                 message = message.replaceFirst("#%scr3En%#", "");
                 break;

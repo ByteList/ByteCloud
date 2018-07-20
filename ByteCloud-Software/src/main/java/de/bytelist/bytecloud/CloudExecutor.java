@@ -16,6 +16,10 @@ public class CloudExecutor extends Thread {
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     private final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+
+    /**
+     * If true it send some more information from the queue.
+     */
     @Getter @Setter
     private boolean extendedDebug;
 
@@ -40,6 +44,11 @@ public class CloudExecutor extends Thread {
         }
     }
 
+    /**
+     * Put a runnable into the queue while cloud is running otherwise the runnable will executed directly.
+     * @param runnable to execute
+     * @return successful added to queue
+     */
     public boolean execute(Runnable runnable) {
         if(!byteCloud.isRunning) {
             runnable.run();
@@ -49,6 +58,13 @@ public class CloudExecutor extends Thread {
         return queue.add(runnable);
     }
 
+    /**
+     * Execute a runnable after the sleep time.
+     *
+     * @param runnable to execute
+     * @param sleepSeconds the sleeping time in seconds
+     * @return successful queue add
+     */
     public boolean execute(Runnable runnable, long sleepSeconds) {
         long check = System.currentTimeMillis() / 1000 + sleepSeconds;
 

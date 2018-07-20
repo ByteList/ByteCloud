@@ -7,6 +7,11 @@ package de.bytelist.bytecloud.bootstrap;
  */
 public class Bootstrap {
 
+    /**
+     * Checks the java version from the system.
+     * @param args given arguments
+     * @throws Exception all unhandled exceptions
+     */
     public static void main(String[] args) throws Exception {
         if ( Float.parseFloat( System.getProperty( "java.class.version" ) ) < 52.0 )
         {

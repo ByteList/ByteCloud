@@ -60,7 +60,7 @@ public class BungeeCommand extends Command {
             }
             if(args[0].equalsIgnoreCase("screen")) {
                 if(bungee.isRunning()) {
-                    byteCloud.getScreenSystem().joinNewScreen(bungee);
+                    byteCloud.getScreenManager().joinNewScreen(bungee);
                     try {
                         Thread.sleep(500L);
                     } catch (InterruptedException e) {

@@ -59,7 +59,7 @@ public class ServerCommand extends Command {
                 Server server = byteCloud.getServerHandler().getServer(serverName);
 
                 if(server != null) {
-                    byteCloud.getScreenSystem().joinNewScreen(server);
+                    byteCloud.getScreenManager().joinNewScreen(server);
                     try {
                         Thread.sleep(500L);
                     } catch (InterruptedException e) {

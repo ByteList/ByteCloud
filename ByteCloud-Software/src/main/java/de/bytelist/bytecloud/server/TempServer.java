@@ -145,7 +145,7 @@ public class TempServer extends Server {
                     }
                 }
 
-                byteCloud.getScreenSystem().checkAndRemove(this);
+                byteCloud.getScreenManager().checkAndRemove(this);
                 this.process.destroy();
 
                 try {
