@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
@@ -95,39 +96,49 @@ public class ServerHandler {
             byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server groups.");
     }
 
-    public void stop() {
-        System.out.println("Stopping servers...");
+    public void stop(Runnable runSuccess, Runnable runError) {
+        byteCloud.getCloudExecutor().execute(()-> {
+            System.out.println("Stopping servers...");
 
-        for (Server server : new ArrayList<>(getServers())) {
-            server.stopServer("_cloud");
-            while (true) {
-                if(!server.isRunning()) break;
+            try {
+                for (Server server : new ArrayList<>(getServers())) {
+                    server.stopServer("_cloud");
+                    while (true) {
+                        if(!server.isRunning()) break;
+                    }
+                }
+
+                File logDir = new File(EnumFile.SERVERS_LOGS.getPath());
+                List<File> files = new ArrayList<>();
+                for (File file : logDir.listFiles()) {
+                    if(file.getName().contains(".") && file.getName().endsWith(".log")) {
+                        files.add(file);
+                    }
+                }
+
+                try {
+                    Thread.sleep(3000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                int length = 0;
+                if(new File(EnumFile.SERVERS_LOGS.getPath()).exists() && new File(EnumFile.SERVERS_LOGS.getPath()).listFiles() != null) {
+                    length = (int) Arrays.stream(new File(EnumFile.SERVERS_LOGS.getPath()).listFiles().clone())
+                            .filter(file -> file.getName().contains(".") && file.getName().endsWith(".zip")).count();
+                }
+
+                compressZipFile(EnumFile.SERVERS_LOGS.getPath()+new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())+":"+ length, files);
+                deleteFiles(files);
+                System.out.println("Servers stopped!");
+                runSuccess.run();
+            } catch (Exception ex) {
+                System.err.println("Error while stopping servers:");
+                ex.printStackTrace();
+                runError.run();
             }
-        }
+        });
 
-        File logDir = new File(EnumFile.SERVERS_LOGS.getPath());
-        List<File> files = new ArrayList<>();
-        for (File file : logDir.listFiles()) {
-            if(file.getName().contains(".") && file.getName().endsWith(".log")) {
-                files.add(file);
-            }
-        }
-
-        try {
-            Thread.sleep(3000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int length = 0;
-        if(new File(EnumFile.SERVERS_LOGS.getPath()).exists() && new File(EnumFile.SERVERS_LOGS.getPath()).listFiles() != null) {
-            length = (int) Arrays.stream(new File(EnumFile.SERVERS_LOGS.getPath()).listFiles().clone())
-                    .filter(file -> file.getName().contains(".") && file.getName().endsWith(".zip")).count();
-        }
-
-        compressZipFile(EnumFile.SERVERS_LOGS.getPath()+new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())+":"+ length, files);
-        deleteFiles(files);
-        System.out.println("Servers stopped!");
     }
 
     public Collection<Server> getServers() {
@@ -135,12 +146,11 @@ public class ServerHandler {
     }
 
     public Server getServer(String serverId) {
-        for(Server server : servers.values()) {
-            if(serverId.equals(server.getServerId())) {
-                return server;
-            }
+        if(!servers.containsKey(serverId)) {
+            serverId = ServerIdResolver.getUniqueServerId(serverId, servers.keySet());
         }
-        return null;
+
+        return servers.get(serverId);
     }
 
     public boolean existsServer(String serverId) {

@@ -48,6 +48,8 @@ public class ServerCommand extends Command {
 
                 if (server != null) {
                     server.stopServer("_cloud");
+                } else {
+                    logger.info("The server "+serverName+" doesn't exist!");
                 }
                 return;
             }
@@ -65,8 +67,10 @@ public class ServerCommand extends Command {
                     }
                     byteCloud.getLogger().info("** You are now in the screen session [" + server.getServerId() + "]");
                     byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
-                    return;
+                } else {
+                    logger.info("The server "+serverName+" doesn't exist!");
                 }
+                return;
             }
         }
 

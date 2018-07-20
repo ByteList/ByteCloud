@@ -44,7 +44,7 @@ public class ByteCloud {
     public boolean isRunning;
 
     /**
-     * That's the cloud instance. It's needed to return the main class.
+     * Gets the current {@link ByteCloud} singleton.
      */
     @Getter
     private static ByteCloud instance;
@@ -59,21 +59,23 @@ public class ByteCloud {
     @Getter
     private CloudLogger logger;
     /**
-     * The ServerHandler manages server groups and permanently servers.
-     * Server groups manage servers like game-servers or lobby-servers.
-     * Permanent-servers are good for survival servers, build servers or something like this.
+     * The {@link ServerHandler} manages server groups and permanently servers.
+     * <p>
+     * A {@link de.bytelist.bytecloud.server.ServerGroup} manages servers like game or lobby servers. These are temporary servers.
+     * A {@link de.bytelist.bytecloud.server.PermServer} is good for a survival server or build server. It's a static server.
      */
     @Getter
     private ServerHandler serverHandler;
     /**
-     * The Bungee manages the bungee instance from the cloud.
+     * The {@link Bungee} manages the bungee instance from the cloud.
+     * <p>
      * It's only used to start and stop the bungee instance.
      * This instance can be managed in the Bungee folder like a normal bungee server.
      */
     @Getter
     private Bungee bungee;
     /**
-     * The DatabaseManager is used to manage all database things.
+     * The {@link DatabaseManager} is used to manage all database things.
      * Here you can find all mongodb data's.
      */
     @Getter
@@ -81,7 +83,7 @@ public class ByteCloud {
     /**
      * The DatabaseServer put's all data's from servers in it and load this data any time.
      * You can get information's like player count and
-     * server id from the cloudAPI in the bungee or spigot plugin.
+     * server id from the in the bungee or spigot plugin.
      */
     @Getter
     private DatabaseServer databaseServer;
@@ -357,19 +359,13 @@ public class ByteCloud {
             public void run() {
                 ByteCloud.this.logger.info("Shutting down...");
 
-                serverHandler.stop();
-                bungee.stopBungee();
-                while (true) {
-                    if(!bungee.isRunning()) break;
-                }
+                Runnable lastStop = ()-> {
+                    cloudServer.getPacketServer().stop();
+                    logger.info("ByteCloud stopped.");
+                    cleanStop();
+                };
 
-                try {
-                    Thread.sleep(5000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                cloudServer.getPacketServer().stop();
-                cleanStop();
+                serverHandler.stop(()-> bungee.stopBungee(lastStop, lastStop), lastStop);
             }
         }.start();
     }

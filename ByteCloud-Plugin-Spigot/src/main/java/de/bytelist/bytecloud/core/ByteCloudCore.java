@@ -1,8 +1,8 @@
 package de.bytelist.bytecloud.core;
 
-import de.bytelist.bytecloud.core.cloud.CloudAPI;
-import de.bytelist.bytecloud.core.cloud.CloudHandler;
+import de.bytelist.bytecloud.api.SpigotAPI;
 import de.bytelist.bytecloud.config.CloudConfig;
+import de.bytelist.bytecloud.core.cloud.CloudHandler;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.server.PacketInServer;
 import de.bytelist.bytecloud.network.server.ServerClient;
@@ -24,7 +24,7 @@ public class ByteCloudCore extends JavaPlugin {
     @Getter
     private CloudHandler cloudHandler;
     @Getter
-    private CloudAPI cloudAPI;
+    private SpigotAPI cloudAPI;
     @Getter
     private ServerClient serverClient;
     @Getter
@@ -50,8 +50,7 @@ public class ByteCloudCore extends JavaPlugin {
         this.configFile = new File("plugins/ByteCloud", "config.json");
         this.cloudConfig = CloudConfig.loadDocument(this.configFile);
 
-        cloudHandler = new CloudHandler();
-        cloudAPI = new CloudAPI();
+        this.cloudHandler = new CloudHandler();
 
         NetworkManager.connect(this.cloudHandler.getSocketPort(), getLogger());
         this.serverClient = new ServerClient();
@@ -68,6 +67,8 @@ public class ByteCloudCore extends JavaPlugin {
             sender.sendMessage("This server is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
             return true;
         });
+
+        this.cloudAPI = new SpigotCloudAPI();
     }
 
     @Override

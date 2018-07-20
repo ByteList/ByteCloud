@@ -1,6 +1,6 @@
 package de.bytelist.bytecloud.core.event;
 
-import de.bytelist.bytecloud.core.cloud.CloudAPI;
+import de.bytelist.bytecloud.api.ServerState;
 import lombok.Getter;
 
 /**
@@ -11,11 +11,11 @@ import lombok.Getter;
 public class CloudServerUpdateStateEvent extends CloudServerUpdateEvent {
 
     @Getter
-    private CloudAPI.ServerState oldState;
+    private ServerState oldState;
     @Getter
-    private CloudAPI.ServerState newState;
+    private ServerState newState;
 
-    public CloudServerUpdateStateEvent(String serverId, String serverGroup, CloudAPI.ServerState oldState, CloudAPI.ServerState newState) {
+    public CloudServerUpdateStateEvent(String serverId, String serverGroup, ServerState oldState, ServerState newState) {
         super(serverId, serverGroup);
         this.oldState = oldState;
         this.newState = newState;

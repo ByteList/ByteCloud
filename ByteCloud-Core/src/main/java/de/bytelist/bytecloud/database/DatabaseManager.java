@@ -23,6 +23,8 @@ import java.util.logging.Logger;
  * Created by ByteList on 09.04.2017.
  */
 public class DatabaseManager {
+    @Getter
+    private static DatabaseManager instance;
 
     @Getter
     private MongoClient mongoClient;
@@ -39,6 +41,8 @@ public class DatabaseManager {
     private Executor executor;
 
     public DatabaseManager(String host, int port, String username, String password, String database) {
+        instance = this;
+
         // Disable the stupid log messages from mongodb
         Logger mongoLog = Logger.getLogger("org.mongodb.driver");
         mongoLog.setLevel(Level.OFF);

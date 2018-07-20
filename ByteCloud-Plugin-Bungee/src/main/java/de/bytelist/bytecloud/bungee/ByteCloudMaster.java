@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud.bungee;
 
+import de.bytelist.bytecloud.api.BungeeAPI;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.bungee.listener.LoginListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
@@ -37,6 +38,8 @@ public class ByteCloudMaster extends Plugin {
     private CloudConfig cloudConfig;
     @Getter
     private File configFile;
+    @Getter
+    private BungeeAPI cloudAPI;
 
     @Override
     public void onEnable() {
@@ -76,6 +79,8 @@ public class ByteCloudMaster extends Plugin {
                             "§7Grund: Cloud wird neu gestartet.");
             }
         });
+
+        this.cloudAPI = new BungeeCloudAPI();
     }
 
     @Override

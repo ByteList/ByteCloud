@@ -1,0 +1,23 @@
+package de.bytelist.bytecloud.api;
+
+import java.util.Collection;
+import java.util.UUID;
+
+/**
+ * Created by ByteList on 20.07.2018.
+ * <p>
+ * Copyright by ByteList - https://bytelist.de/
+ */
+public interface CloudAPI {
+
+    public Collection<String> getServers();
+
+    public String getUniqueServerId(String server);
+
+    public void movePlayerToLobby(UUID uuid);
+
+    public void movePlayerToServer(UUID uuid, String serverId);
+
+    public void kickPlayer(String playerName, String reason);
+
+}

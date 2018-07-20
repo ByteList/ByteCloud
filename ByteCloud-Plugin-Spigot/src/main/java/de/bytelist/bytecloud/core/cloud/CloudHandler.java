@@ -1,7 +1,8 @@
 package de.bytelist.bytecloud.core.cloud;
 
+import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.core.ByteCloudCore;
-import de.bytelist.bytecloud.core.cloud.CloudAPI.ServerState;
+import de.bytelist.bytecloud.api.ServerState;
 import de.bytelist.bytecloud.core.event.CloudPlayerConnectToServerEvent;
 import de.bytelist.bytecloud.core.event.CloudServerUpdateEvent;
 import de.bytelist.bytecloud.core.event.CloudServerUpdateStateEvent;
@@ -120,14 +121,7 @@ public class CloudHandler {
     }
 
     public String getUniqueServerId(String serverName) {
-        String uid = null;
-
-        for (String id : getServerInDatabase())
-            if (id.contains(serverName)) {
-                uid = id;
-            }
-
-        return uid;
+        return ServerIdResolver.getUniqueServerId(serverName);
     }
 
     public void callCloudServerUpdateEvent(String serverId, String serverGroup) {
