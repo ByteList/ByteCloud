@@ -136,7 +136,7 @@ public class ServerHandler {
 
     public Server getServer(String serverId) {
         for(Server server : servers.values()) {
-            if(serverId.equals(server.getServerId()) || serverId.startsWith(server.getServerId())) {
+            if(server.getServerId().equals(serverId) || server.getServerId().startsWith(serverId)) {
                 return server;
             }
         }

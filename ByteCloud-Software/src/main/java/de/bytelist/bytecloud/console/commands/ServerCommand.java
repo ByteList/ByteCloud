@@ -67,6 +67,9 @@ public class ServerCommand extends Command {
                     byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
                     return;
                 }
+
+                logger.info("Could not find a server with id: "+serverName);
+                return;
             }
         }
 
