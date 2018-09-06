@@ -19,7 +19,7 @@ public class EndCommand extends Command {
     public void execute(String[] args) {
 
         if(args.length == 1 && args[0].equalsIgnoreCase("-update")) {
-            new Updater();
+            new Updater(false);
         }
         ByteCloud.getInstance().stop();
     }
