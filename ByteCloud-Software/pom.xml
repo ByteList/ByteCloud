@@ -44,6 +44,8 @@
     <packaging>jar</packaging>
 
     <build>
+        <defaultGoal>assembly:assembly</defaultGoal>
+
         <finalName>${project.name}</finalName>
 
         <resources>
@@ -92,6 +94,40 @@
                             <Implementation-Version>${project.version}.${build.number}:${git.commit}</Implementation-Version>
                         </manifestEntries>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>html/version.php</file>
+                    <replacements>
+                        <replacement>
+                            <token>$version = "mvn:unknown";</token>
+                            <value>$version = "${project.version}.${build.number}";</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>crunchify.xml</descriptor>
+                    </descriptors>
+                    <tarLongFileMode>posix</tarLongFileMode>
                 </configuration>
             </plugin>
         </plugins>

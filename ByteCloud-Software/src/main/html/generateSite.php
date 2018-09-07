@@ -1,6 +1,6 @@
 <?php
 $baseUrl = $_SERVER['SERVER_ADDR']."/";
-$version = "2.2.dev.50:ab8ff25";
+include "version.php";
 
 if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
     header('HTTP/1.1 301 Moved Permanently');

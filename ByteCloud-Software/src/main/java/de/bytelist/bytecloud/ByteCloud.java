@@ -246,7 +246,8 @@ public class ByteCloud {
                     .append("mongo-user", "user")
                     .append("mongo-password", "password")
                     .append("mongo-database", "database")
-                    .append("web-port", "8090")
+                    .append("web-address", "http://127.0.0.1/cloud/")
+                    .append("web-auth", "not-generated")
                     .append("jar-name", "paperclip")
                     .append("socket-port", "4213")
                     .append("max-memory", "13795");

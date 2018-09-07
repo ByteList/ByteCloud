@@ -1,10 +1,24 @@
 <?php
 session_start();
-$version = "2.2.dev.50:ab8ff25";
+include "version.php";
 $err = "";
 $user = "";
 $password = "";
 $info = "";
+
+if(isset($_GET['v']) && isset($_GET['u'])) {
+    include "auth.php";
+    header("Content-Type: text/plain; charset=utf-8");
+    if($_GET['v'] == $auth) {
+        $fo = fopen("auth.php", "w");
+        fwrite($fo, "<?php \$auth = \"".$_GET['u']."\";");
+        fclose($fo);
+        echo "ok";
+    } else {
+        echo "not-authenticated";
+    }
+    exit(0);
+}
 
 if(isset($_GET['logout'])) {
     session_destroy();
