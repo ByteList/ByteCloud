@@ -7,12 +7,10 @@ session_start();
  * Time: 10:18
  */
 include "version.php";
-$err = "";
-$info = "";
 
 if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
     header('HTTP/1.1 301 Moved Permanently');
-    header("Location: ".$_SERVER['REMOTE_ADDR']."/");
+    header("Location: ".$baseUrl);
     exit(0);
 }
 
