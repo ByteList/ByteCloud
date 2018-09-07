@@ -47,7 +47,7 @@ public class WebService {
     public WebService(CloudLogger logger, int port, boolean local) {
         boolean ok;
         UUID uuid = UUID.randomUUID();
-        this.uid = uuid.toString()+"-"+uuid.timestamp();
+        this.uid = uuid.toString();
 
         try {
             URL url = new URL(byteCloud.getCloudConfig().getString("web-dashboard")+"?v="+byteCloud.getCloudConfig().getString("web-auth")+"&u="+this.uid);
