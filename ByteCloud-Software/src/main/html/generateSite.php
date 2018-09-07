@@ -54,7 +54,7 @@ $grid = "dashboard/".$_SESSION['grid'];
 </div>
 
 <?php if (!empty($grid)) {
-    include $baseUrl.$grid."/site.php";
+    include $grid."/site.php";
     echo $gridSite;
 } ?>
 
