@@ -112,7 +112,7 @@
                     <replacements>
                         <replacement>
                             <token>\$version = &quot;mvn:unknown&quot;;</token>
-                            <value>\$version = &quot;${project.version}.${build.number}&quot;;</value>
+                            <value>\$version = &quot;${project.version}.${build.number}:${git.commit}&quot;;</value>
                         </replacement>
                     </replacements>
                 </configuration>
