@@ -50,7 +50,7 @@ public class WebService {
         this.uid = uuid.toString()+"-"+uuid.timestamp();
 
         try {
-            URL url = new URL(byteCloud.getCloudConfig().getString("web-address")+"?v="+byteCloud.getCloudConfig().getString("web-auth")+"&u="+this.uid);
+            URL url = new URL(byteCloud.getCloudConfig().getString("web-dashboard")+"?v="+byteCloud.getCloudConfig().getString("web-auth")+"&u="+this.uid);
             URLConnection uc = url.openConnection();
             uc.setUseCaches(false);
             uc.setDefaultUseCaches(false);

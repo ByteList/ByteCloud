@@ -13,6 +13,7 @@ import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.cloud.CloudServer;
+import de.bytelist.bytecloud.restapi.WebService;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.ServerHandler;
 import de.bytelist.bytecloud.server.screen.Screen;
@@ -168,6 +169,12 @@ public class ByteCloud {
     private boolean debug;
 
     /**
+     *
+     */
+    @Getter
+    private WebService webService;
+
+    /**
      * Initialise the cloud instance. This doesn't start anything!
      *
      */
@@ -246,8 +253,9 @@ public class ByteCloud {
                     .append("mongo-user", "user")
                     .append("mongo-password", "password")
                     .append("mongo-database", "database")
-                    .append("web-address", "http://127.0.0.1/cloud/")
+                    .append("web-dashboard", "http://127.0.0.1/cloud/")
                     .append("web-auth", "not-generated")
+                    .append("web-port", "49999")
                     .append("jar-name", "paperclip")
                     .append("socket-port", "4213")
                     .append("max-memory", "13795");
@@ -333,6 +341,8 @@ public class ByteCloud {
             this.commandHandler.registerCommand(command);
         }
 
+        this.webService = new WebService(this.logger, this.cloudConfig.getInt("web-port"), false);
+
         this.bungee = new Bungee();
         this.serverHandler = new ServerHandler();
     }
@@ -341,6 +351,8 @@ public class ByteCloud {
         isRunning = true;
 
         this.cloudExecutor.start();
+        this.webService.startWebServer();
+
         this.bungee.startBungee();
         try {
             Thread.sleep(7000L);
