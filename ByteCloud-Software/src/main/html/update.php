@@ -25,17 +25,13 @@ if(isset($_FILES['html_content_file']) && isset($_POST['k'])) {
         $res = $backup->open('backup.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         if($res) {
-            // Create recursive directory iterator
             /** @var SplFileInfo[] $files */
             $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($rootPath),RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($files as $name => $file) {
-                // Skip directories (they would be added automatically)
                 if (!$file->isDir()) {
-                    // Get real and relative path for current file
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($rootPath) + 1);
 
-                    // Add current file to archive
                     $backup->addFile($filePath, $relativePath);
                 }
             }
@@ -46,14 +42,15 @@ if(isset($_FILES['html_content_file']) && isset($_POST['k'])) {
                 $zip = new ZipArchive();
                 $res = $zip->open($file);
                 if ($res === TRUE) {
-                    $zip->extractTo('./upload_tmp/');
+                    rename("./auth.php", "./saved_auth.php");
+                    
+                    $zip->extractTo('./');
                     $zip->close();
 
                     unlink($file);
 
-                    unlink("./upload_tmp/auth.php");
-
-                    // TODO: copy from upload_Temp...
+                    unlink("./auth.php");
+                    rename("./save_auth.php", "./auth.php");
 
                     $info = "Successful updated!";
                 } else {
