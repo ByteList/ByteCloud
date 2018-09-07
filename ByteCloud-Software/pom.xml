@@ -112,7 +112,7 @@
                     <replacements>
                         <replacement>
                             <token>include &quot;version.php&quot;;</token>
-                            <value>$version = &quot;${project.version}.${build.number}&quot;;</value>
+                            <value>\$version = &quot;${project.version}.${build.number}&quot;;</value>
                         </replacement>
                     </replacements>
                 </configuration>
