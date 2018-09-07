@@ -44,8 +44,6 @@
     <packaging>jar</packaging>
 
     <build>
-        <defaultGoal>assembly:assembly</defaultGoal>
-
         <finalName>${project.name}</finalName>
 
         <resources>
@@ -113,8 +111,8 @@
                     <file>${project.artifactId}/src/main/html/version.php</file>
                     <replacements>
                         <replacement>
-                            <token>$version = "mvn:unknown";</token>
-                            <value>$version = "${project.version}.${build.number}";</value>
+                            <token>&lt;?php $version = "mvn:unknown";</token>
+                            <value>&lt;?php $version = "${project.version}.${build.number}";</value>
                         </replacement>
                     </replacements>
                 </configuration>
