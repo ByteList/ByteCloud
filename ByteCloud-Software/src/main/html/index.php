@@ -23,13 +23,13 @@ if(isset($_GET['v']) && isset($_GET['u'])) {
 if(isset($_GET['logout'])) {
     session_destroy();
     header('HTTP/1.1 301 Moved Permanently');
-    header("Location: ".$_SERVER['SERVER_ADDR']."/");
+    header("Location: ".$_SERVER['REMOTE_ADDR']."/");
     exit(0);
 }
 
 if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']) {
     header('HTTP/1.1 301 Moved Permanently');
-    header("Location: ./dashboard/");
+    header("Location: ".$_SERVER['REMOTE_ADDR']."/dashboard/");
     exit(0);
 }
 
@@ -41,7 +41,7 @@ if($_POST['u'] != null && $_POST['p'] != null) {
         $_SESSION['loggedIn'] = true;
         $_SESSION['u'] = $user;
         header('HTTP/1.1 301 Moved Permanently');
-        header("Location: ".$_SERVER['SERVER_ADDR']."/");
+        header("Location: ".$_SERVER['REMOTE_ADDR']."/");
         exit(0);
     } else {
         $err = "Wrong username or password!";

@@ -12,7 +12,7 @@ $info = "";
 
 if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
     header('HTTP/1.1 301 Moved Permanently');
-    header("Location: ".$_SERVER['SERVER_ADDR']."/");
+    header("Location: ".$_SERVER['REMOTE_ADDR']."/");
     exit(0);
 }
 
@@ -43,7 +43,7 @@ if(isset($_FILES['html_content_file']) && isset($_POST['k'])) {
                 $res = $zip->open($file);
                 if ($res === TRUE) {
                     rename("./auth.php", "./saved_auth.php");
-                    
+
                     $zip->extractTo('./');
                     $zip->close();
 

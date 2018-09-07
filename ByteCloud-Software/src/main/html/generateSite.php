@@ -1,5 +1,5 @@
 <?php
-$baseUrl = $_SERVER['SERVER_ADDR']."/";
+$baseUrl = $_SERVER['REMOTE_ADDR']."/";
 include "version.php";
 
 if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
