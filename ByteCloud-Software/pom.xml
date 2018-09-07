@@ -111,8 +111,8 @@
                     <file>${project.artifactId}/src/main/html/index.php</file>
                     <replacements>
                         <replacement>
-                            <token>include "version.php";</token>
-                            <value>$version = "${project.version}.${build.number}";</value>
+                            <token>include &quot;version.php&quot;;</token>
+                            <value>$version = &quot;${project.version}.${build.number}&quot;;</value>
                         </replacement>
                     </replacements>
                 </configuration>
