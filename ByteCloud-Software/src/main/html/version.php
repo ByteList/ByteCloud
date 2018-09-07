@@ -1,1 +1,2 @@
-<?php $version = "mvn:unknown";
+<?php
+$version = "mvn:unknown";

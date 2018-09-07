@@ -108,10 +108,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <file>${project.artifactId}/src/main/html/index.php</file>
+                    <file>${project.artifactId}/src/main/html/version.php</file>
                     <replacements>
                         <replacement>
-                            <token>include &quot;version.php&quot;;</token>
+                            <token>\$version = &quot;mvn:unknown&quot;;</token>
                             <value>\$version = &quot;${project.version}.${build.number}&quot;;</value>
                         </replacement>
                     </replacements>
