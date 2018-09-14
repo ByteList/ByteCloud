@@ -19,7 +19,7 @@ public class Updater {
 
     private final JenkinsAPI jenkinsAPI;
 
-    public Updater() {
+    public Updater(boolean shutdown) {
         this.jenkinsAPI = new JenkinsAPI("apiUser", "Uf6UYSqSrgOGby01fSIe7dAkd1eSzVYggqH");
 
         String loginCheck = jenkinsAPI.getLoginCorrect("https://kvm.bytelist.de/jenkins/");
@@ -58,10 +58,7 @@ public class Updater {
             if(Objects.requireNonNull(file.listFiles()).length == 0) {
                 file.delete();
             }
-            byteCloud.getLogger().info("Update successful! Restarting cloud...");
-            for (Handler handler : byteCloud.getLogger().getHandlers()) {
-                handler.close();
-            }
+
             Thread shutdownHook = new Thread(() -> {
                 String[] param = {"sh", "update.sh"};
                 try {
@@ -72,7 +69,18 @@ public class Updater {
             });
             shutdownHook.setDaemon(true);
             Runtime.getRuntime().addShutdownHook(shutdownHook);
-            System.exit(0);
+
+            if(shutdown) {
+                byteCloud.getLogger().info("Update successful! Restarting cloud...");
+                for (Handler handler : byteCloud.getLogger().getHandlers()) {
+                    handler.close();
+                }
+                System.exit(0);
+            } else {
+                byteCloud.getLogger().info("Update successful!");
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

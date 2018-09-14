@@ -1,0 +1,144 @@
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+body {
+    color: #FFFFFF;
+    background-color: #071240;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    min-height: 100%;
+    position: relative;
+}
+footer {
+    position: absolute;
+    bottom: 3px;
+    right: 8px;
+    text-align: right;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.c-err {
+    color: #af0100;
+    font-weight: bolder;
+}
+
+.login {
+    width: 360px;
+    padding: 8% 0 0;
+    margin: auto;
+}
+.login-form {
+    position: relative;
+    z-index: 1;
+    background: #0F288C;
+    max-width: 360px;
+    margin: 0 auto 20px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.login-form input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000000;
+}
+.login-form button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #08164D;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
+.login-form button:hover,.form button:active,.form button:focus {
+    background: #08164D;
+}
+.login-form .message {
+    margin: 15px 0 0;
+    color: #b3b3b3;
+    font-size: 12px;
+}
+.login-form .message a {
+    color: #0FBCFF;
+    text-decoration: none;
+}
+.login-form .register-form {
+    display: none;
+}
+
+.nav {
+    position: fixed;
+    height: 100%;
+    width: 3.5%;
+    background-color: #060E33;
+    z-index: 50;
+}
+.nav .header {
+    top: 0;
+    position: absolute;
+    margin-left: 25%;
+}
+.nav .body {
+    top: 35%;
+    position: absolute;
+    margin-left: 25%;
+}
+.nav .footer {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 35px;
+    margin-left: 25%;
+}
+.nav img {
+    width: 40px;
+}
+.nav .nav-tab {
+    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    font-size: 25px;
+    text-align: center;
+}
+.nav .nav-tab a {
+    color: #0FBCFF;
+}
+.nav-tip {
+    position: absolute;
+    color: #1b48ff;
+    font-size: 18px;
+    background-color: #060E33;
+    width: 160px;
+    text-align: center;
+    border-radius: .35em;
+    line-height: 30px;
+    visibility: hidden;
+    opacity: 0;
+}
+.nav .nav-tab a:hover + .nav-tip {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+    color: #fff;
+}
+.grid {
+    position: absolute;
+    width: 95%;
+    right: 0;
+}
