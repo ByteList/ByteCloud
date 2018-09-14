@@ -282,7 +282,7 @@ public class ByteCloud {
         }
 
         if(System.getProperty("update", "true").equals("true")) {
-            new Updater();
+            new Updater(false);
         }
 
         try {
