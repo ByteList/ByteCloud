@@ -49,7 +49,7 @@ public class ServerHandler {
         if(servGroups.list().length > 0) {
             for(String template : servGroups.list()) {
                 final ServerDocument serverDocument = new ServerDocument(new File(EnumFile.TEMPLATES.getPath(), template));
-                if(serverDocument.get("disabled").getAsBoolean()) {
+                if(serverDocument.get("enabled").getAsBoolean()) {
                     ServerGroup serverGroup = new ServerGroup(template, serverDocument);
                     this.serverGroups.put(template, serverGroup);
                 }

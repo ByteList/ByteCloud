@@ -57,7 +57,7 @@ public class TemplateCommand extends Command {
                 lines.add("spectator=" + spectator);
                 lines.add("ram=" + ramM);
                 lines.add("port=" + port);
-                lines.add("disabled=" + disabled);
+                lines.add("enabled=" + disabled);
 
                 try {
                     FileUtils.writeLines(file, lines);
@@ -108,7 +108,7 @@ public class TemplateCommand extends Command {
         }
 
         System.out.println("Using template command:");
-        System.out.println("template create <name> <prefix> <startAmount> <maxServ> <player> <spectator> <ram> <startPort> <disabled>");
+        System.out.println("template create <name> <prefix> <startAmount> <maxServ> <player> <spectator> <ram> <startPort> <enabled>");
         System.out.println("template delete <name>");
         System.out.println("template info <name>");
     }
