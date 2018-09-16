@@ -26,7 +26,7 @@ public class TemplateCommand extends Command {
     @Override
     public void execute(String[] args) {
 
-        if(args.length == 9) {
+        if(args.length == 10) {
             if(args[0].equalsIgnoreCase("create")) {
                 String name = args[1];
                 String prefix = args[2];
@@ -36,6 +36,7 @@ public class TemplateCommand extends Command {
                 int spectator = Integer.parseInt(args[6]);
                 int ramM = Integer.parseInt(args[7]);
                 int port = Integer.parseInt(args[8]);
+                boolean disabled = Boolean.parseBoolean(args[9]);
 
                 File dir = new File(EnumFile.TEMPLATES.getPath(), name.toUpperCase());
                 if(!dir.exists()) dir.mkdirs();
@@ -56,6 +57,7 @@ public class TemplateCommand extends Command {
                 lines.add("spectator=" + spectator);
                 lines.add("ram=" + ramM);
                 lines.add("port=" + port);
+                lines.add("disabled=" + disabled);
 
                 try {
                     FileUtils.writeLines(file, lines);
@@ -106,7 +108,7 @@ public class TemplateCommand extends Command {
         }
 
         System.out.println("Using template command:");
-        System.out.println("template create <name> <prefix> <startAmount> <maxServ> <player> <spectator> <ram> <startPort>");
+        System.out.println("template create <name> <prefix> <startAmount> <maxServ> <player> <spectator> <ram> <startPort> <disabled>");
         System.out.println("template delete <name>");
         System.out.println("template info <name>");
     }
