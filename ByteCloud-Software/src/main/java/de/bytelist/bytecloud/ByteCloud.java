@@ -198,6 +198,7 @@ public class ByteCloud {
 
         this.screenManager = new ScreenManager();
 
+
         // 2.0.23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloud.class.getPackage().getImplementationVersion().split(":");
         // 2.0.23:0034258
@@ -346,6 +347,8 @@ public class ByteCloud {
         for(Command command : commands) {
             this.commandHandler.registerCommand(command);
         }
+
+        this.webService = new WebService(this.logger, this.cloudConfig.getInt("web-port"), false);
 
         this.bungee = new Bungee();
         this.serverHandler = new ServerHandler();
