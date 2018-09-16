@@ -3,6 +3,7 @@ package de.bytelist.bytecloud.updater;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.jenkinsapi.JenkinsAPI;
+import lombok.Setter;
 
 import java.io.*;
 import java.util.Objects;
@@ -18,8 +19,10 @@ public class Updater {
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     private final JenkinsAPI jenkinsAPI;
+    @Setter
+    private UpdateChannel channel;
 
-    public Updater(boolean shutdown) {
+    public Updater(UpdateChannel channel, boolean shutdown) {
         this.jenkinsAPI = new JenkinsAPI("apiUser", "Uf6UYSqSrgOGby01fSIe7dAkd1eSzVYggqH");
 
         String loginCheck = jenkinsAPI.getLoginCorrect("https://kvm.bytelist.de/jenkins/");
@@ -28,6 +31,8 @@ public class Updater {
             byteCloud.getLogger().warning(loginCheck);
             return;
         }
+
+        this.channel = channel;
 
         int currentBuildNumber = Integer.parseInt(byteCloud.getVersion().replace(".", ":").split(":")[2]);
 
@@ -96,7 +101,7 @@ public class Updater {
         String lastVersion = byteCloud.getCloudConfig().getString("last-version");
         String lastVersionType = byteCloud.getCloudConfig().getString("last-version-type");
         String lastVersionStable = byteCloud.getCloudConfig().getString("last-version-stable");
-        String updateChannel = byteCloud.getCloudConfig().getString("update-channel");
+        String updateChannel = this.channel.getChannel();
 
 
         if(updateChannel.equals("dev")) {

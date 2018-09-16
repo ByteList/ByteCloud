@@ -17,6 +17,7 @@ import de.bytelist.bytecloud.restapi.WebService;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.ServerHandler;
 import de.bytelist.bytecloud.server.screen.ScreenManager;
+import de.bytelist.bytecloud.updater.UpdateChannel;
 import de.bytelist.bytecloud.updater.Updater;
 import jline.console.ConsoleReader;
 import lombok.Getter;
@@ -291,7 +292,7 @@ public class ByteCloud {
         }
 
         if(System.getProperty("update", "true").equals("true")) {
-            new Updater(true);
+            new Updater(UpdateChannel.getUpdateChannel(this.cloudConfig.getString("update-channel")), true);
         }
 
         try {

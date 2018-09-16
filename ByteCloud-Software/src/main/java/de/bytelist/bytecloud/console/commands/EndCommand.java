@@ -2,6 +2,7 @@ package de.bytelist.bytecloud.console.commands;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.console.Command;
+import de.bytelist.bytecloud.updater.UpdateChannel;
 import de.bytelist.bytecloud.updater.Updater;
 
 /**
@@ -11,6 +12,8 @@ import de.bytelist.bytecloud.updater.Updater;
  */
 public class EndCommand extends Command {
 
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
+
     public EndCommand() {
         super("end", "shutdown the cloud");
     }
@@ -18,8 +21,12 @@ public class EndCommand extends Command {
     @Override
     public void execute(String[] args) {
 
-        if(args.length == 1 && args[0].equalsIgnoreCase("-update")) {
-            new Updater(false);
+        if(args.length == 1 && args[0].startsWith("-update")) {
+            UpdateChannel updateChannel;
+            if(args[0].contains("=")) updateChannel = UpdateChannel.getUpdateChannel(args[0].split("=")[1]);
+            else updateChannel = UpdateChannel.getUpdateChannel(byteCloud.getCloudConfig().getString("update-channel"));
+
+            new Updater(updateChannel, false);
         }
         ByteCloud.getInstance().stop();
     }
