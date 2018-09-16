@@ -119,6 +119,13 @@ public class Bungee implements IScreen {
     }
 
     /**
+     * Stops the bungee.
+     */
+    public void stopBungee() {
+        this.stopBungee(()-> {}, ()-> {});
+    }
+
+    /**
      * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.network.bungee.PacketInBungee} packet.
      * Set the bungee to started.
      */

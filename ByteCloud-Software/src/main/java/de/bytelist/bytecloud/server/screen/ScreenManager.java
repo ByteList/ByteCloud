@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud.server.screen;
 
+import de.bytelist.bytecloud.ByteCloud;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -13,6 +14,8 @@ import java.nio.charset.StandardCharsets;
  * Copyright by ByteList - https://bytelist.de/
  */
 public class ScreenManager {
+
+    private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     @Getter
     private IScreen screen;
@@ -46,6 +49,9 @@ public class ScreenManager {
 
         });
         this.handled.start();
+
+        byteCloud.getLogger().info("** You are now in the screen session [" + screen.getServerId() + "]");
+        byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
     }
 
     public ScreenManager closeScreen() {

@@ -26,13 +26,7 @@ public class BungeeCommand extends Command {
                 byteCloud.getLogger().info("Restarting bungee...");
                 if(bungee.isRunning()) {
                     bungee.execByCommand = true;
-                    bungee.stopBungee();
-                    try {
-                        Thread.sleep(23000L);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    bungee.startBungee();
+                    bungee.stopBungee(()-> bungee.startBungee(()-> byteCloud.getLogger().info("Bungee restarted.")), ()-> {});
                     return;
                 } else {
                     byteCloud.getLogger().info("Bungee isn't running!");
@@ -51,7 +45,7 @@ public class BungeeCommand extends Command {
             if(args[0].equalsIgnoreCase("start")) {
                 if(!bungee.isRunning()) {
                     bungee.execByCommand = true;
-                    bungee.startBungee();
+                    bungee.startBungee(()-> {});
                     return;
                 } else {
                     byteCloud.getLogger().info("Bungee is already running!");
@@ -61,13 +55,6 @@ public class BungeeCommand extends Command {
             if(args[0].equalsIgnoreCase("screen")) {
                 if(bungee.isRunning()) {
                     byteCloud.getScreenManager().joinNewScreen(bungee);
-                    try {
-                        Thread.sleep(500L);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    byteCloud.getLogger().info("** You are now in the screen session [" + bungee.getServerId() + "]");
-                    byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
                     return;
                 } else {
                     byteCloud.getLogger().info("Bungee isn't running!");

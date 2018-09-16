@@ -44,12 +44,6 @@ public class ServerIdResolver {
      * @return the unique id from the solved id.
      */
     public static String getUniqueServerId(String serverId, Collection<String> servers) {
-        String[] args = serverId.split("-");
-
-        if(args.length == 1 && servers.contains(serverId)) {
-            return serverId;
-        }
-
         return servers.stream().filter(server -> server.startsWith(serverId)).findFirst().orElse(null);
     }
 }

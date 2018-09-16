@@ -60,16 +60,10 @@ public class ServerCommand extends Command {
 
                 if(server != null) {
                     byteCloud.getScreenManager().joinNewScreen(server);
-                    try {
-                        Thread.sleep(500L);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    byteCloud.getLogger().info("** You are now in the screen session [" + server.getServerId() + "]");
-                    byteCloud.getLogger().info("** You can leave it with the command \"screen leave\"");
-                } else {
-                    logger.info("The server "+serverName+" doesn't exist!");
+                    return;
                 }
+
+                logger.info("Could not find a server with id: "+serverName);
                 return;
             }
         }
