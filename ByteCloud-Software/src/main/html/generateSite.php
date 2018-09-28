@@ -6,6 +6,7 @@ if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
     header("Location: ".$baseUrl);
     exit(0);
 }
+include "auth.php";
 
 $grid = "dashboard/".$_SESSION['grid'];
 ?>

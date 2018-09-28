@@ -1,9 +1,9 @@
 <?php
 session_start();
 include "version.php";
-include "auth.php";
 
 if(isset($_GET['v']) && isset($_GET['u'])) {
+    include "auth.php";
     header("Content-Type: text/plain; charset=utf-8");
     if($_GET['v'] == $auth) {
         try {
