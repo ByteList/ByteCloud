@@ -64,7 +64,7 @@ if(isset($_POST['uc']) && isset($_POST['k'])) {
                     unlink($file);
 
                     unlink("./auth.php");
-                    rename("./save_auth.php", "./auth.php");
+                    rename("./saved_auth.php", "./auth.php");
 
                     $info = "Successful updated!";
                 } else {
