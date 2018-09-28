@@ -6,10 +6,14 @@ if(isset($_GET['v']) && isset($_GET['u'])) {
     include "auth.php";
     header("Content-Type: text/plain; charset=utf-8");
     if($_GET['v'] == $auth) {
-        $fo = fopen("auth.php", "w");
-        fwrite($fo, "<?php \$auth = \"".$_GET['u']."\";");
-        fclose($fo);
-        echo "ok";
+        try {
+            $fo = fopen("auth.php", "w");
+            fwrite($fo, "<?php \$auth = \"".$_GET['u']."\";");
+            fclose($fo);
+            echo "ok";
+        } catch (Exception $ex) {
+            echo "error: ".$ex->getTraceAsString();
+        }
     } else {
         echo "not-authenticated";
     }
