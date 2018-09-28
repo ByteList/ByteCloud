@@ -47,6 +47,6 @@ $gridSite = <<<GRID
 </div>
 <script src="$baseUrl/js/dashboard-bytecloud.js"></script>
 <script>
-    updateMonitor($auth);
+    updateMonitor("$auth");
 </script>
 GRID;
