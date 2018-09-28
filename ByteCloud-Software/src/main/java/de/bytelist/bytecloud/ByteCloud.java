@@ -473,8 +473,8 @@ public class ByteCloud {
     public double getCurrentSystemCpuLoad() {
         return this.osBean.getSystemCpuLoad();
     }
-    public long getCurrentSystemMemoryLoad() {
-        return this.osBean.getFreePhysicalMemorySize() / this.osBean.getTotalPhysicalMemorySize();
+    public double getCurrentSystemMemoryLoad() {
+        return (double)this.osBean.getFreePhysicalMemorySize() / (double)this.osBean.getTotalPhysicalMemorySize();
     }
 
     public double getCurrentCloudCpuLoad() {
