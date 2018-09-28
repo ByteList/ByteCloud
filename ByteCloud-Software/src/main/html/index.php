@@ -7,7 +7,7 @@ if(isset($_GET['v']) && isset($_GET['u'])) {
     header("Content-Type: text/plain; charset=utf-8");
     if($_GET['v'] == $auth) {
         try {
-            $fo = fopen("auth.php", "w");
+            $fo = fopen("./auth.php", "w");
             fwrite($fo, "<?php \$auth = \"".$_GET['u']."\";");
             fclose($fo);
             echo "ok";
