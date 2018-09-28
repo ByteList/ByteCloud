@@ -471,18 +471,23 @@ public class ByteCloud {
     }
 
     public double getCurrentSystemCpuLoad() {
-        return this.osBean.getSystemCpuLoad();
+        return this.osBean.getSystemCpuLoad() * 100;
     }
     public double getCurrentSystemMemoryLoad() {
-        return (double)this.osBean.getFreePhysicalMemorySize() / (double)this.osBean.getTotalPhysicalMemorySize();
+        return (double)this.osBean.getFreePhysicalMemorySize() / (double)this.osBean.getTotalPhysicalMemorySize() * 100;
     }
 
     public double getCurrentCloudCpuLoad() {
-        return this.osBean.getProcessCpuLoad();
+        return this.osBean.getProcessCpuLoad() * 100;
     }
 
     public double getCurrentCloudMemoryLoad() {
-        return (double)this.getUsedMemory() / (double)this.maxMemory;
+        return (double)this.getUsedMemory() / (double)this.maxMemory * 100;
+    }
+
+    public double getStorageLoad() {
+        File root = new File("/");
+        return (double)(root.getTotalSpace()-root.getFreeSpace()) / (double)root.getTotalSpace() * 100;
     }
 
     /**
