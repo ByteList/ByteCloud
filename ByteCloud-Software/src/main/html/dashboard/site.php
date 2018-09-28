@@ -15,19 +15,19 @@ $gridSite = <<<GRID
             <i class="fa fa-cloud usage-icon" aria-hidden="true"></i>System-CPU-Load:
             <div class="progress">
                 <div id="sys-cpu-load" class="progress-bar progress-bar-striped active" role="progressbar" style="width: $monitor[0]%">
-                    $monitor[0]
+                    $monitor[0]%
                 </div>
             </div>
             <i class="fa fa-server usage-icon" aria-hidden="true"></i>System-Memory-Load:
             <div class="progress">
                 <div id="sys-ram-load" class="progress-bar progress-bar-striped active" role="progressbar" style="width: $monitor[1]%">
-                    $monitor[1]
+                    $monitor[1]%
                 </div>
             </div>
             <i class="fa fa-hdd usage-icon" aria-hidden="true"></i>Storage:
             <div class="progress">
                 <div id="storage" class="progress-bar progress-bar-striped active" role="progressbar" style="width: $monitor[2]%">
-                    $monitor[2]
+                    $monitor[2]%
                 </div>
             </div>
         </div>
