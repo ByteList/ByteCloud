@@ -6,7 +6,7 @@
  * Time: 15:30
  */
 
-$monitor = explode(":", file_get_contents("http://game-chest.de:49999/?uid=$auth&m=dashboard&monitor=all"));
+$monitor = explode(":", file_get_contents("http://game-chest.de:49999/?uid=".$auth."&m=dashboard&monitor=all"));
 
 $gridSite = <<<GRID
 <div class="grid">
