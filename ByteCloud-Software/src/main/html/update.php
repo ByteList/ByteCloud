@@ -24,6 +24,7 @@ if(isset($_POST['uc']) && isset($_POST['k'])) {
         $res = $backup->open('backup.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         if($res) {
+            echo "1";
             /** @var SplFileInfo[] $files */
             $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($rootPath),RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($files as $name => $file) {
@@ -35,6 +36,7 @@ if(isset($_POST['uc']) && isset($_POST['k'])) {
                 }
             }
             $backup->close();
+            echo "2";
 
             $file = "./html.zip";
 
@@ -48,14 +50,17 @@ if(isset($_POST['uc']) && isset($_POST['k'])) {
             curl_setopt($ch, CURLOPT_USERPWD, "apiUser:Uf6UYSqSrgOGby01fSIe7dAkd1eSzVYggqH");
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
             $rawFile = curl_exec($ch);
+            echo "3";
 
             if(curl_errno($ch)){
                 $err = curl_error($ch);
             } else {
+                echo "4";
                 file_put_contents($file, $rawFile);
                 $zip = new ZipArchive();
                 $res = $zip->open($file);
                 if ($res === TRUE) {
+                    echo "5";
                     rename("./auth.php", "./saved_auth.php");
 
                     $zip->extractTo('./');
