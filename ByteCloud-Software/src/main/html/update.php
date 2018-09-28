@@ -36,7 +36,7 @@ if(isset($_POST['uc']) && isset($_POST['k'])) {
             }
             $backup->close();
 
-            $file = "./html/";
+            $file = "./html.zip";
 
             $ch = curl_init();
             if($updateChannel == "s") {
