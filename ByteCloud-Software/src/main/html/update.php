@@ -55,7 +55,6 @@ if(isset($_POST['uc']) && isset($_POST['k'])) {
                 $zip = new ZipArchive();
                 $res = $zip->open($file);
                 if ($res === TRUE) {
-                    echo "5";
                     rename("./auth.php", "./saved_auth.php");
 
                     $zip->extractTo('./');

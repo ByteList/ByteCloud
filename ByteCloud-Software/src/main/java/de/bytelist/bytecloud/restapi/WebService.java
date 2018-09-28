@@ -4,6 +4,8 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpServer;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.log.CloudLogger;
+import org.apache.commons.io.FileSystemUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpRequest;
 
 import java.io.*;
@@ -99,8 +101,30 @@ public class WebService {
                                 if(!requestParameters.get("uid").get(0).equals(this.uid)) {
                                     responseBody = "not-authenticated";
                                 } else {
+                                    if(!requestParameters.containsKey("m")) {
+                                        responseBody = "error: missing m parameter!";
+                                    } else {
+                                        switch (requestParameters.get("m").get(0)) {
+                                            case "dashboard":
+                                                if(!requestParameters.containsKey("monitor")) {
+                                                    responseBody = "error: missing monitor parameter!";
+                                                } else {
+                                                    switch (requestParameters.get("monitor").get(0)) {
+                                                        case "all":
+                                                            responseBody =
+                                                                    byteCloud.getCurrentSystemCpuLoad()+":"+
+                                                                    byteCloud.getCurrentSystemMemoryLoad()+":"+
+                                                                    FileSystemUtils.freeSpaceKb("/")+":"+
+                                                                    byteCloud.getCurrentCloudCpuLoad()+":"+
+                                                                    byteCloud.getCurrentCloudMemoryLoad()
+                                                            ;
+                                                            break;
+                                                    }
+                                                }
+                                                break;
 
-
+                                        }
+                                    }
 
                                 }
                             }

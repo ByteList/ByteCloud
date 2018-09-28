@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud;
 
+import com.sun.management.OperatingSystemMXBean;
 import de.bytelist.bytecloud.bungee.Bungee;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
@@ -27,6 +28,7 @@ import org.fusesource.jansi.AnsiConsole;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -179,6 +181,8 @@ public class ByteCloud {
      */
     @Getter
     private WebService webService;
+
+    private OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
     /**
      * Initialise the cloud instance. This doesn't start anything!
@@ -464,6 +468,21 @@ public class ByteCloud {
 
         mem = mem + bungee.getRamM();
         return mem;
+    }
+
+    public double getCurrentSystemCpuLoad() {
+        return this.osBean.getSystemCpuLoad();
+    }
+    public long getCurrentSystemMemoryLoad() {
+        return this.osBean.getFreePhysicalMemorySize() / this.osBean.getTotalPhysicalMemorySize();
+    }
+
+    public double getCurrentCloudCpuLoad() {
+        return this.osBean.getProcessCpuLoad();
+    }
+
+    public double getCurrentCloudMemoryLoad() {
+        return (double)this.getUsedMemory() / (double)this.maxMemory;
     }
 
     /**
