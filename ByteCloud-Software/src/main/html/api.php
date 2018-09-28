@@ -5,6 +5,7 @@
  * Date: 28.09.2018
  * Time: 13:44
  */
+include "auth.php";
 
 header("Content-Type: text/plain; charset=utf-8");
 
