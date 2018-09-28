@@ -1,6 +1,6 @@
-function updateMonitor(uid) {
+function updateMonitor(url) {
     this.setInterval(function() {
-        $.get('http://game-chest.de:49999/?uid='+uid+'&m=dashboard&monitor=all', function(data) {
+        $.get(url, function(data) {
             data = data.split(":");
             $('#sys-cpu-load').css({
                 width: data[0]+"%"
