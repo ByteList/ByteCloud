@@ -14,8 +14,9 @@ if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
     exit(0);
 }
 
-if(isset($_FILES['html_content_file']) && isset($_POST['k'])) {
+if(isset($_POST['uc']) && isset($_POST['k'])) {
     $key = $_POST['k'];
+    $updateChannel = $_POST['uc'];
 
     if($key == "!updateByteCloud") {
         $rootPath = realpath('./');
@@ -35,8 +36,23 @@ if(isset($_FILES['html_content_file']) && isset($_POST['k'])) {
             }
             $backup->close();
 
-            $file = basename($_FILES['html_content_file']['name']);
-            if(move_uploaded_file($_FILES['html_content_file']['tmp_name'], "./".$file)) {
+            $file = "./html/";
+
+            $ch = curl_init();
+            if($updateChannel == "s") {
+                curl_setopt($ch, CURLOPT_URL, "https://kvm.bytelist.de/jenkins/job/ByteCloud-v2/lastSuccessfulBuild/artifact/html.zip");
+            } else {
+                curl_setopt($ch, CURLOPT_URL, "https://kvm.bytelist.de/jenkins/job/ByteCloud-v2-dev/lastSuccessfulBuild/artifact/html.zip");
+            }
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, "apiUser:Uf6UYSqSrgOGby01fSIe7dAkd1eSzVYggqH");
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $rawFile = curl_exec($ch);
+
+            if(curl_errno($ch)){
+                $err = curl_error($ch);
+            } else {
+                file_put_contents($file, $rawFile);
                 $zip = new ZipArchive();
                 $res = $zip->open($file);
                 if ($res === TRUE) {
@@ -54,9 +70,31 @@ if(isset($_FILES['html_content_file']) && isset($_POST['k'])) {
                 } else {
                     $err = "Error while unzip!";
                 }
-            } else {
-                $err = "Error while uploading!";
             }
+
+            curl_close($ch);
+
+//            if(move_uploaded_file($_FILES['html_content_file']['tmp_name'], "./".$file)) {
+//                $zip = new ZipArchive();
+//                $res = $zip->open($file);
+//                if ($res === TRUE) {
+//                    rename("./auth.php", "./saved_auth.php");
+//
+//                    $zip->extractTo('./');
+//                    $zip->close();
+//
+//                    unlink($file);
+//
+//                    unlink("./auth.php");
+//                    rename("./save_auth.php", "./auth.php");
+//
+//                    $info = "Successful updated!";
+//                } else {
+//                    $err = "Error while unzip!";
+//                }
+//            } else {
+//                $err = "Error while uploading!";
+//            }
         } else {
             $err = "Error while creating backup!";
         }
@@ -82,7 +120,13 @@ if(isset($_FILES['html_content_file']) && isset($_POST['k'])) {
             <?php if($err != "") echo "<span class='c-err' style='margin-bottom: 15px;'>".$err."</span>"; ?>
             <?php if($info != "") echo "<span class='c-info' style='margin-bottom: 15px;'>".$info."</span>"; ?>
             <h3>Update Webinterface</h3>
-            <input type="file" placeholder="html.zip file" name="html_content_file"/>
+<!--            <input type="file" placeholder="html.zip file" name="html_content_file"/>-->
+            <label style="display: block; font-weight: normal;">
+                <select name="uc">
+                    <option value="s">UpdateChannel: Stable</option>
+                    <option value="d">UpdateChannel: Dev</option>
+                </select>
+            </label>
             <input type="password" placeholder="Key" name="k"/>
             <button>update</button>
         </form>
