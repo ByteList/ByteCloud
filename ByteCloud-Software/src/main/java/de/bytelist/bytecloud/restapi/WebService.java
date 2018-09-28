@@ -114,7 +114,7 @@ public class WebService {
                                                             responseBody =
                                                                     byteCloud.getCurrentSystemCpuLoad()+":"+
                                                                     byteCloud.getCurrentSystemMemoryLoad()+":"+
-                                                                    FileSystemUtils.freeSpaceKb("/")+":"+
+                                                                    byteCloud.getStorageLoad()+":"+
                                                                     byteCloud.getCurrentCloudCpuLoad()+":"+
                                                                     byteCloud.getCurrentCloudMemoryLoad()
                                                             ;
