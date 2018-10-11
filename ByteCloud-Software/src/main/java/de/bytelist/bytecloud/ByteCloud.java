@@ -15,6 +15,7 @@ import de.bytelist.bytecloud.log.LoggingOutPutStream;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.cloud.CloudServer;
 import de.bytelist.bytecloud.restapi.WebService;
+import de.bytelist.bytecloud.restapi.WebSocket;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.ServerHandler;
 import de.bytelist.bytecloud.server.screen.ScreenManager;
@@ -182,6 +183,9 @@ public class ByteCloud {
     @Getter
     private WebService webService;
 
+    @Getter
+    private WebSocket webSocket;
+
     private OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
     /**
@@ -266,7 +270,8 @@ public class ByteCloud {
                     .append("mongo-database", "database")
                     .append("web-dashboard", "http://127.0.0.1/cloud/")
                     .append("web-auth", "not-generated")
-                    .append("web-port", "49999")
+                    .append("web-restapi-port", "49999")
+                    .append("web-socket-port", "49998")
                     .append("jar-name", "paperclip")
                     .append("socket-port", "4213")
                     .append("max-memory", "13795");
@@ -352,7 +357,8 @@ public class ByteCloud {
             this.commandHandler.registerCommand(command);
         }
 
-        this.webService = new WebService(this.logger, this.cloudConfig.getInt("web-port"), false);
+        this.webService = new WebService(this.logger, this.cloudConfig.getInt("web-restapi-port"), false);
+        this.webSocket = new WebSocket(this.logger, this.cloudConfig.getInt("web-socket-port"), false);
 
         this.bungee = new Bungee();
         this.serverHandler = new ServerHandler();

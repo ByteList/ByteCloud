@@ -31,22 +31,17 @@ $gridSite = <<<GRID
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-        </div>
-        <div class="col-md-4">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-        </div>
-        <div class="col-md-4">
-        </div>
-        <div class="col-md-4">
+        <div class="col-md-8">
+            <div id="console" class="terminal">
+            </div>
         </div>
     </div>
 </div>
-<script src="$baseUrl/js/dashboard-bytecloud.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/js/jquery.terminal.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/css/jquery.terminal.min.css" rel="stylesheet"/>
+<script src="${$baseUrl}/js/dashboard-bytecloud.js"></script>
 <script>
     updateMonitor("$baseUrl/api.php?moniAll");
+    initTerminal($terminalSocket);
 </script>
 GRID;

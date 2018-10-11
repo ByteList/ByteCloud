@@ -22,7 +22,9 @@ public class LogWriter extends Handler {
 
     private void print(String s) {
         try {
-            console.print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + ConsoleReader.RESET_LINE + s + Ansi.ansi().reset().toString());
+            s = Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + ConsoleReader.RESET_LINE + s + Ansi.ansi().reset().toString();
+
+            console.print(s);
             console.drawLine();
             console.flush();
         } catch (IOException ex) {

@@ -1,5 +1,5 @@
 <?php
-include "version.php";
+include "config.php";
 
 if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
     header('HTTP/1.1 301 Moved Permanently');
@@ -19,6 +19,8 @@ $grid = "dashboard/".$_SESSION['grid'];
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $baseUrl; ?>css/default-bytecloud.css">
     <link rel="stylesheet" href="<?php echo $baseUrl; ?>css/dashboard-bytecloud.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="nav">
@@ -63,8 +65,6 @@ $grid = "dashboard/".$_SESSION['grid'];
     ByteCloud - Version: <?php echo $version; ?>
 </footer>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -4,11 +4,12 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpServer;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.log.CloudLogger;
-import org.apache.commons.io.FileSystemUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpRequest;
+import lombok.Getter;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +29,7 @@ public class WebService {
     private final CloudLogger logger;
 
     private final int port;
+    @Getter
     private final boolean local, ok;
 
     private HttpServer httpServer;
@@ -106,11 +108,11 @@ public class WebService {
                                     } else {
                                         switch (requestParameters.get("m").get(0)) {
                                             case "dashboard":
-                                                if(!requestParameters.containsKey("monitor")) {
+                                                if(!requestParameters.containsKey("action")) {
                                                     responseBody = "error: missing monitor parameter!";
                                                 } else {
-                                                    switch (requestParameters.get("monitor").get(0)) {
-                                                        case "all":
+                                                    switch (requestParameters.get("action").get(0)) {
+                                                        case "monitorAll":
                                                             responseBody =
                                                                     byteCloud.getCurrentSystemCpuLoad()+":"+
                                                                     byteCloud.getCurrentSystemMemoryLoad()+":"+
@@ -118,6 +120,18 @@ public class WebService {
                                                                     byteCloud.getCurrentCloudCpuLoad()+":"+
                                                                     byteCloud.getCurrentCloudMemoryLoad()
                                                             ;
+                                                            break;
+                                                        case "terminalExec":
+                                                            String cmd = requestParameters.get("cmd").get(0);
+                                                            if(cmd.startsWith("screen")) {
+                                                                responseBody = "err| ** Screen is disabled in Web-Terminal";
+                                                                break;
+                                                            }
+                                                            if (!byteCloud.getCommandHandler().dispatchCommand(cmd)) {
+                                                                responseBody = "err| ** Command not found";
+                                                                break;
+                                                            }
+
                                                             break;
                                                     }
                                                 }

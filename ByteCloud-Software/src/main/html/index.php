@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "version.php";
+include "config.php";
 
 if(isset($_GET['v']) && isset($_GET['u'])) {
     include "auth.php";

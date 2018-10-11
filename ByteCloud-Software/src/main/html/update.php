@@ -6,7 +6,7 @@ session_start();
  * Date: 07.09.2018
  * Time: 10:18
  */
-include "version.php";
+include "config.php";
 
 if(!(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'])) {
     header('HTTP/1.1 301 Moved Permanently');
