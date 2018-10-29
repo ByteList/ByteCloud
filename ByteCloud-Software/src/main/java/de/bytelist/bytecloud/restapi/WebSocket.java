@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Created by ByteList on 29.09.2018.
@@ -58,7 +56,8 @@ public class WebSocket {
                 if(baseRequest.getParameter("uid") == null || !baseRequest.getParameter("uid").equals(uid)) {
                     response.getWriter().println("not-authenticated");
                 } else {
-                    if(baseRequest.getParameter(""))
+//                    if(baseRequest.getParameter("").equals(""))
+                    response.getWriter().println("not-found");
                 }
             }
         });
