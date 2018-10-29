@@ -115,7 +115,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <file>${project.artifactId}/src/main/html/version.php</file>
+                    <file>${project.artifactId}/src/main/html/config.php</file>
                     <replacements>
                         <replacement>
                             <token>\$version = &quot;mvn:unknown&quot;;</token>
