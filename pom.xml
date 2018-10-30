@@ -55,6 +55,10 @@
             <id>byte-repo</id>
             <url>https://kvm.bytelist.de/nexus/repository/byte-repo/</url>
         </repository>
+        <snapshotRepository>
+            <id>byte-repo</id>
+            <url>https://kvm.bytelist.de/nexus/repository/byte-repo/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>

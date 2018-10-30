@@ -14,7 +14,7 @@ import java.util.logging.Handler;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class Updater {
+public class Updater extends Thread {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
@@ -22,17 +22,30 @@ public class Updater {
     @Setter
     private UpdateChannel channel;
 
+    private final boolean shutdown;
+
     public Updater(UpdateChannel channel, boolean shutdown) {
+        super("Updater Thread #"+System.currentTimeMillis()/1000);
         this.jenkinsAPI = new JenkinsAPI("apiUser", "Uf6UYSqSrgOGby01fSIe7dAkd1eSzVYggqH");
-
-        String loginCheck = jenkinsAPI.getLoginCorrect("https://kvm.bytelist.de/jenkins/");
-        if(!loginCheck.equals(JenkinsAPI.CORRECT_LOGIN_VARIABLE)) {
-            byteCloud.getLogger().warning("Cannot check for updates:");
-            byteCloud.getLogger().warning(loginCheck);
-            return;
-        }
-
         this.channel = channel;
+        this.shutdown = shutdown;
+
+        start();
+    }
+
+    @Override
+    public void run() {
+        try {
+            String loginCheck = jenkinsAPI.getLoginCorrect("https://kvm.bytelist.de/jenkins/");
+            if(!loginCheck.equals(JenkinsAPI.CORRECT_LOGIN_VARIABLE)) {
+                byteCloud.getLogger().warning("Cannot check for updates:");
+                byteCloud.getLogger().warning(loginCheck);
+                return;
+            }
+        } catch (Exception ex) {
+            byteCloud.getLogger().warning("Cannot check for updates (ex):");
+            ex.printStackTrace();
+        }
 
         int currentBuildNumber = Integer.parseInt(byteCloud.getVersion().replace(".", ":").split(":")[2]);
 
@@ -84,8 +97,6 @@ public class Updater {
             } else {
                 byteCloud.getLogger().info("Update successful!");
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
