@@ -26,7 +26,10 @@ public class EndCommand extends Command {
             if(args[0].contains("=")) updateChannel = UpdateChannel.getUpdateChannel(args[0].split("=")[1]);
             else updateChannel = UpdateChannel.getUpdateChannel(byteCloud.getCloudConfig().getString("update-channel"));
 
-            new Updater(updateChannel, false);
+            Updater updater = new Updater(updateChannel, false);
+            while (true) {
+                if(!updater.isAlive()) break;
+            }
         }
         ByteCloud.getInstance().stop();
     }

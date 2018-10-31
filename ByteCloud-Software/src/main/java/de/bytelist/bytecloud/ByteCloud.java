@@ -302,7 +302,10 @@ public class ByteCloud {
         }
 
         if(System.getProperty("update", "true").equals("true")) {
-            new Updater(UpdateChannel.getUpdateChannel(this.cloudConfig.getString("update-channel")), true);
+            Updater updater = new Updater(UpdateChannel.getUpdateChannel(this.cloudConfig.getString("update-channel")), true);
+            while (true) {
+                if(!updater.isAlive()) break;
+            }
         }
 
         try {
