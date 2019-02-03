@@ -52,13 +52,14 @@
 
         <dependency>
             <groupId>de.bytelist.bytecloud</groupId>
-            <artifactId>ByteCloud-Core</artifactId>
+            <artifactId>ByteCloud-Common</artifactId>
             <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>de.bytelist.bytecloud</groupId>
-            <artifactId>ByteCloud-Plugin-API</artifactId>
+            <artifactId>ByteCloud-Core</artifactId>
             <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>

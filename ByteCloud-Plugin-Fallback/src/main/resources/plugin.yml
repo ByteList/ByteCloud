@@ -1,6 +1,0 @@
-name: ByteCloudFallback
-version: mvn:unknown
-#description
-author: ByteList
-
-main: de.bytelist.bytecloud.fallback.Fallback

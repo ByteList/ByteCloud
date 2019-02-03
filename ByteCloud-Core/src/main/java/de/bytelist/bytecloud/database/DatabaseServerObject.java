@@ -12,14 +12,8 @@ public enum DatabaseServerObject {
     PORT("Port"),
     STATE("State"),
     STARTED("Started"),
-    PLAYER_MAX("Player-Max"),
-    PLAYER_ONLINE("Player-Online"),
-    SPECTATOR_MAX("Spectator-Max"),
-    SPECTATOR_ONLINE("Spectator-Online"),
-    MOTD("Motd"),
-    EVENT_MODE("Event-Mode"),
-    PLAYERS("Players"),
-    SPECTATORS("Spectators");
+    SLOTS("Slots"),
+    MOTD("Motd");
 
     @Getter
     private String name;

@@ -2,10 +2,10 @@ package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.core.ByteCloudCore;
-import de.bytelist.bytecloud.api.ServerState;
-import de.bytelist.bytecloud.core.event.CloudPlayerConnectToServerEvent;
-import de.bytelist.bytecloud.core.event.CloudServerUpdateEvent;
-import de.bytelist.bytecloud.core.event.CloudServerUpdateStateEvent;
+import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.core.event.ByteCloudPlayerConnectToServerEvent;
+import de.bytelist.bytecloud.core.event.ByteCloudServerUpdateEvent;
+import de.bytelist.bytecloud.core.event.ByteCloudServerUpdateStateEvent;
 import de.bytelist.bytecloud.database.DatabaseElement;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
@@ -102,8 +102,7 @@ public class CloudHandler {
     }
 
     public String getRandomLobbyId() {
-        List<String> lobbyServer = new ArrayList<>();
-        lobbyServer.addAll(getServerInDatabase("Lobby"));
+        List<String> lobbyServer = new ArrayList<>(getServerInDatabase("Lobby"));
 
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
@@ -125,11 +124,11 @@ public class CloudHandler {
     }
 
     public void callCloudServerUpdateEvent(String serverId, String serverGroup) {
-        Bukkit.getPluginManager().callEvent(new CloudServerUpdateEvent(serverId, serverGroup));
+        Bukkit.getPluginManager().callEvent(new ByteCloudServerUpdateEvent(serverId, serverGroup));
     }
 
     public void callCloudServerUpdateStateEvent(String serverId, String serverGroup, String oldState, String newState) {
-        Bukkit.getPluginManager().callEvent(new CloudServerUpdateStateEvent(serverId, serverGroup, ServerState.valueOf(oldState), ServerState.valueOf(newState)));
+        Bukkit.getPluginManager().callEvent(new ByteCloudServerUpdateStateEvent(serverId, serverGroup, ServerState.valueOf(oldState), ServerState.valueOf(newState)));
     }
 
     public void callCloudPlayerConnectToServerEvent(String player, String oldServer, String oldServerGroup, String targetServer, String targetServerGroup) {
@@ -138,6 +137,6 @@ public class CloudHandler {
             oldServerGroup = null;
         }
 
-        Bukkit.getPluginManager().callEvent(new CloudPlayerConnectToServerEvent(player, oldServer, oldServerGroup, targetServer, targetServerGroup));
+        Bukkit.getPluginManager().callEvent(new ByteCloudPlayerConnectToServerEvent(player, oldServer, oldServerGroup, targetServer, targetServerGroup));
     }
 }

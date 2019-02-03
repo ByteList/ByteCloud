@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.database;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -25,7 +26,7 @@ public class DatabaseServer {
         this.collection = databaseManager.getCollection();
         this.executor = databaseManager.getExecutor();
     }
-    public void addServer(String group, String id, Integer port, String state, Integer maxPlayer, Integer maxSpectator, String motd, String eventMode) {
+    public void addServer(String group, String id, Integer port, String state, Integer slots, String motd) {
         if(existsServer(id)) return;
 
         this.executor.execute(()-> {
@@ -35,14 +36,8 @@ public class DatabaseServer {
                     .append(DatabaseServerObject.PORT.getName(), port)
                     .append(DatabaseServerObject.STATE.getName(), state)
                     .append(DatabaseServerObject.STARTED.getName(), new SimpleDateFormat("dd.MM.yyyy HH:mm").format(Calendar.getInstance().getTime()))
-                    .append(DatabaseServerObject.PLAYER_MAX.getName(), maxPlayer)
-                    .append(DatabaseServerObject.PLAYER_ONLINE.getName(), 0)
-                    .append(DatabaseServerObject.SPECTATOR_MAX.getName(), maxSpectator)
-                    .append(DatabaseServerObject.SPECTATOR_ONLINE.getName(), 0)
-                    .append(DatabaseServerObject.MOTD.getName(), motd)
-                    .append(DatabaseServerObject.EVENT_MODE.getName(), eventMode)
-                    .append(DatabaseServerObject.PLAYERS.getName(), "")
-                    .append(DatabaseServerObject.SPECTATORS.getName(), "");
+                    .append(DatabaseServerObject.SLOTS.getName(), slots)
+                    .append(DatabaseServerObject.MOTD.getName(), motd);
 
             this.collection.insertOne(document);
         });
@@ -50,11 +45,7 @@ public class DatabaseServer {
 
     public void removeServer(String id) {
         if(!existsServer(id)) return;
-        this.executor.execute(()-> {
-            BasicDBObject dbObject = new BasicDBObject()
-                    .append(DatabaseServerObject.SERVER_ID.getName(), id);
-            collection.deleteOne(dbObject);
-        });
+        this.executor.execute(()-> collection.deleteOne(new BasicDBObject(DatabaseServerObject.SERVER_ID.getName(), id)));
     }
 
     public boolean existsServer(String id) {
@@ -64,31 +55,22 @@ public class DatabaseServer {
     }
 
     public List<String> getServer() {
-        FindIterable<Document> find = collection.find();
         List<String> list = new ArrayList<>();
-        for(Document document : find) {
-            list.add(document.getString(DatabaseServerObject.SERVER_ID.getName()));
-        }
+        collection.find().forEach((Block<? super Document>) document -> list.add(document.getString(DatabaseServerObject.SERVER_ID.getName())));
         return list;
     }
 
     public List<String> getServer(String group) {
-        FindIterable<Document> find = collection.find(Filters.eq(DatabaseServerObject.GROUP.getName(), group));
         List<String> list = new ArrayList<>();
-        for(Document document : find) {
-            list.add(document.getString(DatabaseServerObject.SERVER_ID.getName()));
-        }
+        collection.find(Filters.eq(DatabaseServerObject.GROUP.getName(), group)).forEach((Block<? super Document>) document ->
+                        list.add(document.getString(DatabaseServerObject.SERVER_ID.getName())));
         return list;
     }
 
     public void setDatabaseObject(String id, DatabaseServerObject databaseServerObject, Object value) {
-        this.executor.execute(()-> {
-            BasicDBObject doc = new BasicDBObject();
-            doc.append("$set", new BasicDBObject().append(databaseServerObject.getName(), value));
-
-            BasicDBObject basicDBObject = new BasicDBObject().append(DatabaseServerObject.SERVER_ID.getName(), id);
-            collection.updateOne(basicDBObject, doc);
-        });
+        this.executor.execute(()-> collection.updateOne(
+                new BasicDBObject(DatabaseServerObject.SERVER_ID.getName(), id),
+                new BasicDBObject("$set", new BasicDBObject(databaseServerObject.getName(), value))));
     }
 
     public DatabaseElement getDatabaseElement(String id, DatabaseServerObject databaseServerObject) {

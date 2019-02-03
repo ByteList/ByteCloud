@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.core.event;
 
-import de.bytelist.bytecloud.api.ServerState;
+import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.common.spigot.event.CloudServerUpdateStateEvent;
 import lombok.Getter;
 
 /**
@@ -8,14 +9,14 @@ import lombok.Getter;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class CloudServerUpdateStateEvent extends CloudServerUpdateEvent {
+public class ByteCloudServerUpdateStateEvent extends ByteCloudServerUpdateEvent implements CloudServerUpdateStateEvent {
 
     @Getter
     private ServerState oldState;
     @Getter
     private ServerState newState;
 
-    public CloudServerUpdateStateEvent(String serverId, String serverGroup, ServerState oldState, ServerState newState) {
+    public ByteCloudServerUpdateStateEvent(String serverId, String serverGroup, ServerState oldState, ServerState newState) {
         super(serverId, serverGroup);
         this.oldState = oldState;
         this.newState = newState;

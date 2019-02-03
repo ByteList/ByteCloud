@@ -1,4 +1,4 @@
-package de.bytelist.bytecloud.api;
+package de.bytelist.bytecloud.common;
 
 /**
  * Created by ByteList on 20.07.2018.

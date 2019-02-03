@@ -1,4 +1,4 @@
-package de.bytelist.bytecloud.api;
+package de.bytelist.bytecloud.common;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -13,6 +13,10 @@ public interface CloudAPI {
     public Collection<String> getServers();
 
     public String getUniqueServerId(String server);
+
+    public String getRandomLobbyId();
+
+    public String getRandomLobbyId(String excludedLobby);
 
     public void movePlayerToLobby(UUID uuid);
 

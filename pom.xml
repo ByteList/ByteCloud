@@ -17,12 +17,11 @@
     <name>ByteCloud</name>
 
     <modules>
-        <module>ByteCloud-Software</module>
+        <module>ByteCloud-Common</module>
         <module>ByteCloud-Core</module>
+        <module>ByteCloud-Software</module>
         <module>ByteCloud-Plugin-Bungee</module>
         <module>ByteCloud-Plugin-Spigot</module>
-        <module>ByteCloud-Plugin-Fallback</module>
-        <module>ByteCloud-Plugin-API</module>
     </modules>
 
     <repositories>

@@ -36,16 +36,18 @@
 
         <dependency>
             <groupId>de.bytelist.bytecloud</groupId>
+            <artifactId>ByteCloud-Common</artifactId>
+            <version>${parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.bytelist.bytecloud</groupId>
             <artifactId>ByteCloud-Core</artifactId>
             <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>de.bytelist.bytecloud</groupId>
-            <artifactId>ByteCloud-Plugin-API</artifactId>
-            <version>${parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 
     <packaging>jar</packaging>

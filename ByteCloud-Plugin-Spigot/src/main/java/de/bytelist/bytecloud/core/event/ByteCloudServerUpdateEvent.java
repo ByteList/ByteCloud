@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud.core.event;
 
+import de.bytelist.bytecloud.common.spigot.event.CloudServerUpdateEvent;
 import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -9,7 +10,7 @@ import org.bukkit.event.HandlerList;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class CloudServerUpdateEvent extends Event {
+public class ByteCloudServerUpdateEvent extends Event implements CloudServerUpdateEvent {
 
     @Getter
     private static HandlerList handlerList = new HandlerList();
@@ -19,7 +20,7 @@ public class CloudServerUpdateEvent extends Event {
     @Getter
     private String serverGroup;
 
-    public CloudServerUpdateEvent(String serverId, String serverGroup) {
+    public ByteCloudServerUpdateEvent(String serverId, String serverGroup) {
         this.serverId = serverId;
         this.serverGroup = serverGroup;
     }

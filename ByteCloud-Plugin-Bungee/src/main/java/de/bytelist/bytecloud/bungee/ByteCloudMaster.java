@@ -1,9 +1,11 @@
 package de.bytelist.bytecloud.bungee;
 
-import de.bytelist.bytecloud.api.BungeeAPI;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.bungee.listener.LoginListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
+import de.bytelist.bytecloud.common.bungee.BungeeCloud;
+import de.bytelist.bytecloud.common.bungee.BungeeCloudAPI;
+import de.bytelist.bytecloud.common.bungee.BungeeCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.bungee.BungeeClient;
@@ -20,7 +22,7 @@ import java.io.File;
 /**
  * Created by ByteList on 27.01.2017.
  */
-public class ByteCloudMaster extends Plugin {
+public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
 
     public String prefix = "§bCloud §8\u00BB ";
 
@@ -33,17 +35,17 @@ public class ByteCloudMaster extends Plugin {
     @Getter
     private BungeeClient bungeeClient;
     @Getter
-    private String serverIdOnConnect;
+    private String forcedJoinServerId;
     @Getter
     private CloudConfig cloudConfig;
     @Getter
     private File configFile;
     @Getter
-    private BungeeAPI cloudAPI;
+    private BungeeCloudAPI cloudAPI;
 
     @Override
     public void onEnable() {
-        instance = this;
+        BungeeCloud.setInstance(instance = this);
 
         this.configFile = new File("plugins/ByteCloud", "config.json");
         this.cloudConfig = CloudConfig.loadDocument(this.configFile);
@@ -55,7 +57,7 @@ public class ByteCloudMaster extends Plugin {
         // 2.0-23:0034258
         version = v[0]+":"+v[1].substring(0, 7);
 
-        this.serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
+        this.forcedJoinServerId = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
 
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
@@ -80,7 +82,7 @@ public class ByteCloudMaster extends Plugin {
             }
         });
 
-        this.cloudAPI = new BungeeCloudAPI();
+        this.cloudAPI = new ByteBungeeCloudAPI();
     }
 
     @Override

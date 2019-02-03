@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud.core.event;
 
+import de.bytelist.bytecloud.common.spigot.event.CloudPlayerConnectToServerEvent;
 import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -9,7 +10,7 @@ import org.bukkit.event.HandlerList;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class CloudPlayerConnectToServerEvent extends Event {
+public class ByteCloudPlayerConnectToServerEvent extends Event implements CloudPlayerConnectToServerEvent {
 
     @Getter
     private static HandlerList handlerList = new HandlerList();
@@ -25,7 +26,7 @@ public class CloudPlayerConnectToServerEvent extends Event {
     @Getter
     private String targetServerGroup;
 
-    public CloudPlayerConnectToServerEvent(String player, String oldServer, String oldServerGroup, String targetServer, String targetServerGroup) {
+    public ByteCloudPlayerConnectToServerEvent(String player, String oldServer, String oldServerGroup, String targetServer, String targetServerGroup) {
         this.player = player;
         this.oldServer = oldServer;
         this.oldServerGroup = oldServerGroup;
