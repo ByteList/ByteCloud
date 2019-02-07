@@ -29,6 +29,10 @@
             <id>byte-repo</id>
             <url>https://kvm.bytelist.de/nexus/repository/byte-repo/</url>
         </repository>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <properties>

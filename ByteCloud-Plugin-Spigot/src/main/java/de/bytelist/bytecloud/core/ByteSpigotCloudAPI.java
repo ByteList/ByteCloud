@@ -90,4 +90,14 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     public void kickPlayer(String playerName, String reason) {
         ByteCloudCore.getInstance().getServerClient().sendPacket(new PacketInKickPlayer(playerName, reason));
     }
+
+    @Override
+    public String getServerIdFromPlayer(UUID uuid) {
+        return ByteCloudCore.getInstance().getCloudHandler().getDa;
+    }
+
+    @Override
+    public UUID getUniqueIdFromName(String name) {
+        return null;
+    }
 }

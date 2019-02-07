@@ -11,13 +11,6 @@
 
     <artifactId>ByteCloud-Plugin-Bungee</artifactId>
 
-    <repositories>
-        <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>net.md-5</groupId>
@@ -52,7 +45,7 @@
 
         <dependency>
             <groupId>de.bytelist.bytecloud</groupId>
-            <artifactId>ByteCloud-Common</artifactId>
+            <artifactId>common-bungee</artifactId>
             <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>

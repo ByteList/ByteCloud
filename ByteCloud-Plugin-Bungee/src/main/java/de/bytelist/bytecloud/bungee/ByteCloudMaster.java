@@ -3,6 +3,7 @@ package de.bytelist.bytecloud.bungee;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.bungee.listener.LoginListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
+import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.bungee.BungeeCloud;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudAPI;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudPlugin;
@@ -45,7 +46,7 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
 
     @Override
     public void onEnable() {
-        BungeeCloud.setInstance(instance = this);
+        Cloud.setInstance(instance = this);
 
         this.configFile = new File("plugins/ByteCloud", "config.json");
         this.cloudConfig = CloudConfig.loadDocument(this.configFile);

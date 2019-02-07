@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.core;
 
-import de.bytelist.bytecloud.common.spigot.SpigotCloud;
+import de.bytelist.bytecloud.common.Cloud;
+import de.bytelist.bytecloud.common.CloudPermissionCheck;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
@@ -9,7 +10,9 @@ import de.bytelist.bytecloud.network.NetworkManager;
 import de.bytelist.bytecloud.network.server.PacketInServer;
 import de.bytelist.bytecloud.network.server.ServerClient;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -34,13 +37,16 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     @Getter
     private File configFile;
 
-    public String prefix = "§bCloud §8\u00BB ";
+    @Getter @Setter
+    private CloudPermissionCheck<Player> permissionCheck;
+
     @Getter
     private String version = "unknown";
 
     @Override
     public void onEnable() {
-        SpigotCloud.setInstance(instance = this);
+        Cloud.setInstance(instance = this);
+        this.permissionCheck = new PermissionCheck();
 
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloudCore.class.getPackage().getImplementationVersion().split(":");
@@ -77,5 +83,18 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     public void onDisable() {
         this.serverClient.disconnect();
         Bukkit.getConsoleSender().sendMessage(prefix + "§cDisabled!");
+    }
+
+    public static class PermissionCheck implements CloudPermissionCheck<Player> {
+
+        @Override
+        public boolean hasPermission(String permission, Player checker) {
+            return checker.isOp();
+        }
+
+        @Override
+        public String getNoPermissionMessage() {
+            return "§cYou don't have the permission for this command!";
+        }
     }
 }
