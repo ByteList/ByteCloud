@@ -6,9 +6,10 @@ import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
-import de.bytelist.bytecloud.network.NetworkManager;
-import de.bytelist.bytecloud.network.server.PacketInServer;
-import de.bytelist.bytecloud.network.server.ServerClient;
+import de.bytelist.bytecloud.packet.ByteCloudPacketClient;
+import de.bytelist.bytecloud.packet.NetworkManager;
+import de.bytelist.bytecloud.packet.server.PacketInServer;
+import de.bytelist.bytecloud.packet.server.ServerClient;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     @Getter
     private SpigotCloudAPI cloudAPI;
     @Getter
-    private ServerClient serverClient;
+    private ByteCloudPacketClient packetClient;
     @Getter
     private CloudConfig cloudConfig;
     @Getter
@@ -60,16 +61,15 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
         this.cloudHandler = new CloudHandler();
 
-        NetworkManager.connect(this.cloudHandler.getSocketPort(), getLogger());
-        this.serverClient = new ServerClient();
-        this.serverClient.connect();
+        this.packetClient = new ByteCloudPacketClient(this.cloudHandler.getSocketPort());
+        this.packetClient.connect();
 
         Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§aEnabled!");
 
         String serverId = cloudHandler.getServerId();
 
         PacketInServer packetInServer = new PacketInServer(serverId);
-        this.serverClient.sendPacket(packetInServer);
+        this.packetClient.sendPacket(packetInServer);
 
         getCommand("cloud").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage("This server is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
@@ -81,7 +81,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
     @Override
     public void onDisable() {
-        this.serverClient.disconnect();
+        this.packetClient.disconnect();
         Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§cDisabled!");
     }
 

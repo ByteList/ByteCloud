@@ -4,7 +4,7 @@ import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.core.event.CloudEvent;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.network.cloud.*;
+import de.bytelist.bytecloud.packet.cloud.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

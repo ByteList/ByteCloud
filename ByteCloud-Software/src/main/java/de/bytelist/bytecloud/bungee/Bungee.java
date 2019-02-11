@@ -2,8 +2,8 @@ package de.bytelist.bytecloud.bungee;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.network.cloud.PacketOutCloudInfo;
-import de.bytelist.bytecloud.network.cloud.PacketOutRegisterServer;
+import de.bytelist.bytecloud.packet.cloud.PacketOutCloudInfo;
+import de.bytelist.bytecloud.packet.cloud.PacketOutRegisterServer;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
@@ -126,7 +126,7 @@ public class Bungee implements IScreen {
     }
 
     /**
-     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.network.bungee.PacketInBungee} packet.
+     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.packet.bungee.PacketInBungee} packet.
      * Set the bungee to started.
      */
     public void onStart() {
@@ -145,7 +145,7 @@ public class Bungee implements IScreen {
     }
 
     /**
-     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.network.bungee.PacketInBungeeStopped} packet.
+     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.packet.bungee.PacketInBungeeStopped} packet.
      * Destroy the process from the bungee and set the bungee to stopped.
      */
     public void onStop() {

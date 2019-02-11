@@ -2,7 +2,7 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.network.cloud.PacketOutSendMessage;
+import de.bytelist.bytecloud.packet.cloud.PacketOutSendMessage;
 import lombok.Getter;
 
 import java.io.File;

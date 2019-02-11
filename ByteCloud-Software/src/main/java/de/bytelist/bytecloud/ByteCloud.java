@@ -2,6 +2,8 @@ package de.bytelist.bytecloud;
 
 import com.sun.management.OperatingSystemMXBean;
 import de.bytelist.bytecloud.bungee.Bungee;
+import de.bytelist.bytecloud.common.Cloud;
+import de.bytelist.bytecloud.common.CloudAPI;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
@@ -12,8 +14,7 @@ import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.log.AnsiColor;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
-import de.bytelist.bytecloud.network.NetworkManager;
-import de.bytelist.bytecloud.network.cloud.CloudServer;
+import de.bytelist.bytecloud.packet.ByteCloudPacketServer;
 import de.bytelist.bytecloud.restapi.WebService;
 import de.bytelist.bytecloud.restapi.WebSocket;
 import de.bytelist.bytecloud.server.Server;
@@ -110,14 +111,14 @@ public class ByteCloud {
     @Getter
     private final String cloudStarted;
     /**
-     * The {@link CloudServer} manages all incoming connections.
+     * The {@link ByteCloudPacketServer} manages all incoming connections.
      * It's the packet server.
      * You get an information in the console when a connection comes in.
      * If this connection comes from a game server or from a bungee
      * you will see this and get informed about this.
      */
     @Getter
-    private CloudServer cloudServer;
+    private ByteCloudPacketServer packetServer;
 
     /**
      * This string represents a time who the cloud should be stopped.
@@ -328,12 +329,7 @@ public class ByteCloud {
             return;
         }
 
-        NetworkManager.connect(this.cloudConfig.getInt("socket-port"), this.logger);
-        this.cloudServer = new CloudServer();
-        if(!this.cloudServer.startPacketServer()) {
-            cleanStop();
-            return;
-        }
+        this.packetServer = new ByteCloudPacketServer(this.cloudConfig.getInt("socket-port"));
 
         try {
             maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.cloudConfig.getString("max-memory")));
@@ -373,6 +369,7 @@ public class ByteCloud {
     public void start() {
         isRunning = true;
 
+        this.packetServer.start();
         this.cloudExecutor.start();
         this.webService.startWebServer();
 
@@ -391,7 +388,7 @@ public class ByteCloud {
                 ByteCloud.this.logger.info("Shutting down...");
 
                 Runnable lastStop = ()-> {
-                    cloudServer.getPacketServer().stop();
+                    packetServer.stop();
                     logger.info("ByteCloud stopped.");
                     cleanStop();
                 };

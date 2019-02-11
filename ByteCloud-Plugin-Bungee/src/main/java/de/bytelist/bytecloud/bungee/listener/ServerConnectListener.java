@@ -1,7 +1,7 @@
 package de.bytelist.bytecloud.bungee.listener;
 
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
-import de.bytelist.bytecloud.network.bungee.PacketInPlayerChangedServer;
+import de.bytelist.bytecloud.packet.bungee.PacketInPlayerChangedServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.ServerConnectEvent;

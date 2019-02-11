@@ -5,9 +5,9 @@ import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
-import de.bytelist.bytecloud.network.server.PacketInChangeServerState;
-import de.bytelist.bytecloud.network.server.PacketInKickPlayer;
-import de.bytelist.bytecloud.network.server.PacketInStopOwnServer;
+import de.bytelist.bytecloud.packet.server.PacketInChangeServerState;
+import de.bytelist.bytecloud.packet.server.PacketInKickPlayer;
+import de.bytelist.bytecloud.packet.server.PacketInStopOwnServer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,6 +16,7 @@ import java.io.DataOutputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by ByteList on 20.07.2018.
@@ -33,7 +34,7 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     public void changeServerState(ServerState serverState) {
         ByteCloudCore.getInstance().getCloudHandler().editDatabaseServerValue(getCurrentServerId(), DatabaseServerObject.STATE,
                 serverState.toString());
-        ByteCloudCore.getInstance().getServerClient().sendPacket(new PacketInChangeServerState(getCurrentServerId(), serverState.name()));
+        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInChangeServerState(getCurrentServerId(), serverState.name()));
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     @Override
     public void shutdown() {
         PacketInStopOwnServer packetInStopOwnServer = new PacketInStopOwnServer(getCurrentServerId());
-        ByteCloudCore.getInstance().getServerClient().sendPacket(packetInStopOwnServer);
+        ByteCloudCore.getInstance().getPacketClient().sendPacket(packetInStopOwnServer);
     }
 
     @Override
@@ -55,6 +56,11 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     @Override
     public CloudPlayer<Player> getPlayer(String name) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Logger getLogger() {
+        return ByteCloudCore.getInstance().getLogger();
     }
 
     @Override
@@ -99,7 +105,7 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public void kickPlayer(String playerName, String reason) {
-        ByteCloudCore.getInstance().getServerClient().sendPacket(new PacketInKickPlayer(playerName, reason));
+        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInKickPlayer(playerName, reason));
     }
 
     @Override
