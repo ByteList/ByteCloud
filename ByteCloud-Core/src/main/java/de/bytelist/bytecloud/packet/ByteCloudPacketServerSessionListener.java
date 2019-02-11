@@ -2,6 +2,7 @@ package de.bytelist.bytecloud.packet;
 
 import com.github.steveice10.packetlib.event.session.*;
 import de.bytelist.bytecloud.common.packet.PingPacket;
+import de.bytelist.bytecloud.common.packet.ServerStartedPacket;
 
 /**
  * Created by ByteList on 11.02.2019.
@@ -11,9 +12,16 @@ import de.bytelist.bytecloud.common.packet.PingPacket;
 public class ByteCloudPacketServerSessionListener extends SessionAdapter {
     @Override
     public void packetReceived(PacketReceivedEvent event) {
-        if(event.getPacket() instanceof PingPacket) {
-            System.out.println("Received: " + event.<PingPacket>getPacket().getId());
-            event.getSession().send(event.getPacket());
+        switch (event.getPacket().getClass().getSimpleName()) {
+            case PingPacket.PACKET_NAME:
+                PingPacket packet = event.getPacket();
+
+                System.out.println("Received: " + packet.getId());
+                break;
+            case ServerStartedPacket.PACKET_NAME:
+//                Cloud.getInstance().
+// TODO: 11.02.2019 add common-software
+                break;
         }
     }
 

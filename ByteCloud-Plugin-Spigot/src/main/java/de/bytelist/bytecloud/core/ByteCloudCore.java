@@ -44,7 +44,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     private CloudPermissionCheck<Player> permissionCheck;
 
     @Getter
-    private String version = "unknown";
+    private String serverId = "unknown", version = "unknown";
 
     @Override
     public void onEnable() {
@@ -62,6 +62,8 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
         this.cloudConfig = CloudConfig.loadDocument(this.configFile);
 
         this.cloudHandler = new CloudHandler();
+
+        this.serverId = this.cloudHandler.getServerId();
 
         byte[] decodedKey = Base64.getDecoder().decode(System.getProperty("de.bytelist.bytecloud.communication", "null"));
         SecretKey key = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");

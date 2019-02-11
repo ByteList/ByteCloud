@@ -19,7 +19,7 @@ public class ByteCloudPacketServerListener extends ServerAdapter {
 
     @Override
     public void serverBound(ServerBoundEvent event) {
-        System.out.println("SERVER Bound: " + event.getServer().getHost() + ":" + event.getServer().getPort());
+        System.out.println("Bound: " + event.getServer().getHost() + ":" + event.getServer().getPort());
     }
 
     @Override
@@ -34,13 +34,12 @@ public class ByteCloudPacketServerListener extends ServerAdapter {
 
     @Override
     public void sessionAdded(SessionAddedEvent event) {
-        System.out.println("SERVER Session Added: " + event.getSession().getHost() + ":" + event.getSession().getPort());
+        System.out.println("Session Added: " + event.getSession().getHost() + ":" + event.getSession().getPort());
         ((ByteCloudPacketProtocol) event.getSession().getPacketProtocol()).setSecretKey(this.key);
     }
 
     @Override
     public void sessionRemoved(SessionRemovedEvent event) {
-        System.out.println("SERVER Session Removed: " + event.getSession().getHost() + ":" + event.getSession().getPort());
-        event.getServer().close();
+        System.out.println("Session Removed: " + event.getSession().getHost() + ":" + event.getSession().getPort());
     }
 }

@@ -29,7 +29,7 @@ import java.util.Base64;
 public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
 
     @Getter
-    private String version = "unknown";
+    private String serverId = "unknown", version = "unknown";
     @Getter
     private static ByteCloudMaster instance;
     @Getter
@@ -55,6 +55,8 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
         this.cloudConfig = CloudConfig.loadDocument(this.configFile);
 
         this.cloudHandler = new CloudHandler();
+
+        this.serverId = this.cloudHandler.getBungeeId();
 
         // 2.0-23:00342580cc947e7bf8d1eeb7fb8650ab456dc3e2
         String[] v = ByteCloudMaster.class.getPackage().getImplementationVersion().split(":");

@@ -408,7 +408,9 @@ public class ByteCloud {
                 ByteCloud.this.logger.info("Shutting down...");
 
                 Runnable lastStop = ()-> {
-                    packetServer.close();
+                    if(packetServer.isListening())
+                        packetServer.close();
+
                     logger.info("ByteCloud stopped.");
                     cleanStop();
                 };
