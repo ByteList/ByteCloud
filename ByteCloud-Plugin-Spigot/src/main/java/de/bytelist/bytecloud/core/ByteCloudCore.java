@@ -1,22 +1,24 @@
 package de.bytelist.bytecloud.core;
 
+import com.github.steveice10.packetlib.Client;
+import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.core.cloud.CloudHandler;
-import de.bytelist.bytecloud.packet.ByteCloudPacketClient;
-import de.bytelist.bytecloud.packet.NetworkManager;
-import de.bytelist.bytecloud.packet.server.PacketInServer;
-import de.bytelist.bytecloud.packet.server.ServerClient;
+import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by ByteList on 20.12.2016.
@@ -32,7 +34,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     @Getter
     private SpigotCloudAPI cloudAPI;
     @Getter
-    private ByteCloudPacketClient packetClient;
+    private Client packetClient;
     @Getter
     private CloudConfig cloudConfig;
     @Getter
@@ -61,15 +63,22 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
         this.cloudHandler = new CloudHandler();
 
-        this.packetClient = new ByteCloudPacketClient(this.cloudHandler.getSocketPort());
-        this.packetClient.connect();
+        SecretKey key;
+        try {
+            KeyGenerator gen = KeyGenerator.getInstance("AES");
+            gen.init(128);
+            key = gen.generateKey();
+        } catch(NoSuchAlgorithmException e) {
+            System.err.println("AES algorithm not supported, exiting...");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
+        this.packetClient.getSession().connect();
 
         Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§aEnabled!");
 
-        String serverId = cloudHandler.getServerId();
-
-        PacketInServer packetInServer = new PacketInServer(serverId);
-        this.packetClient.sendPacket(packetInServer);
 
         getCommand("cloud").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage("This server is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
@@ -81,7 +90,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
     @Override
     public void onDisable() {
-        this.packetClient.disconnect();
+        this.packetClient.getSession().disconnect("Plugin disabled.");
         Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§cDisabled!");
     }
 

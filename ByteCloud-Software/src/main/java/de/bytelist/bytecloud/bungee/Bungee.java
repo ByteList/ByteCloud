@@ -2,8 +2,6 @@ package de.bytelist.bytecloud.bungee;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.packet.cloud.PacketOutCloudInfo;
-import de.bytelist.bytecloud.packet.cloud.PacketOutRegisterServer;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
@@ -131,13 +129,13 @@ public class Bungee implements IScreen {
      */
     public void onStart() {
         if(isRunning()) {
-            byteCloud.getCloudServer().sendPacket(bungeeId, new PacketOutCloudInfo(byteCloud.getVersion(), byteCloud.getCloudStarted(), byteCloud.isRunning));
+//            byteCloud.getCloudServer().sendPacket(bungeeId, new PacketOutCloudInfo(byteCloud.getVersion(), byteCloud.getCloudStarted(), byteCloud.isRunning));
             byteCloud.getLogger().info("Bungee started.");
             this.started = true;
             this.runStartSuccess.run();
             if(this.execByCommand) {
                 for(Server server : byteCloud.getServerHandler().getServers()) {
-                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutRegisterServer(server.getServerId(), server.getPort()));
+//                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutRegisterServer(server.getServerId(), server.getPort()));
                 }
                 this.execByCommand = false;
             }

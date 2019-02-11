@@ -1,9 +1,8 @@
 package de.bytelist.bytecloud;
 
+import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import com.sun.management.OperatingSystemMXBean;
 import de.bytelist.bytecloud.bungee.Bungee;
-import de.bytelist.bytecloud.common.Cloud;
-import de.bytelist.bytecloud.common.CloudAPI;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
@@ -14,7 +13,8 @@ import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.log.AnsiColor;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
-import de.bytelist.bytecloud.packet.ByteCloudPacketServer;
+import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
+import de.bytelist.bytecloud.packet.ByteCloudPacketServerListener;
 import de.bytelist.bytecloud.restapi.WebService;
 import de.bytelist.bytecloud.restapi.WebSocket;
 import de.bytelist.bytecloud.server.Server;
@@ -27,10 +27,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.fusesource.jansi.AnsiConsole;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -111,14 +114,14 @@ public class ByteCloud {
     @Getter
     private final String cloudStarted;
     /**
-     * The {@link ByteCloudPacketServer} manages all incoming connections.
+     * The {@link com.github.steveice10.packetlib.Server} manages all incoming connections.
      * It's the packet server.
      * You get an information in the console when a connection comes in.
      * If this connection comes from a game server or from a bungee
      * you will see this and get informed about this.
      */
     @Getter
-    private ByteCloudPacketServer packetServer;
+    private com.github.steveice10.packetlib.Server packetServer;
 
     /**
      * This string represents a time who the cloud should be stopped.
@@ -329,7 +332,19 @@ public class ByteCloud {
             return;
         }
 
-        this.packetServer = new ByteCloudPacketServer(this.cloudConfig.getInt("socket-port"));
+        SecretKey key;
+        try {
+            KeyGenerator gen = KeyGenerator.getInstance("AES");
+            gen.init(128);
+            key = gen.generateKey();
+        } catch(NoSuchAlgorithmException e) {
+            System.err.println("AES algorithm not supported, exiting...");
+            cleanStop();
+            return;
+        }
+
+        this.packetServer = new com.github.steveice10.packetlib.Server("127.0.0.1", this.cloudConfig.getInt("socket-port"), ByteCloudPacketProtocol.class, new TcpSessionFactory());
+        this.packetServer.addListener(new ByteCloudPacketServerListener(key));
 
         try {
             maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.cloudConfig.getString("max-memory")));
@@ -369,7 +384,7 @@ public class ByteCloud {
     public void start() {
         isRunning = true;
 
-        this.packetServer.start();
+        this.packetServer.bind();
         this.cloudExecutor.start();
         this.webService.startWebServer();
 
@@ -388,7 +403,7 @@ public class ByteCloud {
                 ByteCloud.this.logger.info("Shutting down...");
 
                 Runnable lastStop = ()-> {
-                    packetServer.stop();
+                    packetServer.close();
                     logger.info("ByteCloud stopped.");
                     cleanStop();
                 };

@@ -5,9 +5,6 @@ import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
-import de.bytelist.bytecloud.packet.server.PacketInChangeServerState;
-import de.bytelist.bytecloud.packet.server.PacketInKickPlayer;
-import de.bytelist.bytecloud.packet.server.PacketInStopOwnServer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -34,7 +31,7 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     public void changeServerState(ServerState serverState) {
         ByteCloudCore.getInstance().getCloudHandler().editDatabaseServerValue(getCurrentServerId(), DatabaseServerObject.STATE,
                 serverState.toString());
-        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInChangeServerState(getCurrentServerId(), serverState.name()));
+//        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInChangeServerState(getCurrentServerId(), serverState.name()));
     }
 
     @Override
@@ -44,8 +41,8 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public void shutdown() {
-        PacketInStopOwnServer packetInStopOwnServer = new PacketInStopOwnServer(getCurrentServerId());
-        ByteCloudCore.getInstance().getPacketClient().sendPacket(packetInStopOwnServer);
+//        PacketInStopOwnServer packetInStopOwnServer = new PacketInStopOwnServer(getCurrentServerId());
+//        ByteCloudCore.getInstance().getPacketClient().sendPacket(packetInStopOwnServer);
     }
 
     @Override
@@ -105,7 +102,7 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public void kickPlayer(String playerName, String reason) {
-        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInKickPlayer(playerName, reason));
+//        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInKickPlayer(playerName, reason));
     }
 
     @Override

@@ -3,13 +3,9 @@ package de.bytelist.bytecloud.command;
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.spigot.SpigotCloud;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 /**
  * Created by nemmerich on 07.02.2019.

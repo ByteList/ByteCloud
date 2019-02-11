@@ -1,30 +1,32 @@
 package de.bytelist.bytecloud.bungee;
 
+import com.github.steveice10.packetlib.Client;
+import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.bungee.listener.LoginListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
 import de.bytelist.bytecloud.common.Cloud;
+import de.bytelist.bytecloud.common.CloudPermissionCheck;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudAPI;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
-import de.bytelist.bytecloud.packet.NetworkManager;
-import de.bytelist.bytecloud.packet.bungee.BungeeClient;
-import de.bytelist.bytecloud.packet.bungee.PacketInBungee;
-import de.bytelist.bytecloud.packet.bungee.PacketInBungeeStopped;
+import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by ByteList on 27.01.2017.
  */
 public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
-
-    public String prefix = "§bCloud §8\u00BB ";
 
     @Getter
     private String version = "unknown";
@@ -33,7 +35,7 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
     @Getter
     private CloudHandler cloudHandler;
     @Getter
-    private BungeeClient bungeeClient;
+    private Client packetClient;
     @Getter
     private String forcedJoinServerId;
     @Getter
@@ -42,6 +44,8 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
     private File configFile;
     @Getter
     private BungeeCloudAPI cloudAPI;
+    @Getter @Setter
+    private CloudPermissionCheck<ProxiedPlayer> permissionCheck;
 
     @Override
     public void onEnable() {
@@ -59,17 +63,26 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
 
         this.forcedJoinServerId = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
 
+        this.permissionCheck = new PermissionCheck();
+
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
 
-        NetworkManager.connect(this.cloudHandler.getSocketPort(), getLogger());
-        this.bungeeClient = new BungeeClient();
-        this.bungeeClient.connect();
+        SecretKey key;
+        try {
+            KeyGenerator gen = KeyGenerator.getInstance("AES");
+            gen.init(128);
+            key = gen.generateKey();
+        } catch(NoSuchAlgorithmException e) {
+            System.err.println("AES algorithm not supported, exiting...");
+            this.onDisable();
+            return;
+        }
 
-        getProxy().getConsole().sendMessage(prefix+"§aEnabled!");
+        this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
+        this.packetClient.getSession().connect();
 
-        PacketInBungee packetInBungee = new PacketInBungee(this.cloudHandler.getBungeeId(), 25565);
-        this.bungeeClient.sendPacket(packetInBungee);
+        getProxy().getConsole().sendMessage(Cloud.PREFIX+"§aEnabled!");
 
         getProxy().getPluginManager().registerCommand(this, new Command("cloudend") {
             @Override
@@ -87,8 +100,21 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
 
     @Override
     public void onDisable() {
-        this.bungeeClient.sendPacket(new PacketInBungeeStopped(cloudHandler.getBungeeId()));
-        this.bungeeClient.disconnect();
-        getProxy().getConsole().sendMessage(prefix+"§cDisabled!");
+        this.packetClient.getSession().disconnect("Plugin disabled.");
+        getProxy().getConsole().sendMessage(Cloud.PREFIX+"§cDisabled!");
+        super.onDisable();
+    }
+
+    public static class PermissionCheck implements CloudPermissionCheck<ProxiedPlayer> {
+
+        @Override
+        public boolean hasPermission(String permission, ProxiedPlayer checker) {
+            return checker.hasPermission("cloud.admin");
+        }
+
+        @Override
+        public String getNoPermissionMessage() {
+            return "§cYou don't have the permission for this command!";
+        }
     }
 }

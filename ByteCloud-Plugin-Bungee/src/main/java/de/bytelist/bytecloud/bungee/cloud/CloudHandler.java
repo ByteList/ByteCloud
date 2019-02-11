@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.bungee.cloud;
 
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
+import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.database.DatabaseManager;
 import de.bytelist.bytecloud.database.DatabaseServer;
 import lombok.Getter;
@@ -41,7 +42,7 @@ public class CloudHandler {
 
         try {
             this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
-            ByteCloudMaster.getInstance().getProxy().getConsole().sendMessage(ByteCloudMaster.getInstance().prefix+"§eDatabase - §aConnected!");
+            ByteCloudMaster.getInstance().getProxy().getConsole().sendMessage(Cloud.PREFIX +"§eDatabase - §aConnected!");
             this.databaseServer = this.databaseManager.getDatabaseServer();
         } catch (Exception e) {
             e.printStackTrace();

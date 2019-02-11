@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.ServerIdResolver;
+import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.core.event.ByteCloudPlayerConnectToServerEvent;
@@ -44,7 +45,7 @@ public class CloudHandler {
         this.serverGroup = System.getProperty("de.bytelist.bytecloud.servergroup", "null");
 
         DatabaseManager databaseManager = new DatabaseManager(host, 27017, user, password, database);
-        Bukkit.getConsoleSender().sendMessage(byteCloudCore.prefix+"§eDatabase - §aConnected!");
+        Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX+"§eDatabase - §aConnected!");
         this.databaseServer = databaseManager.getDatabaseServer();
     }
 

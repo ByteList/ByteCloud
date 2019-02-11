@@ -30,6 +30,13 @@
             <version>17.0</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>de.bytelist.bytecloud</groupId>
+            <artifactId>common-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <packaging>jar</packaging>

@@ -22,7 +22,6 @@
         <module>ByteCloud-Software</module>
         <module>ByteCloud-Plugin-Bungee</module>
         <module>ByteCloud-Plugin-Spigot</module>
-        <module>ByteCloud-PacketClient</module>
     </modules>
 
     <repositories>

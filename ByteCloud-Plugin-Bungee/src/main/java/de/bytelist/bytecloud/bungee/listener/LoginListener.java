@@ -1,6 +1,6 @@
 package de.bytelist.bytecloud.bungee.listener;
 
-import de.bytelist.bytecloud.bungee.ByteCloudMaster;
+import de.bytelist.bytecloud.common.Cloud;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -17,7 +17,7 @@ public class LoginListener implements Listener {
 
         if(pc.getVersion() < 100) {
             e.setCancelled(true);
-            e.setCancelReason(ByteCloudMaster.getInstance().prefix+"§cBitte verwende eine Minecraft-Version ab 1.9!");
+            e.setCancelReason(Cloud.PREFIX+"§cBitte verwende eine Minecraft-Version ab 1.9!");
         }
     }
 }

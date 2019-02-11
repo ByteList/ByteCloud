@@ -1,11 +1,13 @@
 package de.bytelist.bytecloud.bungee;
 
 import de.bytelist.bytecloud.ServerIdResolver;
+import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudAPI;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by ByteList on 20.07.2018.
@@ -13,6 +15,11 @@ import java.util.UUID;
  * Copyright by ByteList - https://bytelist.de/
  */
 public class ByteBungeeCloudAPI implements BungeeCloudAPI {
+
+    @Override
+    public Logger getLogger() {
+        return ByteCloudMaster.getInstance().getLogger();
+    }
 
     @Override
     public Collection<String> getServers() {
@@ -48,5 +55,25 @@ public class ByteBungeeCloudAPI implements BungeeCloudAPI {
     public void kickPlayer(String playerName, String reason) {
         ProxiedPlayer player = ByteCloudMaster.getInstance().getProxy().getPlayer(playerName);
         player.disconnect(reason);
+    }
+
+    @Override
+    public String getServerIdFromPlayer(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public UUID getUniqueIdFromName(String name) {
+        return null;
+    }
+
+    @Override
+    public CloudPlayer<ProxiedPlayer> getPlayer(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public CloudPlayer<ProxiedPlayer> getPlayer(String name) {
+        return null;
     }
 }

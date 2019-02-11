@@ -2,7 +2,6 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.file.EnumFile;
-import de.bytelist.bytecloud.packet.cloud.PacketOutSendMessage;
 import lombok.Getter;
 
 import java.io.File;
@@ -102,8 +101,8 @@ public class ServerGroup {
                 tempServer.startServer(sender);
             } else {
                 if(!sender.equals("_cloud")) {
-                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cToo much servers are currently online!");
-                    byteCloud.getCloudServer().sendPacket("Bungee-1", packetOutSendMessage);
+//                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cToo much servers are currently online!");
+//                    byteCloud.getCloudServer().sendPacket("Bungee-1", packetOutSendMessage);
                 } else {
                     System.out.println("ServerGroup "+this.groupName+": Too much servers are currently online!");
                 }

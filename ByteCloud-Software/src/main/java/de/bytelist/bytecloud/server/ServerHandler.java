@@ -2,7 +2,6 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.ServerIdResolver;
-import de.bytelist.bytecloud.database.DatabaseServerObject;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
@@ -211,15 +210,15 @@ public class ServerHandler {
         return lobbyServer.get(i);
     }
 
-    public int getDatabasePlayers(String serverId) {
-        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt();
-    }
-
-    public int getDatabaseSpectators(String serverId) {
-        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt();
-    }
-
-    public int getDatabaseOnlineCount(String serverId) {
-        return getDatabasePlayers(serverId) + getDatabaseSpectators(serverId);
-    }
+//    public int getDatabasePlayers(String serverId) {
+//        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SLOTS).getAsInt();
+//    }
+//
+//    public int getDatabaseSpectators(String serverId) {
+//        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt();
+//    }
+//
+//    public int getDatabaseOnlineCount(String serverId) {
+//        return getDatabasePlayers(serverId) + getDatabaseSpectators(serverId);
+//    }
 }
