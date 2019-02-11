@@ -18,10 +18,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
-import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * Created by ByteList on 27.01.2017.
@@ -68,16 +68,8 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
         getProxy().getPluginManager().registerListener(this, new LoginListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
 
-        SecretKey key;
-        try {
-            KeyGenerator gen = KeyGenerator.getInstance("AES");
-            gen.init(128);
-            key = gen.generateKey();
-        } catch(NoSuchAlgorithmException e) {
-            System.err.println("AES algorithm not supported, exiting...");
-            this.onDisable();
-            return;
-        }
+        byte[] decodedKey = Base64.getDecoder().decode(System.getProperty("de.bytelist.bytecloud.communication", "null"));
+        SecretKey key = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
         this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
         this.packetClient.getSession().connect();

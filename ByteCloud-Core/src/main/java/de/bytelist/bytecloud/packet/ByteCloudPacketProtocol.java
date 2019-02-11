@@ -23,12 +23,16 @@ public class ByteCloudPacketProtocol extends PacketProtocol {
     private PacketHeader header = new DefaultPacketHeader();
     private AESEncryption encrypt;
 
+    public ByteCloudPacketProtocol() {}
+
     public ByteCloudPacketProtocol(SecretKey key) {
         this.setSecretKey(key);
     }
 
     void setSecretKey(SecretKey key) {
         this.register(0, PingPacket.class);
+
+        if(key == null) return;
 
         try {
             this.encrypt = new AESEncryption(key);

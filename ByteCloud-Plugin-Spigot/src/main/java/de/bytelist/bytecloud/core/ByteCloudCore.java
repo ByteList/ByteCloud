@@ -15,10 +15,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
-import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * Created by ByteList on 20.12.2016.
@@ -63,16 +63,8 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
         this.cloudHandler = new CloudHandler();
 
-        SecretKey key;
-        try {
-            KeyGenerator gen = KeyGenerator.getInstance("AES");
-            gen.init(128);
-            key = gen.generateKey();
-        } catch(NoSuchAlgorithmException e) {
-            System.err.println("AES algorithm not supported, exiting...");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        byte[] decodedKey = Base64.getDecoder().decode(System.getProperty("de.bytelist.bytecloud.communication", "null"));
+        SecretKey key = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
         this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
         this.packetClient.getSession().connect();

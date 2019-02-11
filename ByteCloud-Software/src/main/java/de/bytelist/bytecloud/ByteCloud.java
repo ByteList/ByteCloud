@@ -35,6 +35,7 @@ import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Handler;
@@ -192,6 +193,9 @@ public class ByteCloud {
 
     private OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
+    @Getter
+    private String packetEncryptionKey;
+
     /**
      * Initialise the cloud instance. This doesn't start anything!
      *
@@ -332,7 +336,7 @@ public class ByteCloud {
             return;
         }
 
-        SecretKey key;
+        SecretKey key = null;
         try {
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
@@ -342,6 +346,7 @@ public class ByteCloud {
             cleanStop();
             return;
         }
+        this.packetEncryptionKey = Base64.getEncoder().encodeToString(key.getEncoded());
 
         this.packetServer = new com.github.steveice10.packetlib.Server("127.0.0.1", this.cloudConfig.getInt("socket-port"), ByteCloudPacketProtocol.class, new TcpSessionFactory());
         this.packetServer.addListener(new ByteCloudPacketServerListener(key));

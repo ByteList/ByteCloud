@@ -80,6 +80,7 @@ public class Bungee implements IScreen {
                 String[] param = { "java", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=50", "-Xmn2M",
                         "-Xmx"+String.valueOf(ramM)+"M", "-Dde.bytelist.bytecloud.servername="+bungeeId,
                         "-Dde.bytelist.bytecloud.connectServer="+byteCloud.getServerIdOnConnect(),
+                        "-Dde.bytelist.bytecloud.communication="+byteCloud.getPacketEncryptionKey(),
                         "-Djline.terminal=jline.UnsupportedTerminal", "-DIReallyKnowWhatIAmDoingISwear=true", "-jar", "BungeeCord.jar" };
                 ProcessBuilder pb = new ProcessBuilder(param);
                 pb.directory(directory);
@@ -100,9 +101,9 @@ public class Bungee implements IScreen {
     public void stopBungee(Runnable runSuccess, Runnable runError) {
         this.runStopSuccess = runSuccess;
         if(!byteCloud.getCloudExecutor().execute(()-> {
+            byteCloud.getLogger().info("Bungee is stopping.");
             try {
                 if(isRunning()) {
-                    byteCloud.getLogger().info("Bungee is stopping.");
                     Thread.sleep(3000L);
                     this.process.getOutputStream().write("end\n".getBytes());
                     this.process.getOutputStream().flush();
@@ -113,6 +114,7 @@ public class Bungee implements IScreen {
                 runError.run();
             }
 
+            this.onStop();
         })) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping bungee "+bungeeId);
     }
 

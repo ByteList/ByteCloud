@@ -56,6 +56,7 @@ public class PermServer extends Server {
                             "-Djline.terminal=jline.UnsupportedTerminal",
                             "-Dde.bytelist.bytecloud.servername=" + serverId,
                             "-Dde.bytelist.bytecloud.servergroup=PERMANENT",
+                            "-Dde.bytelist.bytecloud.communication="+byteCloud.getPacketEncryptionKey(),
 
                             "-Xmx" + ramM + "M",
                             "-jar", byteCloud.getCloudConfig().getString("jar-name") + ".jar",

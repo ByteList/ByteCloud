@@ -65,6 +65,7 @@ public class TempServer extends Server {
                         "-Djline.terminal=jline.UnsupportedTerminal",
                         "-Dde.bytelist.bytecloud.servername=" + serverId,
                         "-Dde.bytelist.bytecloud.servergroup="+serverGroup.getGroupName(),
+                        "-Dde.bytelist.bytecloud.communication="+byteCloud.getPacketEncryptionKey(),
 
                         "-Xmx" + ramM + "M",
                         "-jar", byteCloud.getCloudConfig().getString("jar-name") + ".jar",

@@ -12,7 +12,7 @@ public class ByteCloudPacketServerSessionListener extends SessionAdapter {
     @Override
     public void packetReceived(PacketReceivedEvent event) {
         if(event.getPacket() instanceof PingPacket) {
-            System.out.println("SERVER Received: " + event.<PingPacket>getPacket().getId());
+            System.out.println("Received: " + event.<PingPacket>getPacket().getId());
             event.getSession().send(event.getPacket());
         }
     }
@@ -20,22 +20,22 @@ public class ByteCloudPacketServerSessionListener extends SessionAdapter {
     @Override
     public void packetSent(PacketSentEvent event) {
         if(event.getPacket() instanceof PingPacket) {
-            System.out.println("SERVER Sent: " + event.<PingPacket>getPacket().getId());
+            System.out.println("Sent: " + event.<PingPacket>getPacket().getId());
         }
     }
 
     @Override
     public void connected(ConnectedEvent event) {
-        System.out.println("SERVER Connected");
+        System.out.println("Connected");
     }
 
     @Override
     public void disconnecting(DisconnectingEvent event) {
-        System.out.println("SERVER Disconnecting: " + event.getReason());
+        System.out.println("Disconnecting: " + event.getReason());
     }
 
     @Override
     public void disconnected(DisconnectedEvent event) {
-        System.out.println("SERVER Disconnected: " + event.getReason());
+        System.out.println("Disconnected: " + event.getReason());
     }
 }
