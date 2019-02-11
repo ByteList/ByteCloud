@@ -64,7 +64,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
         this.serverClient = new ServerClient();
         this.serverClient.connect();
 
-        Bukkit.getConsoleSender().sendMessage(prefix + "§aEnabled!");
+        Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§aEnabled!");
 
         String serverId = cloudHandler.getServerId();
 
@@ -82,7 +82,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     @Override
     public void onDisable() {
         this.serverClient.disconnect();
-        Bukkit.getConsoleSender().sendMessage(prefix + "§cDisabled!");
+        Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§cDisabled!");
     }
 
     public static class PermissionCheck implements CloudPermissionCheck<Player> {

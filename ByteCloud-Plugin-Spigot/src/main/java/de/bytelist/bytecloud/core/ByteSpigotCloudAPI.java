@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.core;
 
 import de.bytelist.bytecloud.ServerIdResolver;
+import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
@@ -44,6 +45,16 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     public void shutdown() {
         PacketInStopOwnServer packetInStopOwnServer = new PacketInStopOwnServer(getCurrentServerId());
         ByteCloudCore.getInstance().getServerClient().sendPacket(packetInStopOwnServer);
+    }
+
+    @Override
+    public CloudPlayer<Player> getPlayer(UUID uuid) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public CloudPlayer<Player> getPlayer(String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -93,11 +104,11 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public String getServerIdFromPlayer(UUID uuid) {
-        return ByteCloudCore.getInstance().getCloudHandler().getDa;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public UUID getUniqueIdFromName(String name) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
