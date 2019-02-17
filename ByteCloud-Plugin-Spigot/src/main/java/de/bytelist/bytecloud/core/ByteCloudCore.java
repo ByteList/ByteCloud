@@ -4,6 +4,7 @@ import com.github.steveice10.packetlib.Client;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
+import de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
@@ -70,12 +71,13 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
         this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
         this.packetClient.getSession().connect();
+        this.packetClient.getSession().send(new ClientServerStartedPacket(this.serverId));
 
         Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§aEnabled!");
 
 
         getCommand("cloud").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage("This server is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
+            sender.sendMessage("This cloud is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
             return true;
         });
 

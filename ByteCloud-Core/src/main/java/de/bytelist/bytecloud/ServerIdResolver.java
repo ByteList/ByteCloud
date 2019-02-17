@@ -14,7 +14,7 @@ import java.util.Collection;
 public class ServerIdResolver {
 
     /**
-     * Try to solve a server id to return the complete unique server id.
+     * Try to solve a cloud id to return the complete unique cloud id.
      * <br>
      * For example,<code>lb-1</code> is given. The method looks for it at the database to return the unique id.
      *
@@ -35,12 +35,12 @@ public class ServerIdResolver {
     }
 
     /**
-     * Try to solve a server id to return the complete unique server id.
+     * Try to solve a cloud id to return the complete unique cloud id.
      * <br>
      * For example,<code>lb-1</code> is given. The method looks for it at the given servers collection to return the unique id.
      *
      * @param serverId to solve.
-     * @param servers to look for the server id.
+     * @param servers to look for the cloud id.
      * @return the unique id from the solved id.
      */
     public static String getUniqueServerId(String serverId, Collection<String> servers) {

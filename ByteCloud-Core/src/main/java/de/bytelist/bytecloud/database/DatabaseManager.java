@@ -33,7 +33,7 @@ public class DatabaseManager {
     @Getter
     private MongoCollection<Document> mongoCollection;
     @Getter
-    private final String collectionName = "cloud-server";
+    private final String collectionName = "cloud-cloud";
     @Getter
     private DatabaseServer databaseServer;
 

@@ -54,7 +54,7 @@ public class CloudHandler {
     }
 
     /**
-     * Basically you can check if a server exists.
+     * Basically you can check if a cloud exists.
      *
      * @param id
      * @return boolean
@@ -73,9 +73,9 @@ public class CloudHandler {
     }
 
     /**
-     * Gets a value from a server where your value.
+     * Gets a value from a cloud where your value.
      *
-     * @return an Object from the server.
+     * @return an Object from the cloud.
      */
     public DatabaseElement getDatabaseServerValue(String id, DatabaseServerObject databaseServerObject) {
         return this.databaseServer.getDatabaseElement(id, databaseServerObject);
@@ -84,7 +84,7 @@ public class CloudHandler {
     /**
      * Gets all Server in a String-List.
      *
-     * @return List<String> with all server's in database
+     * @return List<String> with all cloud's in database
      */
     public List<String> getServerInDatabase() {
         return this.databaseServer.getServer();
@@ -95,7 +95,7 @@ public class CloudHandler {
     }
 
     /**
-     * Delete a server where your value.
+     * Delete a cloud where your value.
      *
      */
     public void removeServerFromDatabase(String id) {

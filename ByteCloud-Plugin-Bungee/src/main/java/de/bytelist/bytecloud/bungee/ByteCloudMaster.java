@@ -9,6 +9,7 @@ import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudAPI;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudPlugin;
+import de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import lombok.Getter;
@@ -75,6 +76,7 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
 
         this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
         this.packetClient.getSession().connect();
+        this.packetClient.getSession().send(new ClientServerStartedPacket(this.serverId));
 
         getProxy().getConsole().sendMessage(Cloud.PREFIX+"§aEnabled!");
 

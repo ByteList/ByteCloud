@@ -1,5 +1,7 @@
 package de.bytelist.bytecloud.server;
 
+import com.github.steveice10.packetlib.Session;
+import de.bytelist.bytecloud.common.Executable;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
@@ -14,6 +16,8 @@ import java.io.File;
  */
 public abstract class Server implements IScreen, Executable {
 
+    @Getter @Setter
+    protected Session session;
     @Getter
     protected String serverId;
     @Getter

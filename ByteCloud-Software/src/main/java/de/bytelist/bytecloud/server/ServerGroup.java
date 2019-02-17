@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
 
@@ -120,8 +121,8 @@ public class ServerGroup {
         if(byteCloud.isRunning) {
             boolean b = false;
             for (String server : servers) {
-                Server.ServerState serverState = byteCloud.getServerHandler().getServer(server).getServerState();
-                if (serverState == Server.ServerState.STARTING || serverState == Server.ServerState.LOBBY) {
+                ServerState serverState = byteCloud.getServerHandler().getServer(server).getServerState();
+                if (serverState == ServerState.STARTING || serverState == ServerState.LOBBY) {
                     b = true;
                     break;
                 }

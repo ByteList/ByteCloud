@@ -1,10 +1,13 @@
 package de.bytelist.bytecloud.bungee;
 
+import com.github.steveice10.packetlib.Session;
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.common.Executable;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -15,10 +18,12 @@ import java.io.IOException;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class Bungee implements IScreen {
+public class Bungee implements IScreen, Executable {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
+    @Getter @Setter
+    protected Session session;
     /**
      * Gets the id from this bungee.
      */
@@ -51,7 +56,7 @@ public class Bungee implements IScreen {
     @Getter
     private boolean started;
 
-    private Runnable runStartSuccess, runStopSuccess;
+    private Runnable runStartSuccess;
 
     /**
      * Initialise the bungee.
@@ -99,7 +104,6 @@ public class Bungee implements IScreen {
      * @param runError the runnable gets execute after an error occurred at the stop
      */
     public void stopBungee(Runnable runSuccess, Runnable runError) {
-        this.runStopSuccess = runSuccess;
         if(!byteCloud.getCloudExecutor().execute(()-> {
             byteCloud.getLogger().info("Bungee is stopping.");
             try {
@@ -114,7 +118,19 @@ public class Bungee implements IScreen {
                 runError.run();
             }
 
-            this.onStop();
+            try {
+                Thread.sleep(5000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(isRunning()) {
+                this.process.destroy();
+                this.process = null;
+            }
+            runSuccess.run();
+            this.started = false;
+            byteCloud.getLogger().info("Bungee stopped.");
+
         })) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping bungee "+bungeeId);
     }
 
@@ -125,10 +141,21 @@ public class Bungee implements IScreen {
         this.stopBungee(()-> {}, ()-> {});
     }
 
+    @Override
+    public boolean startServer(String sender) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean stopServer(String sender) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     /**
-     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.packet.bungee.PacketInBungee} packet.
+     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket} packet.
      * Set the bungee to started.
      */
+    @Override
     public void onStart() {
         if(isRunning()) {
 //            byteCloud.getCloudServer().sendPacket(bungeeId, new PacketOutCloudInfo(byteCloud.getVersion(), byteCloud.getCloudStarted(), byteCloud.isRunning));
@@ -137,30 +164,11 @@ public class Bungee implements IScreen {
             this.runStartSuccess.run();
             if(this.execByCommand) {
                 for(Server server : byteCloud.getServerHandler().getServers()) {
-//                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutRegisterServer(server.getServerId(), server.getPort()));
+//                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutRegisterServer(cloud.getServerId(), cloud.getPort()));
                 }
                 this.execByCommand = false;
             }
         }
-    }
-
-    /**
-     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.packet.bungee.PacketInBungeeStopped} packet.
-     * Destroy the process from the bungee and set the bungee to stopped.
-     */
-    public void onStop() {
-        try {
-            Thread.sleep(5000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(isRunning()) {
-            this.process.destroy();
-            this.process = null;
-        }
-        byteCloud.getLogger().info("Bungee stopped.");
-        this.runStopSuccess.run();
-        this.started = false;
     }
 
     /**

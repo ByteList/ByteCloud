@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class TemplateCommand extends Command {
 
     public TemplateCommand() {
-        super("template", "server template commands");
+        super("template", "cloud template commands");
     }
     
     private final Logger logger = ByteCloud.getInstance().getLogger();

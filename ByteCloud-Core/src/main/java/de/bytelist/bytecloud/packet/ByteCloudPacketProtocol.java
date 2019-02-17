@@ -8,10 +8,11 @@ import com.github.steveice10.packetlib.crypt.PacketEncryption;
 import com.github.steveice10.packetlib.packet.DefaultPacketHeader;
 import com.github.steveice10.packetlib.packet.PacketHeader;
 import com.github.steveice10.packetlib.packet.PacketProtocol;
-import de.bytelist.bytecloud.common.packet.PingPacket;
+import de.bytelist.bytecloud.common.packet.PacketInfo;
 
 import javax.crypto.SecretKey;
 import java.security.GeneralSecurityException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by ByteList on 11.02.2019.
@@ -30,9 +31,8 @@ public class ByteCloudPacketProtocol extends PacketProtocol {
     }
 
     void setSecretKey(SecretKey key) {
-        this.register(0, PingPacket.class);
-
-        if(key == null) return;
+        AtomicInteger i = new AtomicInteger(0);
+        PacketInfo.forEach((name, packet) -> this.register(i.getAndIncrement(), packet));
 
         try {
             this.encrypt = new AESEncryption(key);
@@ -63,6 +63,6 @@ public class ByteCloudPacketProtocol extends PacketProtocol {
 
     @Override
     public void newServerSession(Server server, Session session) {
-        session.addListener(new ByteCloudPacketServerSessionListener());
+        session.addListener(new ByteCloudPacketCloudSessionListener());
     }
 }

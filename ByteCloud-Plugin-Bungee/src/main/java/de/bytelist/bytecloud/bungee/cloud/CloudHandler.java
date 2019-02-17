@@ -60,7 +60,7 @@ public class CloudHandler {
     /**
      * Gets all Server in a String-List.
      *
-     * @return List<String> with all server's in database
+     * @return List<String> with all cloud's in database
      */
     public List<String> getServerInDatabase() {
         return this.databaseServer.getServer();

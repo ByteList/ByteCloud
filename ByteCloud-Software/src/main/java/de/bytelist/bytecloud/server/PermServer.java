@@ -39,7 +39,7 @@ public class PermServer extends Server {
                 if(!byteCloud.isRunning) return;
                 setServerState(ServerState.STARTING);
                 if (!sender.equals("_cloud")) {
-//                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting server §e" + getServerId() + "§7.");
+//                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting cloud §e" + getServerId() + "§7.");
 //                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
                 }
                 if (process == null) {
@@ -86,7 +86,7 @@ public class PermServer extends Server {
             }
         });
 
-        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server "+serverId);
+        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting cloud "+serverId);
         return b;
     }
 
@@ -96,7 +96,7 @@ public class PermServer extends Server {
         boolean b = byteCloud.getCloudExecutor().execute(()-> {
             byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
             if(!sender.equals("_cloud")) {
-//                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent server §e"+getServerId()+"§7.");
+//                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping permanent cloud §e"+getServerId()+"§7.");
 //                byteCloud.getCloudServer().sendPacket(ByteCloud.getInstance().getBungee().getBungeeId(), packetOutSendMessage);
             }
             setServerState(ServerState.STOPPED);
@@ -155,7 +155,7 @@ public class PermServer extends Server {
             byteCloud.getLogger().info("Server " + serverId + " (permanent) stopped.");
         });
 
-        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping server "+serverId);
+        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping cloud "+serverId);
         return b;
     }
 
@@ -179,9 +179,9 @@ public class PermServer extends Server {
         String event = createEventString(CloudEvent.SERVER_UPDATE_STATE, this.serverId, "PERMANENT", this.serverState.name(), serverState.name());
 //        PacketOutCallCloudEvent packetOutCallCloudEvent = new PacketOutCallCloudEvent(event);
 
-//        byteCloud.getServerHandler().getServers().forEach(server -> {
-//            if(server.getServerState() != ServerState.STARTING)
-//                byteCloud.getCloudServer().sendPacket(server.getServerId(), packetOutCallCloudEvent);
+//        byteCloud.getServerHandler().getServers().forEach(cloud -> {
+//            if(cloud.getServerState() != ServerState.STARTING)
+//                byteCloud.getCloudServer().sendPacket(cloud.getServerId(), packetOutCallCloudEvent);
 //        });
         super.setServerState(serverState);
     }

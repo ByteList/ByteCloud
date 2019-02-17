@@ -94,7 +94,7 @@ public class ServerHandler {
             serverGroup.start();
         }
         if (!ByteCloud.getInstance().getCloudExecutor().execute(() -> this.serverCheckThread.start(), 10))
-            byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting server groups.");
+            byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting cloud groups.");
     }
 
     public void stop(Runnable runSuccess, Runnable runError) {

@@ -9,37 +9,31 @@ import javax.crypto.SecretKey;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class ByteCloudPacketServerListener extends ServerAdapter {
+public class ByteCloudPacketCloudListener extends ServerAdapter {
 
     private SecretKey key;
 
-    public ByteCloudPacketServerListener(SecretKey key) {
+    public ByteCloudPacketCloudListener(SecretKey key) {
         this.key = key;
     }
 
     @Override
     public void serverBound(ServerBoundEvent event) {
-        System.out.println("Bound: " + event.getServer().getHost() + ":" + event.getServer().getPort());
+        System.out.println("PacketServer bound to " + event.getServer().getHost() + ":" + event.getServer().getPort());
     }
 
     @Override
     public void serverClosing(ServerClosingEvent event) {
-        System.out.println("CLOSING SERVER...");
+        System.out.println("Closing PacketServer...");
     }
 
     @Override
     public void serverClosed(ServerClosedEvent event) {
-        System.out.println("SERVER CLOSED");
+        System.out.println("PacketServer closed.");
     }
 
     @Override
     public void sessionAdded(SessionAddedEvent event) {
-        System.out.println("Session Added: " + event.getSession().getHost() + ":" + event.getSession().getPort());
         ((ByteCloudPacketProtocol) event.getSession().getPacketProtocol()).setSecretKey(this.key);
-    }
-
-    @Override
-    public void sessionRemoved(SessionRemovedEvent event) {
-        System.out.println("Session Removed: " + event.getSession().getHost() + ":" + event.getSession().getPort());
     }
 }

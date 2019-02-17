@@ -1,8 +1,11 @@
 package de.bytelist.bytecloud;
 
+import com.github.steveice10.packetlib.packet.Packet;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import com.sun.management.OperatingSystemMXBean;
 import de.bytelist.bytecloud.bungee.Bungee;
+import de.bytelist.bytecloud.common.CloudSoftware;
+import de.bytelist.bytecloud.common.Executable;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
@@ -14,7 +17,7 @@ import de.bytelist.bytecloud.log.AnsiColor;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
 import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
-import de.bytelist.bytecloud.packet.ByteCloudPacketServerListener;
+import de.bytelist.bytecloud.packet.ByteCloudPacketCloudListener;
 import de.bytelist.bytecloud.restapi.WebService;
 import de.bytelist.bytecloud.restapi.WebSocket;
 import de.bytelist.bytecloud.server.Server;
@@ -46,7 +49,7 @@ import java.util.logging.Level;
  * <p>
  * Copyright by ByteList - https://bytelist.de/
  */
-public class ByteCloud {
+public class ByteCloud implements CloudSoftware.ICloudSoftware {
 
     /**
      * This boolean returns the running status from the cloud instance.
@@ -69,10 +72,10 @@ public class ByteCloud {
     @Getter
     private CloudLogger logger;
     /**
-     * The {@link ServerHandler} manages server groups and permanently servers.
+     * The {@link ServerHandler} manages cloud groups and permanently servers.
      * <p>
      * A {@link de.bytelist.bytecloud.server.ServerGroup} manages servers like game or lobby servers. These are temporary servers.
-     * A {@link de.bytelist.bytecloud.server.PermServer} is good for a survival server or build server. It's a static server.
+     * A {@link de.bytelist.bytecloud.server.PermServer} is good for a survival cloud or build cloud. It's a static cloud.
      */
     @Getter
     private ServerHandler serverHandler;
@@ -80,7 +83,7 @@ public class ByteCloud {
      * The {@link Bungee} manages the bungee instance from the cloud.
      * <p>
      * It's only used to start and stop the bungee instance.
-     * This instance can be managed in the Bungee folder like a normal bungee server.
+     * This instance can be managed in the Bungee folder like a normal bungee cloud.
      */
     @Getter
     private Bungee bungee;
@@ -93,7 +96,7 @@ public class ByteCloud {
     /**
      * The {@link DatabaseServer} put's all data's from servers in it and load this data any time.
      * You can get information's like player count and
-     * server id from the in the bungee or spigot plugin.
+     * cloud id from the in the bungee or spigot plugin.
      */
     @Getter
     private DatabaseServer databaseServer;
@@ -116,9 +119,9 @@ public class ByteCloud {
     private final String cloudStarted;
     /**
      * The {@link com.github.steveice10.packetlib.Server} manages all incoming connections.
-     * It's the packet server.
+     * It's the packet cloud.
      * You get an information in the console when a connection comes in.
-     * If this connection comes from a game server or from a bungee
+     * If this connection comes from a game cloud or from a bungee
      * you will see this and get informed about this.
      */
     @Getter
@@ -133,9 +136,9 @@ public class ByteCloud {
     private String stopDate;
 
     /**
-     * This is used to start an Fallback server if cloud get stopped.
+     * This is used to start an Fallback cloud if cloud get stopped.
      * It will run at the minecraft standard port (25565).
-     * You can edit this server in Fallback-Server/
+     * You can edit this cloud in Fallback-Server/
      * Set this to false to disable it.
      * <p>
      * Arg: -Dde.bytelist.bytecloud.startFallback=false
@@ -160,7 +163,7 @@ public class ByteCloud {
     @Getter
     private ScreenManager screenManager;
     /**
-     * Sets the force server to connect on join.
+     * Sets the force cloud to connect on join.
      * This can be set in the system property <code>de.bytelist.bytecloud.connectServer</code>
      */
     @Getter
@@ -201,7 +204,7 @@ public class ByteCloud {
      *
      */
     public ByteCloud() {
-        instance = this;
+        CloudSoftware.setInstance(instance = this);
         this.isRunning = false;
         this.debug = Boolean.valueOf(System.getProperty("de.bytelist.bytecloud.debug", "false"));
         this.cloudStarted = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
@@ -349,7 +352,7 @@ public class ByteCloud {
         this.packetEncryptionKey = Base64.getEncoder().encodeToString(key.getEncoded());
 
         this.packetServer = new com.github.steveice10.packetlib.Server("127.0.0.1", this.cloudConfig.getInt("socket-port"), ByteCloudPacketProtocol.class, new TcpSessionFactory());
-        this.packetServer.addListener(new ByteCloudPacketServerListener(key));
+        this.packetServer.addListener(new ByteCloudPacketCloudListener(key));
 
         try {
             maxMemory = Integer.parseInt(System.getProperty("de.bytelist.bytecloud.maxMem", this.cloudConfig.getString("max-memory")));
@@ -422,7 +425,7 @@ public class ByteCloud {
 
     /**
      * Closes all handlers from {@link CloudLogger#getHandlers()}.
-     * Start the fallback server if it's set to true and exit the system.
+     * Start the fallback cloud if it's set to true and exit the system.
      */
     private void cleanStop() {
         for (Handler handler : getLogger().getHandlers()) {
@@ -535,5 +538,18 @@ public class ByteCloud {
      */
     public void debug(String message) {
         if(isDebug()) this.logger.warning("#%§DEbuG§#%"+message);
+    }
+
+    @Override
+    public Executable getExecutable(String serverId) {
+        if(this.bungee.getBungeeId().equals(serverId)) {
+            return this.bungee;
+        }
+
+        return this.serverHandler.getServer(serverId);
+    }
+
+    public void sendGlobalPacket(Packet packet) {
+        this.packetServer.getSessions().forEach(session -> session.send(packet));
     }
 }

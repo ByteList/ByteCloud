@@ -84,7 +84,7 @@ public class WebService {
 
     public void startWebServer() {
         if(!ok) {
-            logger.warning("Can not start web server, because authentication wasn't ok.");
+            logger.warning("Can not start web cloud, because authentication wasn't ok.");
             return;
         }
         try {

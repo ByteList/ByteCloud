@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class PermanentServerCommand extends Command {
 
     public PermanentServerCommand() {
-        super("pserver", "permanent server commands");
+        super("pserver", "permanent cloud commands");
     }
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
@@ -58,7 +58,7 @@ public class PermanentServerCommand extends Command {
 
                 try {
                     FileUtils.writeLines(file, lines);
-                    logger.info("Permanent server " + name + " created!");
+                    logger.info("Permanent cloud " + name + " created!");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -73,9 +73,9 @@ public class PermanentServerCommand extends Command {
                 File file = new File(dir, "settings.bci");
 
                 if (!file.exists()) {
-                    logger.info("Can not find settings.bci for permanent server " + name+"!");
+                    logger.info("Can not find settings.bci for permanent cloud " + name+"!");
                 } else {
-                    logger.info("Permanent server information for " + name + ":");
+                    logger.info("Permanent cloud information for " + name + ":");
                     try {
                         ArrayList<Object> lines = new ArrayList<Object>(FileUtils.readLines(file));
                         for (Object l : lines) {
@@ -92,11 +92,11 @@ public class PermanentServerCommand extends Command {
                 File file = new File(EnumFile.SERVERS_PERMANENT.getPath(), name);
 
                 if (!file.exists()) {
-                    logger.info("Can not find permanent server directory for " + name);
+                    logger.info("Can not find permanent cloud directory for " + name);
                 } else {
                     try {
                         FileUtils.deleteDirectory(file);
-                        logger.info("Permanent server " + name + " deleted!");
+                        logger.info("Permanent cloud " + name + " deleted!");
                     } catch(IOException e) {
                         e.printStackTrace();
                     }
@@ -111,7 +111,7 @@ public class PermanentServerCommand extends Command {
                     PermServer permServer = (PermServer) server;
 
                     if (permServer.isRunning()) {
-                        logger.info("Permanent server " + serverName + " is already running!");
+                        logger.info("Permanent cloud " + serverName + " is already running!");
                     } else {
                         permServer.startServer("_cloud");
                     }
@@ -124,7 +124,7 @@ public class PermanentServerCommand extends Command {
                     byteCloud.getServerHandler().getPermanentServers().add(permServer);
                     permServer.startServer("_cloud");
                 } else {
-                    logger.info(serverName+" isn't a permanent server!");
+                    logger.info(serverName+" isn't a permanent cloud!");
                 }
                 return;
             }
@@ -135,14 +135,14 @@ public class PermanentServerCommand extends Command {
                 if(server instanceof PermServer) {
                     server.stopServer("_cloud");
                 } else {
-                    logger.info(serverName+" isn't a permanent server!");
+                    logger.info(serverName+" isn't a permanent cloud!");
                 }
                 return;
             }
         }
 
 
-        System.out.println("Using perm server command:");
+        System.out.println("Using perm cloud command:");
         System.out.println("pserver create <name> <player> <spectator> <ram> <port> <autoStart>");
         System.out.println("pserver delete <name>");
         System.out.println("pserver info <name>");

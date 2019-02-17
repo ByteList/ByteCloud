@@ -96,6 +96,11 @@
                             <pattern>jline</pattern>
                             <shadedPattern>de.bytelist.bytecloud.libs.jline</shadedPattern>
                         </relocation>
+                        <!--<relocation>-->
+                            <!--<pattern>org.fusesource</pattern>-->
+                            <!--<shadedPattern>de.bytelist.bytecloud.libs.jline.fusesource</shadedPattern>-->
+                        <!--</relocation>-->
+
                         <relocation>
                             <pattern>com.google</pattern>
                             <shadedPattern>de.bytelist.bytecloud.libs.google</shadedPattern>
@@ -115,10 +120,6 @@
                         <relocation>
                             <pattern>org.bson</pattern>
                             <shadedPattern>de.bytelist.bytecloud.libs.bson</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.fusesource</pattern>
-                            <shadedPattern>de.bytelist.bytecloud.libs.fusesource</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>javax.servlet</pattern>
