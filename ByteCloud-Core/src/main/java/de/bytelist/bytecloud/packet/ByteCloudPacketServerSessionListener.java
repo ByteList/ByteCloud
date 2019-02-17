@@ -2,6 +2,7 @@ package de.bytelist.bytecloud.packet;
 
 import com.github.steveice10.packetlib.event.session.*;
 import de.bytelist.bytecloud.common.packet.PingPacket;
+import de.bytelist.bytecloud.common.packet.ServerInfoPacket;
 import de.bytelist.bytecloud.common.packet.ServerStartedPacket;
 
 /**
@@ -21,6 +22,9 @@ public class ByteCloudPacketServerSessionListener extends SessionAdapter {
             case ServerStartedPacket.PACKET_NAME:
 //                Cloud.getInstance().
 // TODO: 11.02.2019 add common-software
+                break;
+            case ServerInfoPacket.PACKET_NAME:
+
                 break;
         }
     }

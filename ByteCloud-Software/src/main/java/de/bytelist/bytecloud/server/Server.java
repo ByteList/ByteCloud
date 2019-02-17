@@ -1,5 +1,6 @@
 package de.bytelist.bytecloud.server;
 
+import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,14 +47,5 @@ public abstract class Server implements IScreen, Executable {
     @Override
     public String toString() {
         return "Server[id="+serverId+",port="+port+",ram="+ramM+",running="+isRunning()+"]";
-    }
-
-    public enum ServerState {
-        STARTING,
-        LOBBY,
-        FULL,
-        INGAME,
-        RESTART,
-        STOPPED
     }
 }
