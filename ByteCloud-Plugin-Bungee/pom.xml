@@ -91,6 +91,51 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <relocations>
+                        <relocation>
+                            <pattern>jline</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.jline</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.google</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.google</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.github.steveice10.packetlib</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.packetlib</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.eclipse.jetty</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.jetty</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.apache</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.apache</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bson</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.bson</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.fusesource</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.fusesource</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>javax.servlet</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.servlet</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.mongodb</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.mongodb</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.netty</pattern>
+                            <shadedPattern>de.bytelist.bytecloud.libs.netty</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
