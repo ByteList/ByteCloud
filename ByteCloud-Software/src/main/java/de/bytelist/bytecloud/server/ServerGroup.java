@@ -2,6 +2,7 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ import java.util.Random;
 /**
  * Created by ByteList on 18.02.2017.
  */
-public class ServerGroup {
+public class ServerGroup implements CloudServerGroup {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
@@ -35,7 +36,7 @@ public class ServerGroup {
     private String groupName, prefix;
 
     @Getter
-    private int amount, max, startPort, player, spectator, ram;
+    private int amount, maxServers, startPort, slotsPerServer, ram;
 
     @Getter
     private File directory;
@@ -53,10 +54,9 @@ public class ServerGroup {
         this.groupName = serverDocument.get("name").getAsString();
         this.prefix = serverDocument.get("prefix").getAsString();
         this.amount = serverDocument.get("amount").getAsInt();
-        this.max = serverDocument.get("max").getAsInt();
+        this.maxServers = serverDocument.get("maxServers").getAsInt();
         this.startPort = serverDocument.get("port").getAsInt();
-        this.player = serverDocument.get("player").getAsInt();
-        this.spectator = serverDocument.get("spectator").getAsInt();
+        this.slotsPerServer = serverDocument.get("player").getAsInt();
         this.ram = serverDocument.get("ram").getAsInt();
 
         this.directory = new File(EnumFile.TEMPLATES.getPath(), group.toUpperCase());
@@ -92,10 +92,10 @@ public class ServerGroup {
 
     public void startNewServer(String sender) {
         if(byteCloud.isRunning) {
-            if(byteCloud.getUsedMemory()+ram < byteCloud.getMaxMemory() && this.servers.size() < max) {
+            if(byteCloud.getUsedMemory()+ram < byteCloud.getMaxMemory() && this.servers.size() < maxServers) {
                 String serverId = generateServerId();
                 int port = getNextServerPort();
-                TempServer tempServer = new TempServer(serverId, port, this.ram, this.player, this.spectator, this);
+                TempServer tempServer = new TempServer(serverId, port, this.ram, this.slotsPerServer, this);
 
                 this.servers.add(tempServer.getServerId());
 

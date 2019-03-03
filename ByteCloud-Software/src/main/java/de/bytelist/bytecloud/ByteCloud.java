@@ -10,14 +10,12 @@ import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
 import de.bytelist.bytecloud.console.commands.*;
-import de.bytelist.bytecloud.database.DatabaseManager;
-import de.bytelist.bytecloud.database.DatabaseServer;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.log.AnsiColor;
 import de.bytelist.bytecloud.log.CloudLogger;
 import de.bytelist.bytecloud.log.LoggingOutPutStream;
-import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import de.bytelist.bytecloud.packet.ByteCloudPacketCloudListener;
+import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import de.bytelist.bytecloud.restapi.WebService;
 import de.bytelist.bytecloud.restapi.WebSocket;
 import de.bytelist.bytecloud.server.Server;
@@ -87,19 +85,19 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
      */
     @Getter
     private Bungee bungee;
-    /**
-     * The {@link DatabaseManager} is used to manage all database things.
-     * Here you can find all mongodb data's.
-     */
-    @Getter
-    private DatabaseManager databaseManager;
-    /**
-     * The {@link DatabaseServer} put's all data's from servers in it and load this data any time.
-     * You can get information's like player count and
-     * cloud id from the in the bungee or spigot plugin.
-     */
-    @Getter
-    private DatabaseServer databaseServer;
+//    /**
+//     * The {@link DatabaseManager} is used to manage all database things.
+//     * Here you can find all mongodb data's.
+//     */
+//    @Getter
+//    private DatabaseManager databaseManager;
+//    /**
+//     * The {@link DatabaseServer} put's all data's from servers in it and load this data any time.
+//     * You can get information's like player count and
+//     * cloud id from the in the bungee or spigot plugin.
+//     */
+//    @Getter
+//    private DatabaseServer databaseServer;
     /**
      * This returns the correct version from the cloud.
      * It contains information's about git commit and jenkins build number.
@@ -319,25 +317,25 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
             }
         }
 
-        try {
-            String host = this.cloudConfig.getString("mongo-host");
-            String database = this.cloudConfig.getString("mongo-database");
-            String user = this.cloudConfig.getString("mongo-user");
-            String password = this.cloudConfig.getString("mongo-password");
-
-            this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
-            this.databaseServer = this.databaseManager.getDatabaseServer();
-            if(this.databaseServer.getServer().size() > 0) {
-                for(String server : this.databaseServer.getServer()) {
-                    this.databaseServer.removeServer(server);
-                }
-            }
-            this.logger.info("Connected to database.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            cleanStop();
-            return;
-        }
+//        try {
+//            String host = this.cloudConfig.getString("mongo-host");
+//            String database = this.cloudConfig.getString("mongo-database");
+//            String user = this.cloudConfig.getString("mongo-user");
+//            String password = this.cloudConfig.getString("mongo-password");
+//
+//            this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
+//            this.databaseServer = this.databaseManager.getDatabaseServer();
+//            if(this.databaseServer.getServer().size() > 0) {
+//                for(String server : this.databaseServer.getServer()) {
+//                    this.databaseServer.removeServer(server);
+//                }
+//            }
+//            this.logger.info("Connected to database.");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            cleanStop();
+//            return;
+//        }
 
         SecretKey key = null;
         try {

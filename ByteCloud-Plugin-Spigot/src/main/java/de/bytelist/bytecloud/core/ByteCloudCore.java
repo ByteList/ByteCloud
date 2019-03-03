@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.core;
 
 import com.github.steveice10.packetlib.Client;
+import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
@@ -34,8 +35,9 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     private CloudHandler cloudHandler;
     @Getter
     private SpigotCloudAPI cloudAPI;
-    @Getter
-    private Client packetClient;
+
+     @Getter
+    private Session session;
     @Getter
     private CloudConfig cloudConfig;
     @Getter
@@ -69,9 +71,10 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
         byte[] decodedKey = Base64.getDecoder().decode(System.getProperty("de.bytelist.bytecloud.communication", "null"));
         SecretKey key = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
-        this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
-        this.packetClient.getSession().connect();
-        this.packetClient.getSession().send(new ClientServerStartedPacket(this.serverId));
+        Client packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
+        this.session = packetClient.getSession();
+        this.session.connect();
+        this.session.send(new ClientServerStartedPacket(this.serverId));
 
         Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§aEnabled!");
 
@@ -86,7 +89,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
     @Override
     public void onDisable() {
-        this.packetClient.getSession().disconnect("Plugin disabled.");
+        this.session.disconnect("Plugin disabled.");
         Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§cDisabled!");
     }
 

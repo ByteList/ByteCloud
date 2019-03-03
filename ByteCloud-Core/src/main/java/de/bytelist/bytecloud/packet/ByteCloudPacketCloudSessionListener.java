@@ -3,6 +3,7 @@ package de.bytelist.bytecloud.packet;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.*;
 import de.bytelist.bytecloud.common.CloudSoftware;
+import de.bytelist.bytecloud.common.Executable;
 import de.bytelist.bytecloud.common.packet.PacketFlag;
 import de.bytelist.bytecloud.common.packet.PacketInfo;
 import de.bytelist.bytecloud.common.packet.client.ClientKeepAlivePacket;
@@ -35,8 +36,9 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
                 break;
             case CLIENT_SERVER_STARTED_PACKET:
                 ClientServerStartedPacket clientServerStartedPacket = event.getPacket();
-                CloudSoftware.getInstance().getExecutable(clientServerStartedPacket.getServerId()).setSession(event.getSession());
-                CloudSoftware.getInstance().getExecutable(clientServerStartedPacket.getServerId()).onStart();
+                Executable executable = CloudSoftware.getInstance().getExecutable(clientServerStartedPacket.getServerId());
+                executable.setSession(event.getSession());
+                executable.onStart();
                 break;
             case CLIENT_SERVER_STOPPED_PACKET:
                 break;
@@ -48,7 +50,15 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
                 break;
             case CLOUD_SERVER_STOPPED_PACKET:
                 break;
-            case CLOUD_SERVER_INFO_PACKET:
+            case CLOUD_SERVER_GROUP_INFO_PACKET:
+                break;
+
+
+            case CLOUD_PLAYER_CONNECT_PACKET:
+                break;
+            case CLOUD_PLAYER_DISCONNECT_PACKET:
+                break;
+            case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
                 break;
         }
     }
@@ -74,7 +84,7 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
     private class KeepAliveTask implements Runnable {
         private Session session;
 
-        public KeepAliveTask(Session session) {
+        KeepAliveTask(Session session) {
             this.session = session;
         }
 

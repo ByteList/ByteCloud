@@ -1,9 +1,11 @@
 package de.bytelist.bytecloud.core.cloud;
 
+import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.common.Cloud;
-import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
+import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.core.event.ByteCloudPlayerConnectToServerEvent;
 import de.bytelist.bytecloud.core.event.ByteCloudServerUpdateEvent;
 import de.bytelist.bytecloud.core.event.ByteCloudServerUpdateStateEvent;
@@ -14,6 +16,7 @@ import de.bytelist.bytecloud.database.DatabaseServerObject;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by ByteList on 20.12.2016.
  */
-public class CloudHandler {
+public class CloudHandler extends CloudAPIHandler {
 
     private final ByteCloudCore byteCloudCore = ByteCloudCore.getInstance();
 
@@ -49,57 +52,16 @@ public class CloudHandler {
         this.databaseServer = databaseManager.getDatabaseServer();
     }
 
+    @Override
+    public void kickCloudPlayer(CloudPlayerKickPacket cloudPlayerKickPacket) {
+        Player player = Bukkit.getPlayer(cloudPlayerKickPacket.getUuid());
+
+        if(player != null)
+            Bukkit.getScheduler().runTaskLater(ByteCloudCore.getInstance(), ()-> player.kickPlayer(cloudPlayerKickPacket.getReason()), 2);
+    }
+
     public Integer getSocketPort() {
         return byteCloudCore.getCloudConfig().getInt("socket-port");
-    }
-
-    /**
-     * Basically you can check if a cloud exists.
-     *
-     * @param id
-     * @return boolean
-     */
-    public boolean existsServerInDatabase(String id) {
-        return this.databaseServer.existsServer(id);
-    }
-
-    /**
-     * With this method you can edit a value in the database.
-     *
-     * @param value
-     */
-    public void editDatabaseServerValue(String id, DatabaseServerObject databaseServerObject, Object value) {
-        this.databaseServer.setDatabaseObject(id, databaseServerObject, value);
-    }
-
-    /**
-     * Gets a value from a cloud where your value.
-     *
-     * @return an Object from the cloud.
-     */
-    public DatabaseElement getDatabaseServerValue(String id, DatabaseServerObject databaseServerObject) {
-        return this.databaseServer.getDatabaseElement(id, databaseServerObject);
-    }
-
-    /**
-     * Gets all Server in a String-List.
-     *
-     * @return List<String> with all cloud's in database
-     */
-    public List<String> getServerInDatabase() {
-        return this.databaseServer.getServer();
-    }
-
-    public List<String> getServerInDatabase(String type) {
-        return this.databaseServer.getServer(type);
-    }
-
-    /**
-     * Delete a cloud where your value.
-     *
-     */
-    public void removeServerFromDatabase(String id) {
-        this.databaseServer.removeServer(id);
     }
 
     public String getRandomLobbyId() {

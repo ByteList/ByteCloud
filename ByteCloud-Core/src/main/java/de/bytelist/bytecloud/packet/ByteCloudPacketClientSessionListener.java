@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.packet;
 
 import com.github.steveice10.packetlib.event.session.*;
+import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.common.packet.PacketInfo;
 import de.bytelist.bytecloud.common.packet.client.ClientKeepAlivePacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudKeepAlivePacket;
@@ -29,11 +30,30 @@ public class ByteCloudPacketClientSessionListener extends SessionAdapter {
             case CLOUD_KEEP_ALIVE_PACKET:
                 event.getSession().send(new ClientKeepAlivePacket(event.<CloudKeepAlivePacket>getPacket().getPingId()));
                 break;
+            case CLOUD_SERVER_CHANGED_STATE_PACKET:
+                break;
             case CLOUD_SERVER_STARTED_PACKET:
+                CloudAPIHandler.getInstance().addCloudServer(event.getPacket());
                 break;
             case CLOUD_SERVER_STOPPED_PACKET:
+                CloudAPIHandler.getInstance().removeCloudServer(event.getPacket());
                 break;
-            case CLOUD_SERVER_INFO_PACKET:
+            case CLOUD_SERVER_GROUP_INFO_PACKET:
+                CloudAPIHandler.getInstance().addCloudServerGroup(event.getPacket());
+                break;
+
+            case CLOUD_PLAYER_CONNECT_PACKET:
+                CloudAPIHandler.getInstance().addCloudPlayer(event.getPacket());
+                break;
+            case CLOUD_PLAYER_DISCONNECT_PACKET:
+                CloudAPIHandler.getInstance().removeCloudPlayer(event.getPacket());
+                break;
+            case CLOUD_PLAYER_KICK_PACKET:
+                break;
+            case CLOUD_PLAYER_MESSAGE_PACKET:
+                break;
+            case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
+                CloudAPIHandler.getInstance().updateCloudPlayerCurrentServer(event.getPacket());
                 break;
         }
     }

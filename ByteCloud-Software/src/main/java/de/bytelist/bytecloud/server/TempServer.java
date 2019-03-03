@@ -1,18 +1,23 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
-import de.bytelist.bytecloud.core.event.CloudEvent;
+import de.bytelist.bytecloud.common.packet.cloud.CloudServerStoppedPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-
-import static de.bytelist.bytecloud.core.event.CloudEvent.createEventString;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by ByteList on 28.05.2017.
@@ -26,8 +31,8 @@ public class TempServer extends Server {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
-    TempServer(String serverId, int port, int ramM, int maxPlayer, int maxSpectator, ServerGroup serverGroup) {
-        super(serverId, port, ramM, maxPlayer, maxSpectator, ServerState.STARTING, EnumFile.SERVERS_RUNNING.getPath());
+    TempServer(String serverId, int port, int ramM, int slots, ServerGroup serverGroup) {
+        super(serverId, port, ramM, slots, ServerState.STARTING, EnumFile.SERVERS_RUNNING.getPath());
         this.serverGroup = serverGroup;
 
         try {
@@ -44,18 +49,18 @@ public class TempServer extends Server {
     public boolean startServer(String sender) {
         this.starter = sender;
         boolean b = byteCloud.getCloudExecutor().execute(() -> {
-            byteCloud.debug(toString()+" - start - begin ===========");
-            if(!byteCloud.isRunning) return;
+            byteCloud.debug(toString() + " - start - begin ===========");
+            if (!byteCloud.isRunning) return;
             setServerState(ServerState.STARTING);
             if (!sender.equals("_cloud")) {
-//                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Starting cloud §e" + getServerId() + "§7.");
-//                byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+                byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
+                        "§7Starting cloud §e" + getServerId() + "§7."));
             }
-            byteCloud.debug(toString()+" - start - process ?0 -> "+(process != null));
+            byteCloud.debug(toString() + " - start - process ?0 -> " + (process != null));
             if (process == null) {
                 byteCloud.getLogger().info("Server " + serverId + " is starting on port " + port + ".");
                 byteCloud.getServerHandler().registerServer(this);
-                String[] param = { "java",
+                String[] param = {"java",
                         "-XX:+UseG1GC",
                         "-XX:MaxGCPauseMillis=50",
                         "-XX:MaxPermSize=256M",
@@ -66,18 +71,18 @@ public class TempServer extends Server {
                         "-Dio.netty.recycler.maxCapacity.default=0",
                         "-Djline.terminal=jline.UnsupportedTerminal",
                         "-Dde.bytelist.bytecloud.servername=" + serverId,
-                        "-Dde.bytelist.bytecloud.servergroup="+serverGroup.getGroupName(),
-                        "-Dde.bytelist.bytecloud.communication="+byteCloud.getPacketEncryptionKey(),
+                        "-Dde.bytelist.bytecloud.servergroup=" + serverGroup.getGroupName(),
+                        "-Dde.bytelist.bytecloud.communication=" + byteCloud.getPacketEncryptionKey(),
 
                         "-Xmx" + ramM + "M",
                         "-jar", byteCloud.getCloudConfig().getString("jar-name") + ".jar",
 
-                        "-s", String.valueOf((maxPlayer + maxSpectator)),
+                        "-s", String.valueOf(slots),
                         "-o", "false",
                         "-p", String.valueOf(port),
                         "nogui"
-                        };
-                byteCloud.debug(toString()+" - start - param: "+(Arrays.toString(param)));
+                };
+                byteCloud.debug(toString() + " - start - param: " + (Arrays.toString(param)));
                 ProcessBuilder pb = new ProcessBuilder(param);
                 pb.directory(directory);
                 try {
@@ -86,12 +91,13 @@ public class TempServer extends Server {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                byteCloud.debug(toString()+" - start - process ?0 -> "+(process != null));
+                byteCloud.debug(toString() + " - start - process ?0 -> " + (process != null));
             }
-            byteCloud.debug(toString()+" - start - end ===========");
+            byteCloud.debug(toString() + " - start - end ===========");
         });
 
-        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting cloud "+serverId);
+        if (!b)
+            byteCloud.getLogger().warning("CloudExecutor returns negative statement while starting cloud " + serverId);
         return b;
     }
 
@@ -101,40 +107,42 @@ public class TempServer extends Server {
         boolean b = byteCloud.getCloudExecutor().execute(() -> {
             byteCloud.getLogger().info("Server " + serverId + " is stopping.");
             if (!sender.equals("_cloud")) {
-//                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§7Stopping cloud §e" + getServerId() + "§7.");
-//                byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+                byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
+                        "§7Stopping cloud §e" + getServerId() + "§7."));
             }
             setServerState(ServerState.STOPPED);
             if (this.process != null) {
                 if (this.process.isAlive()) {
-//                    if(byteCloud.isRunning) {
-//                        ArrayList<String> player = new ArrayList<>();
-//                        Collections.addAll(player, byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYERS).getAsString().split(","));
-//                        Collections.addAll(player, byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATORS).getAsString().split(","));
-//
-//                        if(!byteCloud.getServerIdOnConnect().equals(this.serverId)) {
-//                            PacketOutMovePlayer packetOutMovePlayer = new PacketOutMovePlayer(byteCloud.getServerHandler().getRandomLobbyId(serverId), "§6Verbinde zur Lobby...", player);
-//                            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutMovePlayer);
-//                        } else {
-//                            PacketOutKickPlayer packetOutKickPlayer = new PacketOutKickPlayer("§7Server stopped.\n§cDu konntest nicht zur Lobby verbunden werden!", player);
-//                            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickPlayer);
-//                        }
-//                    } else {
-//                        PacketOutKickAllPlayers packetOutKickPlayer = new PacketOutKickAllPlayers("§cDas Cloud-System wird gerade gestoppt.");
-//                        byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutKickPlayer);
-//                    }
-//                    while (true) {
-//                        if(byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.PLAYER_ONLINE).getAsInt() < 1 &&
-//                                byteCloud.getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt() < 1)
-//                            break;
-//                        else {
-//                            try {
-//                                Thread.sleep(2000L);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
+                    List<CloudPlayer> cloudPlayers = new ArrayList<>(this.players);
+
+                    if (byteCloud.isRunning) {
+                        String lobbyId = byteCloud.getServerHandler().getRandomLobbyId(serverId);
+
+                        if (!byteCloud.getServerIdOnConnect().equals(this.serverId)) {
+                            cloudPlayers.forEach(cloudPlayer -> {
+                                byteCloud.sendGlobalPacket(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), lobbyId));
+                                byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(cloudPlayer.getUuid(),
+                                        "§6Verbinde zur Lobby..."));
+                            });
+                        } else {
+                            cloudPlayers.forEach(cloudPlayer -> {
+                                byteCloud.sendGlobalPacket(new CloudPlayerKickPacket(cloudPlayer.getUuid(),
+                                        "§7Server stopped.\n§cDu konntest nicht zur Lobby verbunden werden!"));
+                            });
+                        }
+                    }
+                    while (true) {
+                        if (this.currentPlayers < 1)
+                            break;
+                        else {
+                            try {
+                                Thread.sleep(2000L);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
                     try {
                         this.process.getOutputStream().write("stop\n".getBytes());
                         this.process.getOutputStream().flush();
@@ -148,7 +156,8 @@ public class TempServer extends Server {
                 this.process.destroy();
 
                 try {
-                    FileUtils.copyFile(new File(this.getDirectory(), "/logs/latest.log"), new File(EnumFile.SERVERS_LOGS.getPath(), this.getServerId() + ".log"));
+                    FileUtils.copyFile(new File(this.getDirectory(), "/logs/latest.log"), new File(EnumFile.SERVERS_LOGS.getPath(),
+                            this.getServerId() + ".log"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -160,46 +169,32 @@ public class TempServer extends Server {
                 }
             }
 
-            byteCloud.getDatabaseServer().removeServer(this.serverId);
-//            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutUnregisterServer(serverId));
+            byteCloud.sendGlobalPacket(new CloudServerStoppedPacket(this.serverId, "Server stopped."));
             byteCloud.getServerHandler().unregisterServer(this);
 
             if (!stopper.equals("_cloud")) {
-//                PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(stopper, "§aServer §e" + getServerId() + "§a stopped.");
-//                byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+                byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
+                        "§aServer §e" + getServerId() + "§a stopped."));
             }
 
             byteCloud.getLogger().info("Server " + serverId + " stopped.");
         });
-        if(!b) byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping cloud "+serverId);
+        if (!b)
+            byteCloud.getLogger().warning("CloudExecutor returns negative statement while stopping cloud " + serverId);
         return b;
     }
 
     @Override
     public void onStart() {
         if (this.process != null) {
-            byteCloud.sendGlobalPacket(new CloudServerStartedPacket(this.serverId, this.port));
-//            byteCloud.getCloudServer().sendPacket(serverId, new PacketOutCloudInfo(byteCloud.getVersion(), byteCloud.getCloudStarted(), byteCloud.isRunning));
-            byteCloud.getLogger().info("Server " + serverId + " started. RAM: " + this.ramM + " Slots: " + (this.maxPlayer + this.maxSpectator));
+            byteCloud.sendGlobalPacket(new CloudServerStartedPacket(this.serverId, this.port, this.serverGroup.getGroupName(), this.serverPermanent,
+                    this.slots, this.motd));
+            byteCloud.getLogger().info("Server " + serverId + " started. RAM: " + this.ramM + " Slots: " + this.slots);
         }
-        byteCloud.getDatabaseServer().addServer(this.serverGroup.getGroupName(), this.getServerId(),
-                this.getPort(), this.getServerState().name(), this.getMaxPlayer(), "Starting");
         if (!starter.equals("_cloud")) {
-//            PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(starter, "§aServer §e" + getServerId() + "§a started.");
-//            byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), packetOutSendMessage);
+            byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(starter),
+                    "§aServer §e" + getServerId() + "§a started."));
         }
-    }
-
-    @Override
-    public void setServerState(ServerState serverState) {
-        String event = createEventString(CloudEvent.SERVER_UPDATE_STATE, this.serverId, this.serverGroup.getGroupName(), this.serverState.name(), serverState.name());
-//        PacketOutCallCloudEvent packetOutCallCloudEvent = new PacketOutCallCloudEvent(event);
-
-//        byteCloud.getServerHandler().getServers().forEach(cloud -> {
-//            if(cloud.getServerState() != ServerState.STARTING)
-//                byteCloud.getCloudServer().sendPacket(cloud.getServerId(), packetOutCallCloudEvent);
-//        });
-        super.setServerState(serverState);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package de.bytelist.bytecloud.core;
 
+import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerKickPacket;
+import de.bytelist.bytecloud.common.server.CloudServer;
+import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.database.DatabaseServerObject;
 import org.bukkit.Bukkit;
@@ -29,9 +33,8 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public void changeServerState(ServerState serverState) {
-        ByteCloudCore.getInstance().getCloudHandler().editDatabaseServerValue(getCurrentServerId(), DatabaseServerObject.STATE,
-                serverState.toString());
 //        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInChangeServerState(getCurrentServerId(), serverState.name()));
+        B<>
     }
 
     @Override
@@ -46,13 +49,38 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     }
 
     @Override
-    public CloudPlayer<Player> getPlayer(UUID uuid) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Collection<CloudServerGroup> getServerGroups() {
+        return Collections.unmodifiableCollection(ByteCloudCore.getInstance().getCloudHandler().getCloudServerGroups().values());
     }
 
     @Override
-    public CloudPlayer<Player> getPlayer(String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Collection<CloudServer> getServers() {
+        return Collections.unmodifiableCollection(ByteCloudCore.getInstance().getCloudHandler().getCloudServers());
+    }
+
+    @Override
+    public Collection<CloudPlayer> getPlayers() {
+        return Collections.unmodifiableCollection(ByteCloudCore.getInstance().getCloudHandler().getCloudPlayers());
+    }
+
+    @Override
+    public CloudServerGroup getServerGroup(String name) {
+        return CloudAPIHandler.getInstance().getCloudServerGroups().get(name);
+    }
+
+    @Override
+    public CloudServer getServer(String serverId) {
+        return CloudAPIHandler.getInstance().getCloudServer(serverId);
+    }
+
+    @Override
+    public CloudPlayer getPlayer(UUID uuid) {
+        return CloudAPIHandler.getInstance().getCloudPlayer(uuid);
+    }
+
+    @Override
+    public CloudPlayer getPlayer(String name) {
+        return CloudAPIHandler.getInstance().getCloudPlayer(name);
     }
 
     @Override
@@ -60,10 +88,6 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
         return ByteCloudCore.getInstance().getLogger();
     }
 
-    @Override
-    public Collection<String> getServers() {
-        return Collections.unmodifiableCollection(ByteCloudCore.getInstance().getCloudHandler().getServerInDatabase());
-    }
 
     @Override
     public String getUniqueServerId(String server) {
@@ -101,13 +125,13 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     }
 
     @Override
-    public void kickPlayer(String playerName, String reason) {
-//        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInKickPlayer(playerName, reason));
+    public void kickPlayer(UUID uuid, String reason) {
+        ByteCloudCore.getInstance().getSession().send(new ClientPlayerKickPacket(uuid, reason));
     }
 
     @Override
     public String getServerIdFromPlayer(UUID uuid) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.getPlayer(uuid).getCurrentServer().getServerId();
     }
 
     @Override
