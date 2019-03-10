@@ -1,6 +1,7 @@
 package de.bytelist.bytecloud.bungee.listener;
 
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
+import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerServerSwitchPacket;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.ServerConnectEvent;
@@ -19,10 +20,8 @@ public class ServerConnectListener implements Listener {
     public void onServerConnect(ServerConnectEvent e) {
         ProxiedPlayer pp = e.getPlayer();
         Server from = pp.getServer();
-        boolean newConnection = false;
 
         if(from == null) {
-            newConnection = true;
             String serverId = byteCloudMaster.getForcedJoinServerId();
             if(byteCloudMaster.getProxy().getServerInfo(serverId) != null) {
                 e.setTarget(byteCloudMaster.getProxy().getServerInfo(serverId));
@@ -31,7 +30,7 @@ public class ServerConnectListener implements Listener {
             }
         }
 
-//        byteCloudMaster.getBungeeClient().sendPacket(new PacketInPlayerChangedServer(pp.getName(), (newConnection ? "null" : from.getInfo().getName()), e.getTarget().getName()));
+        byteCloudMaster.getSession().send(new ClientPlayerServerSwitchPacket(pp.getUniqueId(), e.getTarget().getName()));
     }
 
 

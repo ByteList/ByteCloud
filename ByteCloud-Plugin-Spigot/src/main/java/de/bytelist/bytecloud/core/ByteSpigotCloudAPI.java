@@ -4,11 +4,12 @@ import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.common.packet.client.ClientServerChangeStatePacket;
+import de.bytelist.bytecloud.common.packet.client.ClientServerSetMotdPacket;
 import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerKickPacket;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
-import de.bytelist.bytecloud.database.DatabaseServerObject;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -33,13 +34,12 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public void changeServerState(ServerState serverState) {
-//        ByteCloudCore.getInstance().getPacketClient().sendPacket(new PacketInChangeServerState(getCurrentServerId(), serverState.name()));
-        B<>
+        ByteCloudCore.getInstance().getSession().send(new ClientServerChangeStatePacket(getCurrentServerId(), serverState));
     }
 
     @Override
     public void setMotd(String motd) {
-        ByteCloudCore.getInstance().getCloudHandler().editDatabaseServerValue(getCurrentServerId(), DatabaseServerObject.MOTD, motd);
+        ByteCloudCore.getInstance().getSession().send(new ClientServerSetMotdPacket(getCurrentServerId(), motd));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public Collection<CloudServer> getServers() {
-        return Collections.unmodifiableCollection(ByteCloudCore.getInstance().getCloudHandler().getCloudServers());
+        return Collections.unmodifiableCollection(ByteCloudCore.getInstance().getCloudHandler().getCloudServers().values());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public String getUniqueServerId(String server) {
-        return ServerIdResolver.getUniqueServerId(server);
+        return ServerIdResolver.getUniqueServerId(server, ByteCloudCore.getInstance().getCloudHandler().getCloudServers().keySet());
     }
 
     @Override

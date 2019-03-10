@@ -2,9 +2,16 @@ package de.bytelist.bytecloud.bungee;
 
 import com.github.steveice10.packetlib.Session;
 import de.bytelist.bytecloud.ByteCloud;
+import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.Executable;
+import de.bytelist.bytecloud.common.packet.cloud.CloudServerGroupInfoPacket;
+import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
 import de.bytelist.bytecloud.file.EnumFile;
 import de.bytelist.bytecloud.server.Server;
+import de.bytelist.bytecloud.server.ServerGroup;
+import de.bytelist.bytecloud.server.TempServer;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
 import lombok.Setter;
@@ -158,16 +165,25 @@ public class Bungee implements IScreen, Executable {
     @Override
     public void onStart() {
         if(isRunning()) {
-//            byteCloud.getCloudServer().sendPacket(bungeeId, new PacketOutCloudInfo(byteCloud.getVersion(), byteCloud.getCloudStarted(), byteCloud.isRunning));
+            for (ServerGroup serverGroup : byteCloud.getServerHandler().getServerGroups().values()) {
+                this.session.send(new CloudServerGroupInfoPacket(serverGroup.getGroupName(), serverGroup.getPrefix(),
+                        serverGroup.getMaxServers(), serverGroup.getSlotsPerServer()));
+            }
+            for (Server server : byteCloud.getServerHandler().getServers()) {
+                if(server.isStarted()) {
+                    this.session.send(new CloudServerStartedPacket(server.getServerId(), server.getPort(),
+                            server.isServerPermanent() ? "{null}" : ((TempServer)server).getServerGroup().getGroupName(),
+                            server.isServerPermanent(), server.getSlots(), server.getMotd()));
+
+                    for (CloudPlayer cloudPlayer : server.getPlayers()) {
+                        this.session.send(new CloudPlayerConnectPacket(cloudPlayer.getUuid(), cloudPlayer.getName()));
+                        this.session.send(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), cloudPlayer.getCurrentServer().getServerId()));
+                    }
+                }
+            }
             byteCloud.getLogger().info("Bungee started.");
             this.started = true;
             this.runStartSuccess.run();
-            if(this.execByCommand) {
-                for(Server server : byteCloud.getServerHandler().getServers()) {
-//                    byteCloud.getCloudServer().sendPacket(byteCloud.getBungee().getBungeeId(), new PacketOutRegisterServer(cloud.getServerId(), cloud.getPort()));
-                }
-                this.execByCommand = false;
-            }
         }
     }
 

@@ -1,9 +1,11 @@
 package de.bytelist.bytecloud.bungee;
 
 import com.github.steveice10.packetlib.Client;
+import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import de.bytelist.bytecloud.bungee.cloud.CloudHandler;
 import de.bytelist.bytecloud.bungee.listener.LoginListener;
+import de.bytelist.bytecloud.bungee.listener.PlayerDisconnectListener;
 import de.bytelist.bytecloud.bungee.listener.ServerConnectListener;
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
@@ -36,7 +38,7 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
     @Getter
     private CloudHandler cloudHandler;
     @Getter
-    private Client packetClient;
+    private Session session;
     @Getter
     private String forcedJoinServerId;
     @Getter
@@ -69,14 +71,16 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
         this.permissionCheck = new PermissionCheck();
 
         getProxy().getPluginManager().registerListener(this, new LoginListener());
+        getProxy().getPluginManager().registerListener(this, new PlayerDisconnectListener());
         getProxy().getPluginManager().registerListener(this, new ServerConnectListener());
 
         byte[] decodedKey = Base64.getDecoder().decode(System.getProperty("de.bytelist.bytecloud.communication", "null"));
         SecretKey key = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
 
-        this.packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
-        this.packetClient.getSession().connect();
-        this.packetClient.getSession().send(new ClientServerStartedPacket(this.serverId));
+        Client packetClient = new Client("127.0.0.1", this.cloudHandler.getSocketPort(), new ByteCloudPacketProtocol(key), new TcpSessionFactory());
+        this.session = packetClient.getSession();
+        this.session.connect();
+        this.session.send(new ClientServerStartedPacket(this.serverId));
 
         getProxy().getConsole().sendMessage(Cloud.PREFIX+"§aEnabled!");
 
@@ -96,7 +100,7 @@ public class ByteCloudMaster extends Plugin implements BungeeCloudPlugin {
 
     @Override
     public void onDisable() {
-        this.packetClient.getSession().disconnect("Plugin disabled.");
+        this.session.disconnect("Plugin disabled.");
         getProxy().getConsole().sendMessage(Cloud.PREFIX+"§cDisabled!");
         super.onDisable();
     }

@@ -119,8 +119,7 @@ public class PermanentServerCommand extends Command {
                     final ServerDocument serverDocument = new ServerDocument(new File(EnumFile.SERVERS_PERMANENT.getPath(), serverName));
                     PermServer permServer = new PermServer(serverName, serverDocument.get("port").getAsInt(),
                             serverDocument.get("ram").getAsInt(),
-                            serverDocument.get("player").getAsInt(),
-                            serverDocument.get("spectator").getAsInt());
+                            serverDocument.get("player").getAsInt());
                     byteCloud.getServerHandler().getPermanentServers().add(permServer);
                     permServer.startServer("_cloud");
                 } else {

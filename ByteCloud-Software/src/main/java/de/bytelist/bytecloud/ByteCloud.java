@@ -4,8 +4,15 @@ import com.github.steveice10.packetlib.packet.Packet;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import com.sun.management.OperatingSystemMXBean;
 import de.bytelist.bytecloud.bungee.Bungee;
+import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.CloudSoftware;
 import de.bytelist.bytecloud.common.Executable;
+import de.bytelist.bytecloud.common.IServer;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerDisconnectPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
+import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
@@ -36,9 +43,7 @@ import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 
@@ -196,6 +201,10 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
 
     @Getter
     private String packetEncryptionKey;
+
+    @Getter
+    private HashMap<UUID, CloudPlayer> cloudPlayers = new HashMap<>();
+    private HashMap<UUID, Server> currentServer = new HashMap<>();
 
     /**
      * Initialise the cloud instance. This doesn't start anything!
@@ -545,6 +554,50 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
         }
 
         return this.serverHandler.getServer(serverId);
+    }
+
+    @Override
+    public IServer getIServer(String serverId) {
+        Executable executable = getExecutable(serverId);
+        if(executable instanceof IServer) {
+            return (IServer) executable;
+        }
+        return null;
+    }
+
+    @Override
+    public void connectPlayer(CloudPlayer cloudPlayer) {
+        this.cloudPlayers.put(cloudPlayer.getUuid(), cloudPlayer);
+        this.sendGlobalPacket(new CloudPlayerConnectPacket(cloudPlayer.getUuid(), cloudPlayer.getName()));
+    }
+
+    @Override
+    public void disconnectPlayer(UUID uuid) {
+        this.cloudPlayers.remove(uuid);
+        this.sendGlobalPacket(new CloudPlayerDisconnectPacket(uuid));
+    }
+
+    @Override
+    public void kickPlayer(UUID uuid, String reason) {
+        this.bungee.getSession().send(new CloudPlayerKickPacket(uuid, reason));
+    }
+
+    @Override
+    public void setCurrentServer(UUID uuid, String serverId) {
+        CloudPlayer cloudPlayer = this.cloudPlayers.get(uuid);
+
+        if(cloudPlayer != null) {
+            Server currentServer = this.currentServer.get(uuid),
+                    server = this.getServerHandler().getServer(serverId);
+
+            if(currentServer != null) {
+                currentServer.getPlayers().remove(cloudPlayer);
+            }
+            if(server != null) {
+                server.addPlayer(cloudPlayer);
+                this.currentServer.put(uuid, server);
+            }
+        }
     }
 
     public void sendGlobalPacket(Packet packet) {

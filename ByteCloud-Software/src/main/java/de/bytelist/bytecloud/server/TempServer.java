@@ -3,8 +3,10 @@ package de.bytelist.bytecloud.server;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.common.packet.cloud.CloudServerGroupInfoPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStoppedPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
@@ -54,7 +56,7 @@ public class TempServer extends Server {
             setServerState(ServerState.STARTING);
             if (!sender.equals("_cloud")) {
                 byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                        "§7Starting cloud §e" + getServerId() + "§7."));
+                        "§7Starting server §e" + getServerId() + "§7."));
             }
             byteCloud.debug(toString() + " - start - process ?0 -> " + (process != null));
             if (process == null) {
@@ -108,52 +110,11 @@ public class TempServer extends Server {
             byteCloud.getLogger().info("Server " + serverId + " is stopping.");
             if (!sender.equals("_cloud")) {
                 byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                        "§7Stopping cloud §e" + getServerId() + "§7."));
+                        "§7Stopping server §e" + getServerId() + "§7."));
             }
             setServerState(ServerState.STOPPED);
             if (this.process != null) {
-                if (this.process.isAlive()) {
-                    List<CloudPlayer> cloudPlayers = new ArrayList<>(this.players);
-
-                    if (byteCloud.isRunning) {
-                        String lobbyId = byteCloud.getServerHandler().getRandomLobbyId(serverId);
-
-                        if (!byteCloud.getServerIdOnConnect().equals(this.serverId)) {
-                            cloudPlayers.forEach(cloudPlayer -> {
-                                byteCloud.sendGlobalPacket(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), lobbyId));
-                                byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(cloudPlayer.getUuid(),
-                                        "§6Verbinde zur Lobby..."));
-                            });
-                        } else {
-                            cloudPlayers.forEach(cloudPlayer -> {
-                                byteCloud.sendGlobalPacket(new CloudPlayerKickPacket(cloudPlayer.getUuid(),
-                                        "§7Server stopped.\n§cDu konntest nicht zur Lobby verbunden werden!"));
-                            });
-                        }
-                    }
-                    while (true) {
-                        if (this.currentPlayers < 1)
-                            break;
-                        else {
-                            try {
-                                Thread.sleep(2000L);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    try {
-                        this.process.getOutputStream().write("stop\n".getBytes());
-                        this.process.getOutputStream().flush();
-                        Thread.sleep(1000L);
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                byteCloud.getScreenManager().checkAndRemove(this);
-                this.process.destroy();
+                super.manageProcessOnStop();
 
                 try {
                     FileUtils.copyFile(new File(this.getDirectory(), "/logs/latest.log"), new File(EnumFile.SERVERS_LOGS.getPath(),
@@ -187,27 +148,16 @@ public class TempServer extends Server {
     @Override
     public void onStart() {
         if (this.process != null) {
+            super.onStart();
+
             byteCloud.sendGlobalPacket(new CloudServerStartedPacket(this.serverId, this.port, this.serverGroup.getGroupName(), this.serverPermanent,
                     this.slots, this.motd));
             byteCloud.getLogger().info("Server " + serverId + " started. RAM: " + this.ramM + " Slots: " + this.slots);
+            this.started = true;
         }
         if (!starter.equals("_cloud")) {
             byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(starter),
                     "§aServer §e" + getServerId() + "§a started."));
-        }
-    }
-
-    @Override
-    public void runCommand(String command) {
-        String x = command + "\n";
-        if (this.process != null) {
-            try {
-                this.process.getOutputStream().write(x.getBytes());
-                this.process.getOutputStream().flush();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
         }
     }
 }

@@ -1,14 +1,18 @@
 package de.bytelist.bytecloud.bungee.cloud;
 
+import de.bytelist.bytecloud.CloudAPIHandler;
+import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
-import de.bytelist.bytecloud.common.Cloud;
-import de.bytelist.bytecloud.database.DatabaseManager;
-import de.bytelist.bytecloud.database.DatabaseServer;
+import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
+import de.bytelist.bytecloud.common.server.CloudServer;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,14 +20,10 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by ByteList on 28.01.2017.
  */
-public class CloudHandler {
+public class CloudHandler extends CloudAPIHandler {
 
     private final ByteCloudMaster byteCloudMaster = ByteCloudMaster.getInstance();
 
-    @Getter
-    private DatabaseServer databaseServer;
-    @Getter
-    private DatabaseManager databaseManager;
     @Getter
     private final String bungeeId;
 
@@ -33,20 +33,29 @@ public class CloudHandler {
     private boolean cloudRunning;
 
     public CloudHandler() {
-        String host = byteCloudMaster.getCloudConfig().getString("mongo-host");
-        String database = byteCloudMaster.getCloudConfig().getString("mongo-database");
-        String user = byteCloudMaster.getCloudConfig().getString("mongo-user");
-        String password = byteCloudMaster.getCloudConfig().getString("mongo-password");
-
         this.bungeeId = System.getProperty("de.bytelist.bytecloud.servername", "Bungee-0");
+    }
 
-        try {
-            this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
-            ByteCloudMaster.getInstance().getProxy().getConsole().sendMessage(Cloud.PREFIX +"§eDatabase - §aConnected!");
-            this.databaseServer = this.databaseManager.getDatabaseServer();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void kickCloudPlayer(CloudPlayerKickPacket cloudPlayerKickPacket) {
+        ProxiedPlayer player = ByteCloudMaster.getInstance().getProxy().getPlayer(cloudPlayerKickPacket.getUuid());
+        player.disconnect(cloudPlayerKickPacket.getReason());
+    }
+
+    @Override
+    public void addCloudServer(CloudServerStartedPacket cloudServerStartedPacket) {
+        super.addCloudServer(cloudServerStartedPacket);
+        byteCloudMaster.getProxy().getServers().put(cloudServerStartedPacket.getServerId(), byteCloudMaster.getProxy()
+                .constructServerInfo(cloudServerStartedPacket.getServerId(),
+                        new InetSocketAddress("localhost", cloudServerStartedPacket.getPort()),
+                        "ByteCloud Minecraft-Server", false));
+
+    }
+
+    @Override
+    public void sendMessage(CloudPlayerMessagePacket cloudPlayerMessagePacket) {
+        ProxiedPlayer player = ByteCloudMaster.getInstance().getProxy().getPlayer(cloudPlayerMessagePacket.getUuid());
+        player.sendMessage(cloudPlayerMessagePacket.getMessage());
     }
 
     public Integer getSocketPort() {
@@ -57,61 +66,25 @@ public class CloudHandler {
         return "127.0.0.1";
     }
 
-    /**
-     * Gets all Server in a String-List.
-     *
-     * @return List<String> with all cloud's in database
-     */
-    public List<String> getServerInDatabase() {
-        return this.databaseServer.getServer();
-    }
-
-    public List<String> getServerInDatabase(String type) {
-        return this.databaseServer.getServer(type);
-    }
-
     public String getRandomLobbyId() {
-        List<String> lobbyServer = new ArrayList<>();
-//        lobbyServer.addAll(getServerInDatabase("LOBBY"));
+        List<CloudServer> lobbyServer = new ArrayList<>(getCloudServerGroups().get("LOBBY").getServers());
+        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
-        for(String server : ByteCloudMaster.getInstance().getProxy().getServers().keySet()) {
-            if(server.startsWith("lb")) {
-                lobbyServer.add(server);
-            }
-        }
-        if(!lobbyServer.isEmpty()) {
-            int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
-
-            return lobbyServer.get(i);
-        }
-        return null;
+        return lobbyServer.get(i).getServerId();
     }
 
     public String getRandomLobbyId(String excludedLobbyId) {
-        List<String> lobbyServer = new ArrayList<>();
-//        for(String lb : getServerInDatabase("LOBBY"))
-//            if(!lb.equals(excludedLobbyId)) lobbyServer.add(lb);
-
-        for(String server : ByteCloudMaster.getInstance().getProxy().getServers().keySet()) {
-            if(server.startsWith("lb") && !server.equals(excludedLobbyId)) {
-                lobbyServer.add(server);
-            }
-        }
+        List<CloudServer> lobbyServer = new ArrayList<>(getCloudServerGroups().get("LOBBY").getServers());
+        for(CloudServer lb : lobbyServer)
+            if(lb.getServerId().equals(excludedLobbyId)) lobbyServer.remove(lb);
 
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
-        return lobbyServer.get(i);
+        return lobbyServer.get(i).getServerId();
     }
 
     public String getUniqueServerId(String serverName) {
-        String uid = null;
-
-        for (String id : getServerInDatabase())
-            if (id.contains(serverName)) {
-                uid = id;
-            }
-
-        return uid;
+        return ServerIdResolver.getUniqueServerId(serverName, getCloudServers().keySet());
     }
 
     public int connect(String server, ProxiedPlayer proxiedPlayer) {

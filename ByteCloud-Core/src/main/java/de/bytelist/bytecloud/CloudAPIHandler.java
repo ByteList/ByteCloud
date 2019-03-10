@@ -1,13 +1,8 @@
 package de.bytelist.bytecloud;
 
 import de.bytelist.bytecloud.common.CloudPlayer;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerGroupInfoPacket;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerStoppedPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerDisconnectPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
+import de.bytelist.bytecloud.common.packet.cloud.*;
+import de.bytelist.bytecloud.common.packet.cloud.player.*;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import lombok.Getter;
@@ -30,7 +25,7 @@ public abstract class CloudAPIHandler {
     @Getter
     private final HashMap<String, CloudServerGroup> cloudServerGroups = new HashMap<>();
     @Getter
-    private final List<CloudServer> cloudServers = new ArrayList<>();
+    private final HashMap<String,CloudServer> cloudServers = new HashMap<>();
     @Getter
     private final List<CloudServer> permanentCloudServers = new ArrayList<>();
     @Getter
@@ -67,7 +62,7 @@ public abstract class CloudAPIHandler {
                 cloudServer.getServerGroup().removeServer(cloudServer);
             }
 
-            this.cloudServers.remove(cloudServer);
+            this.cloudServers.remove(cloudServer.getServerId());
         }
     }
 
@@ -93,10 +88,28 @@ public abstract class CloudAPIHandler {
 
     public abstract void kickCloudPlayer(CloudPlayerKickPacket cloudPlayerKickPacket);
 
+    public abstract void sendMessage(CloudPlayerMessagePacket cloudPlayerMessagePacket);
+
+    public void setMotd(CloudServerSetMotdPacket cloudServerSetMotdPacket) {
+        CloudServer cloudServer = this.getCloudServer(cloudServerSetMotdPacket.getServerId());
+
+        if(cloudServer != null) {
+            cloudServer.setMotd(cloudServerSetMotdPacket.getMotd());
+        }
+    }
+
+    public void setServerState(CloudServerChangedStatePacket cloudServerChangedStatePacket) {
+        CloudServer cloudServer = this.getCloudServer(cloudServerChangedStatePacket.getServerId());
+
+        if(cloudServer != null) {
+            cloudServer.setServerState(cloudServerChangedStatePacket.getState());
+        }
+    }
+
     public CloudServer getCloudServer(String serverId) {
-        for (CloudServer cloudServer : this.cloudServers) {
-            if(cloudServer.getServerId().equals(serverId)) {
-                return cloudServer;
+        for (String id : this.cloudServers.keySet()) {
+            if(id.equals(serverId)) {
+                return this.cloudServers.get(id);
             }
         }
         return null;

@@ -2,6 +2,7 @@ package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.common.ServerState;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
 import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
@@ -9,11 +10,12 @@ import lombok.Getter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by ByteList on 18.02.2017.
  */
-public class ServerGroup implements CloudServerGroup {
+public class ServerGroup {
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
@@ -102,8 +104,8 @@ public class ServerGroup implements CloudServerGroup {
                 tempServer.startServer(sender);
             } else {
                 if(!sender.equals("_cloud")) {
-//                    PacketOutSendMessage packetOutSendMessage = new PacketOutSendMessage(sender, "§cToo much servers are currently online!");
-//                    byteCloud.getCloudServer().sendPacket("Bungee-1", packetOutSendMessage);
+                    byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
+                            "§cToo much servers are currently online!"));
                 } else {
                     System.out.println("ServerGroup "+this.groupName+": Too much servers are currently online!");
                 }

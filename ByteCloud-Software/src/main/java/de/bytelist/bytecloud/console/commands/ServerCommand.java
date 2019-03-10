@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class ServerCommand extends Command {
 
     public ServerCommand() {
-        super("cloud", "cloud commands");
+        super("server", "server commands");
     }
 
     private final ByteCloud byteCloud = ByteCloud.getInstance();
@@ -38,7 +38,7 @@ public class ServerCommand extends Command {
                 if(serverGroup != null) {
                     serverGroup.startNewServer("_cloud");
                 } else {
-                    logger.info("This cloud group does not exist.");
+                    logger.info("This server group does not exist.");
                 }
                 return;
             }
@@ -49,7 +49,7 @@ public class ServerCommand extends Command {
                 if (server != null) {
                     server.stopServer("_cloud");
                 } else {
-                    logger.info("The cloud "+serverName+" doesn't exist!");
+                    logger.info("The server "+serverName+" doesn't exist!");
                 }
                 return;
             }
@@ -63,7 +63,7 @@ public class ServerCommand extends Command {
                     return;
                 }
 
-                logger.info("Could not find a cloud with id: "+serverName);
+                logger.info("Could not find a server with id: "+serverName);
                 return;
             }
         }
@@ -77,10 +77,10 @@ public class ServerCommand extends Command {
             return;
         }
 
-        System.out.println("Using cloud command:");
-        System.out.println("cloud start <group>");
-        System.out.println("cloud stop <id>");
-        System.out.println("cloud screen <id>");
-        System.out.println("cloud list");
+        System.out.println("Using server command:");
+        System.out.println("server start <group>");
+        System.out.println("server stop <id>");
+        System.out.println("server screen <id>");
+        System.out.println("server list");
     }
 }

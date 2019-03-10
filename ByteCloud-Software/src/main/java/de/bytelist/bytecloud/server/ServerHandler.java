@@ -61,8 +61,7 @@ public class ServerHandler {
                 if(serverDocument.get("autoStart").getAsBoolean()) {
                     PermServer permServer = new PermServer(servs, serverDocument.get("port").getAsInt(),
                             serverDocument.get("ram").getAsInt(),
-                            serverDocument.get("player").getAsInt(),
-                            serverDocument.get("spectator").getAsInt());
+                            serverDocument.get("player").getAsInt());
                     this.permanentServers.add(permServer);
                     this.servers.put(servs, permServer);
                 }
@@ -186,8 +185,7 @@ public class ServerHandler {
     }
 
     public String getRandomLobbyId() {
-        List<String> lobbyServer = new ArrayList<>();
-        lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("Lobby"));
+        List<String> lobbyServer = new ArrayList<>(this.serverGroups.get("LOBBY").getServers());
 
         int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
 
@@ -195,11 +193,8 @@ public class ServerHandler {
     }
 
     String getRandomLobbyId(String excludeLobby) {
-        List<String> lobbyServer = new ArrayList<>();
-        lobbyServer.addAll(ByteCloud.getInstance().getDatabaseServer().getServer("Lobby"));
-        if(lobbyServer.contains(excludeLobby)) {
-            lobbyServer.remove(excludeLobby);
-        }
+        List<String> lobbyServer = new ArrayList<>(this.serverGroups.get("LOBBY").getServers());
+        lobbyServer.remove(excludeLobby);
 
         if(lobbyServer.size() < 1) {
             return "null";
@@ -209,16 +204,4 @@ public class ServerHandler {
 
         return lobbyServer.get(i);
     }
-
-//    public int getDatabasePlayers(String serverId) {
-//        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SLOTS).getAsInt();
-//    }
-//
-//    public int getDatabaseSpectators(String serverId) {
-//        return ByteCloud.getInstance().getDatabaseServer().getDatabaseElement(serverId, DatabaseServerObject.SPECTATOR_ONLINE).getAsInt();
-//    }
-//
-//    public int getDatabaseOnlineCount(String serverId) {
-//        return getDatabasePlayers(serverId) + getDatabaseSpectators(serverId);
-//    }
 }

@@ -35,8 +35,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
     private CloudHandler cloudHandler;
     @Getter
     private SpigotCloudAPI cloudAPI;
-
-     @Getter
+    @Getter
     private Session session;
     @Getter
     private CloudConfig cloudConfig;
