@@ -3,6 +3,8 @@ package de.bytelist.bytecloud.core;
 import com.github.steveice10.packetlib.Client;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
+import de.bytelist.bytecloud.command.GoToCommand;
+import de.bytelist.bytecloud.command.StopCommand;
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
 import de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket;
@@ -82,6 +84,8 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
             sender.sendMessage("This cloud is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
             return true;
         });
+        getCommand("goto").setExecutor(new GoToCommand());
+        getCommand("stop").setExecutor(new StopCommand());
 
         this.cloudAPI = new ByteSpigotCloudAPI();
     }

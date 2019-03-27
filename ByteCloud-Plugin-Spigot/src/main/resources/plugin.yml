@@ -8,3 +8,5 @@ loadbefore: [GameChest]
 
 commands:
    cloud:
+   goto:
+   stop:

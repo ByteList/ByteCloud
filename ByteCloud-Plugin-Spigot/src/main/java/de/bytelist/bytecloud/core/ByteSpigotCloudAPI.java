@@ -136,6 +136,11 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
 
     @Override
     public UUID getUniqueIdFromName(String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        CloudPlayer cloudPlayer = this.getPlayer(name);
+
+        if(cloudPlayer != null)
+            return cloudPlayer.getUuid();
+
+        return null;
     }
 }

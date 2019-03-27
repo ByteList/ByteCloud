@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by ByteList on 03.03.2019.
@@ -38,6 +39,8 @@ public abstract class CloudAPIHandler {
     public void addCloudServerGroup(CloudServerGroupInfoPacket cloudServerGroupInfoPacket) {
         CloudServerGroup cloudServerGroup = new CloudServerGroup(cloudServerGroupInfoPacket);
         this.cloudServerGroups.put(cloudServerGroup.getGroupName(), cloudServerGroup);
+
+        System.out.println("CloudAPIHandler.addCloudServerGroup: "+cloudServerGroupInfoPacket.getGroupName());
     }
 
     public void addCloudServer(CloudServerStartedPacket cloudServerStartedPacket) {
@@ -48,6 +51,7 @@ public abstract class CloudAPIHandler {
         } else {
             this.permanentCloudServers.add(cloudServer);
         }
+        System.out.println("CloudAPIHandler.addCloudServer: "+cloudServerStartedPacket.getServerId());
     }
 
     public void removeCloudServer(CloudServerStoppedPacket cloudServerStoppedPacket) {
@@ -64,11 +68,15 @@ public abstract class CloudAPIHandler {
 
             this.cloudServers.remove(cloudServer.getServerId());
         }
+
+        System.out.println("CloudAPIHandler.removeCloudServer: "+cloudServerStoppedPacket.getServerId());
     }
 
     public void addCloudPlayer(CloudPlayerConnectPacket cloudPlayerConnectPacket) {
         CloudPlayer cloudPlayer = new CloudPlayer(cloudPlayerConnectPacket.getUuid(), cloudPlayerConnectPacket.getName());
         this.cloudPlayers.add(cloudPlayer);
+
+        System.out.println("CloudAPIHandler.addCloudPlayer: "+cloudPlayerConnectPacket.getUuid());
     }
 
     public void removeCloudPlayer(CloudPlayerDisconnectPacket cloudPlayerDisconnectPacket) {
@@ -76,6 +84,8 @@ public abstract class CloudAPIHandler {
 
         if(cloudPlayer != null)
             cloudPlayer.getCurrentServer().removePlayer(cloudPlayer);
+
+        System.out.println("CloudAPIHandler.removeCloudPlayer: "+cloudPlayerDisconnectPacket.getUuid());
     }
 
     public void updateCloudPlayerCurrentServer(CloudPlayerServerSwitchPacket cloudPlayerServerSwitchPacket) {
@@ -84,6 +94,8 @@ public abstract class CloudAPIHandler {
 
         if(cloudPlayer != null && cloudServer != null)
             cloudPlayer.setCurrentServer(cloudServer);
+
+        System.out.println("CloudAPIHandler.updateCloudPlayerCurrentServer: "+cloudPlayerServerSwitchPacket.getUuid()+" : "+cloudPlayerServerSwitchPacket.getServerId());
     }
 
     public abstract void kickCloudPlayer(CloudPlayerKickPacket cloudPlayerKickPacket);
@@ -131,6 +143,23 @@ public abstract class CloudAPIHandler {
             }
         }
         return null;
+    }
+
+    public String getRandomLobbyId() {
+        List<CloudServer> lobbyServer = new ArrayList<>(getCloudServerGroups().get("Lobby").getServers());
+        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
+
+        return lobbyServer.get(i).getServerId();
+    }
+
+    public String getRandomLobbyId(String excludedLobbyId) {
+        List<CloudServer> lobbyServer = new ArrayList<>(getCloudServerGroups().get("Lobby").getServers());
+        for(CloudServer lb : lobbyServer)
+            if(lb.getServerId().equals(excludedLobbyId)) lobbyServer.remove(lb);
+
+        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
+
+        return lobbyServer.get(i).getServerId();
     }
 
 }

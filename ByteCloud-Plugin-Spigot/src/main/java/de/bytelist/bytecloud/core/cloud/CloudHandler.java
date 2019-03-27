@@ -72,22 +72,4 @@ public class CloudHandler extends CloudAPIHandler {
     public Integer getSocketPort() {
         return byteCloudCore.getCloudConfig().getInt("socket-port");
     }
-
-    public String getRandomLobbyId() {
-        List<CloudServer> lobbyServer = new ArrayList<>(getCloudServerGroups().get("LOBBY").getServers());
-
-        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
-
-        return lobbyServer.get(i).getServerId();
-    }
-
-    public String getRandomLobbyId(String excludedLobbyId) {
-        List<CloudServer> lobbyServer = new ArrayList<>(getCloudServerGroups().get("LOBBY").getServers());
-        for(CloudServer lb : lobbyServer)
-            if(lb.getServerId().equals(excludedLobbyId)) lobbyServer.remove(lb);
-
-        int i = ThreadLocalRandom.current().nextInt(lobbyServer.size());
-
-        return lobbyServer.get(i).getServerId();
-    }
 }

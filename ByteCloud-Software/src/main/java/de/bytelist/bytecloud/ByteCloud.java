@@ -187,13 +187,8 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
      */
     @Getter @Setter
     private boolean debug;
-
-    /**
-     *
-     */
     @Getter
     private WebService webService;
-
     @Getter
     private WebSocket webSocket;
 
@@ -205,6 +200,9 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
     @Getter
     private HashMap<UUID, CloudPlayer> cloudPlayers = new HashMap<>();
     private HashMap<UUID, Server> currentServer = new HashMap<>();
+
+    @Getter
+    private final boolean localMode;
 
     /**
      * Initialise the cloud instance. This doesn't start anything!
@@ -218,6 +216,7 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
         this.stopDate = System.getProperty("de.bytelist.bytecloud.stop", "03:55");
         this.startFallback = System.getProperty("de.bytelist.bytecloud.startFallback", "true");
         this.serverIdOnConnect = System.getProperty("de.bytelist.bytecloud.connectServer", "-1");
+        this.localMode = Boolean.parseBoolean(System.getProperty("de.bytelist.local", "false"));
 
         this.cloudExecutor = new CloudExecutor();
         this.cloudExecutor.setExtendedDebug(Boolean.valueOf(System.getProperty("de.bytelist.bytecloud.debug", "false")));
@@ -319,32 +318,16 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
             logger.info("Config loaded.");
         }
 
-        if(System.getProperty("update", "true").equals("true")) {
+        if(localMode) {
+            this.logger.warning("***** LOCAL MODE ACTIVATED *****");
+        }
+
+        if(System.getProperty("update", "true").equals("true") && !localMode) {
             Updater updater = new Updater(UpdateChannel.getUpdateChannel(this.cloudConfig.getString("update-channel")), true);
             while (true) {
                 if(!updater.isAlive()) break;
             }
         }
-
-//        try {
-//            String host = this.cloudConfig.getString("mongo-host");
-//            String database = this.cloudConfig.getString("mongo-database");
-//            String user = this.cloudConfig.getString("mongo-user");
-//            String password = this.cloudConfig.getString("mongo-password");
-//
-//            this.databaseManager = new DatabaseManager(host, 27017, user, password, database);
-//            this.databaseServer = this.databaseManager.getDatabaseServer();
-//            if(this.databaseServer.getServer().size() > 0) {
-//                for(String server : this.databaseServer.getServer()) {
-//                    this.databaseServer.removeServer(server);
-//                }
-//            }
-//            this.logger.info("Connected to database.");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            cleanStop();
-//            return;
-//        }
 
         SecretKey key = null;
         try {
@@ -401,7 +384,8 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
 
         this.packetServer.bind();
         this.cloudExecutor.start();
-        this.webService.startWebServer();
+        if(!localMode)
+            this.webService.startWebServer();
 
         this.bungee.startBungee(()-> this.serverHandler.start());
     }
