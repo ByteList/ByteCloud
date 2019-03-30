@@ -81,7 +81,7 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
 
 
         getCommand("cloud").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage("This cloud is running ByteCloud version "+version+" (by ByteList, Started: "+cloudHandler.getCloudStarted()+")");
+            sender.sendMessage("This server is running ByteCloud version "+version+" (by ByteList)");
             return true;
         });
         getCommand("goto").setExecutor(new GoToCommand());
