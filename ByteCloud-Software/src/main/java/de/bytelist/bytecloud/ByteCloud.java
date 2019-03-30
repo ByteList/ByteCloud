@@ -11,8 +11,6 @@ import de.bytelist.bytecloud.common.IServer;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerDisconnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
-import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
@@ -90,19 +88,6 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
      */
     @Getter
     private Bungee bungee;
-//    /**
-//     * The {@link DatabaseManager} is used to manage all database things.
-//     * Here you can find all mongodb data's.
-//     */
-//    @Getter
-//    private DatabaseManager databaseManager;
-//    /**
-//     * The {@link DatabaseServer} put's all data's from servers in it and load this data any time.
-//     * You can get information's like player count and
-//     * cloud id from the in the bungee or spigot plugin.
-//     */
-//    @Getter
-//    private DatabaseServer databaseServer;
     /**
      * This returns the correct version from the cloud.
      * It contains information's about git commit and jenkins build number.
@@ -363,7 +348,8 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
                 new BungeeCommand(),
                 new EndCommand(),
                 new ScreenCommand(),
-                new DebugCommand()
+                new DebugCommand(),
+                new VersionCommand()
         };
         for(Command command : commands) {
             this.commandHandler.registerCommand(command);
