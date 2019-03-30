@@ -51,6 +51,9 @@ public abstract class CloudAPIHandler {
         } else {
             this.permanentCloudServers.add(cloudServer);
         }
+
+        this.cloudServers.put(cloudServer.getServerId(), cloudServer);
+
         System.out.println("CloudAPIHandler.addCloudServer: "+cloudServerStartedPacket.getServerId());
     }
 
