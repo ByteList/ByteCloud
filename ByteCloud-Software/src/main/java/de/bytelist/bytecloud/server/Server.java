@@ -3,7 +3,6 @@ package de.bytelist.bytecloud.server;
 import com.github.steveice10.packetlib.Session;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.common.CloudPlayer;
-import de.bytelist.bytecloud.common.Executable;
 import de.bytelist.bytecloud.common.IServer;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerChangedStatePacket;
@@ -11,7 +10,6 @@ import de.bytelist.bytecloud.common.packet.cloud.CloudServerGroupInfoPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerSetMotdPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
 import de.bytelist.bytecloud.server.screen.IScreen;
@@ -87,6 +85,7 @@ public abstract class Server implements IScreen, IServer {
                         server.isServerPermanent(), server.getSlots(), server.getMotd()));
 
                 for (CloudPlayer cloudPlayer : server.getPlayers()) {
+                    System.out.println("Server.onStart: for cloudPlayer: "+cloudPlayer.getUuid());
                     this.session.send(new CloudPlayerConnectPacket(cloudPlayer.getUuid(), cloudPlayer.getName()));
                     this.session.send(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), cloudPlayer.getCurrentServer().getServerId()));
                 }
