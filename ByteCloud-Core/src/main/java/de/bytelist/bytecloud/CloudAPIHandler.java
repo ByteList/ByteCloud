@@ -106,9 +106,9 @@ public abstract class CloudAPIHandler {
 
             cloudServer.addPlayer(cloudPlayer);
             cloudPlayer.setCurrentServer(cloudServer);
-        }
 
-        System.out.println("CloudAPIHandler.updateCloudPlayerCurrentServer: "+cloudPlayerServerSwitchPacket.getUuid()+" : "+cloudPlayerServerSwitchPacket.getServerId());
+            System.out.println("CloudAPIHandler.updateCloudPlayerCurrentServer: "+cloudPlayerServerSwitchPacket.getUuid()+" : "+cloudPlayerServerSwitchPacket.getServerId());
+        }
     }
 
     public abstract void kickCloudPlayer(CloudPlayerKickPacket cloudPlayerKickPacket);
