@@ -31,10 +31,10 @@ public class EndCommand extends Command {
                 while (true) {
                     if(!updater.isAlive()) break;
                 }
+            } else {
+                byteCloud.getLogger().info("Do you mean: \"end -update\" ?");
                 return;
             }
-            byteCloud.getLogger().info("Do you mean: \"end -update\" ?");
-            return;
         }
         ByteCloud.getInstance().stop();
     }
