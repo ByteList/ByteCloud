@@ -6,6 +6,7 @@ import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.common.packet.client.ClientServerChangeStatePacket;
 import de.bytelist.bytecloud.common.packet.client.ClientServerSetMotdPacket;
+import de.bytelist.bytecloud.common.packet.client.ClientServerStopPacket;
 import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerKickPacket;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.common.server.CloudServerGroup;
@@ -43,9 +44,8 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     }
 
     @Override
-    public void shutdown() {
-//        PacketInStopOwnServer packetInStopOwnServer = new PacketInStopOwnServer(getCurrentServerId());
-//        ByteCloudCore.getInstance().getPacketClient().sendPacket(packetInStopOwnServer);
+    public void shutdown(UUID sender) {
+        ByteCloudCore.getInstance().getSession().send(new ClientServerStopPacket(this.getCurrentServerId(), sender));
     }
 
     @Override

@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 /**
  * Created by nemmerich on 19.03.2019.
  * <p>
@@ -17,18 +19,16 @@ public class StopCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(!(sender instanceof Player)) {
-            sender.sendMessage("You can't connect to other servers!");
-            return true;
-        }
-        Player player = (Player) sender;
+        if(sender instanceof Player) {
+            Player player = (Player) sender;
 
-        if(!spigotCloudPlugin.getPermissionCheck().hasPermission("command.stop", player)) {
-            sender.sendMessage(spigotCloudPlugin.getPermissionCheck().getNoPermissionMessage());
-            return true;
+            if(!spigotCloudPlugin.getPermissionCheck().hasPermission("command.stop", player)) {
+                sender.sendMessage(spigotCloudPlugin.getPermissionCheck().getNoPermissionMessage());
+                return true;
+            }
         }
 
-        spigotCloudPlugin.getCloudAPI().shutdown();
+        spigotCloudPlugin.getCloudAPI().shutdown((sender instanceof Player ? ((Player) sender).getUniqueId() : UUID.fromString("_cloud")));
         return true;
     }
 }
