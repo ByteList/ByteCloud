@@ -3,7 +3,6 @@ package de.bytelist.bytecloud.server;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.common.ServerState;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
-import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
 
@@ -56,7 +55,7 @@ public class ServerGroup {
         this.groupName = serverDocument.get("name").getAsString();
         this.prefix = serverDocument.get("prefix").getAsString();
         this.amount = serverDocument.get("amount").getAsInt();
-        this.maxServers = serverDocument.get("maxServers").getAsInt();
+        this.maxServers = serverDocument.get("max").getAsInt();
         this.startPort = serverDocument.get("port").getAsInt();
         this.slotsPerServer = serverDocument.get("player").getAsInt();
         this.ram = serverDocument.get("ram").getAsInt();
