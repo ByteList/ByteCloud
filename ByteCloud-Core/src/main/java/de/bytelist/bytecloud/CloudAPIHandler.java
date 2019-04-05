@@ -78,6 +78,7 @@ public abstract class CloudAPIHandler {
     public void addCloudPlayer(CloudPlayerConnectPacket cloudPlayerConnectPacket) {
         CloudPlayer cloudPlayer = new CloudPlayer(cloudPlayerConnectPacket.getUuid(), cloudPlayerConnectPacket.getName());
         this.cloudPlayers.add(cloudPlayer);
+        cloudPlayer.getCurrentServer().addPlayer(cloudPlayer);
 
         System.out.println("CloudAPIHandler.addCloudPlayer: "+cloudPlayerConnectPacket.getUuid());
     }
@@ -85,8 +86,10 @@ public abstract class CloudAPIHandler {
     public void removeCloudPlayer(CloudPlayerDisconnectPacket cloudPlayerDisconnectPacket) {
         CloudPlayer cloudPlayer = getCloudPlayer(cloudPlayerDisconnectPacket.getUuid());
 
-        if(cloudPlayer != null)
+        if(cloudPlayer != null) {
             cloudPlayer.getCurrentServer().removePlayer(cloudPlayer);
+            this.cloudPlayers.remove(cloudPlayer);
+        }
 
         System.out.println("CloudAPIHandler.removeCloudPlayer: "+cloudPlayerDisconnectPacket.getUuid());
     }
