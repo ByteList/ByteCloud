@@ -51,15 +51,6 @@ public class BungeeCommand extends Command {
                     return;
                 }
             }
-            if(args[0].equalsIgnoreCase("screen")) {
-                if(bungee.isRunning()) {
-                    byteCloud.getScreenManager().joinNewScreen(bungee);
-                    return;
-                } else {
-                    byteCloud.getLogger().info("Bungee isn't running!");
-                    return;
-                }
-            }
         }
         if(args.length > 1 && args[0].equals("exec")) {
             StringBuilder cmd = new StringBuilder();
@@ -75,7 +66,6 @@ public class BungeeCommand extends Command {
                 "   bungee restart - Restarting the bungee.\n"+
                 "   bungee stop - Stopping the bungee.\n"+
                 "   bungee start - Starting the bungee.\n"+
-                "   bungee screen - Screen in the bungee.\n"+
                 "   bungee exec <command> - Execute a command on the bungee.\n");
     }
 }

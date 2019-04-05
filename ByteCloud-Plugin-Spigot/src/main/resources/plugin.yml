@@ -9,4 +9,6 @@ loadbefore: [GameChest]
 commands:
    cloud:
    goto:
+   join:
+   server:
    stop:

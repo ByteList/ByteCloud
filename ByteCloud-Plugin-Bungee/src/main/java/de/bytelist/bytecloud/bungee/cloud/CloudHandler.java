@@ -1,21 +1,15 @@
 package de.bytelist.bytecloud.bungee.cloud;
 
 import de.bytelist.bytecloud.CloudAPIHandler;
-import de.bytelist.bytecloud.ServerIdResolver;
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
-import de.bytelist.bytecloud.common.server.CloudServer;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by ByteList on 28.01.2017.
@@ -64,36 +58,5 @@ public class CloudHandler extends CloudAPIHandler {
 
     public String getCloudAddress() {
         return "127.0.0.1";
-    }
-
-
-    public String getUniqueServerId(String serverName) {
-        return ServerIdResolver.getUniqueServerId(serverName, getCloudServers().keySet());
-    }
-
-    public int connect(String server, ProxiedPlayer proxiedPlayer) {
-        ServerInfo serverInfo = ByteCloudMaster.getInstance().getProxy().getServerInfo(server);
-
-        if (serverInfo == null)
-            return 2;
-
-        if (proxiedPlayer.getServer().getInfo() == serverInfo)
-            return 1;
-
-        proxiedPlayer.connect(serverInfo);
-        return 0;
-    }
-
-    public int move(ProxiedPlayer proxiedPlayer, ProxiedPlayer target) {
-        if (target == null)
-            return 2;
-
-        ServerInfo serverInfo = target.getServer().getInfo();
-
-        if (proxiedPlayer.getServer().getInfo() == serverInfo)
-            return 1;
-
-        proxiedPlayer.connect(serverInfo);
-        return 0;
     }
 }

@@ -2,6 +2,7 @@ package de.bytelist.bytecloud.console.commands;
 
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.console.Command;
+import de.bytelist.bytecloud.server.Server;
 
 /**
  * Created by ByteList on 10.01.2018.
@@ -13,7 +14,7 @@ public class ScreenCommand extends Command {
     private final ByteCloud byteCloud = ByteCloud.getInstance();
 
     public ScreenCommand() {
-        super("screen", "Screen addon commands");
+        super("screen", "Screen commands");
     }
 
     @Override
@@ -33,7 +34,26 @@ public class ScreenCommand extends Command {
 //                        "         |___/                 b y   B y t e L i s t\n" +
 //                        "\n\n");
                 byteCloud.getLogger().info("** You left the screen.");
+                return;
             }
+
+            if(byteCloud.getBungee().getBungeeId().startsWith(args[0])) {
+                if(byteCloud.getBungee().isRunning()) {
+                    byteCloud.getScreenManager().joinNewScreen(byteCloud.getBungee());
+                } else {
+                    byteCloud.getLogger().info("Bungee isn't running!");
+                }
+                return;
+            }
+
+            Server server = byteCloud.getServerHandler().getServer(args[0]);
+
+            if(server != null) {
+                byteCloud.getScreenManager().joinNewScreen(server);
+                return;
+            }
+
+            byteCloud.getLogger().info("Could not find a server with id: "+args[0]);
         }
     }
 }

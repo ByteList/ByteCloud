@@ -26,7 +26,11 @@ public class ByteCloudPacketClientSessionListener extends SessionAdapter {
                 break;
             case CLIENT_SERVER_SET_MOTD_PACKET:
                 break;
+            case CLIENT_SERVER_START_PACKET:
+                break;
             case CLIENT_SERVER_STARTED_PACKET:
+                break;
+            case CLIENT_SERVER_STOP_PACKET:
                 break;
             case CLIENT_SERVER_STOPPED_PACKET:
                 break;

@@ -11,6 +11,7 @@ import de.bytelist.bytecloud.common.IServer;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerDisconnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
@@ -23,6 +24,7 @@ import de.bytelist.bytecloud.packet.ByteCloudPacketCloudListener;
 import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import de.bytelist.bytecloud.restapi.WebService;
 import de.bytelist.bytecloud.restapi.WebSocket;
+import de.bytelist.bytecloud.server.PermServer;
 import de.bytelist.bytecloud.server.Server;
 import de.bytelist.bytecloud.server.ServerHandler;
 import de.bytelist.bytecloud.server.screen.ScreenManager;
@@ -266,10 +268,6 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
                     .append("last-version-type", (isCurrentDevBuild() ? "dev" : "stable"))
                     .append("last-version-stable", (isCurrentDevBuild() ? "-" : this.version))
                     .append("update-channel", "stable")
-                    .append("mongo-host", "host")
-                    .append("mongo-user", "user")
-                    .append("mongo-password", "password")
-                    .append("mongo-database", "database")
                     .append("web-dashboard", "http://127.0.0.1/cloud/")
                     .append("web-auth", "not-generated")
                     .append("web-restapi-port", "49999")
@@ -568,6 +566,42 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
                 this.currentServer.put(uuid, server);
             }
         }
+    }
+
+    @Override
+    public void startTempServer(String group, UUID sender) {
+        for (String serverGroupName : this.serverHandler.getServerGroups().keySet()) {
+            if(group.equalsIgnoreCase(serverGroupName)) {
+                this.serverHandler.getServerGroups().get(serverGroupName).startNewServer(sender.toString());
+                return;
+            }
+        }
+
+        this.bungee.getSession().send(new CloudPlayerMessagePacket(sender, "§cToo much servers are currently online!"));
+    }
+
+    @Override
+    public void startPermServer(String server, UUID sender) {
+        for (PermServer permServer : this.serverHandler.getPermanentServers()) {
+            if(permServer.getServerId().equals(server)) {
+                permServer.startServer(sender.toString());
+                return;
+            }
+        }
+
+        this.bungee.getSession().send(new CloudPlayerMessagePacket(sender, "§cCan't find a permanent server called "+server+"!"));
+    }
+
+    @Override
+    public void stopServer(String serverId, UUID sender) {
+        Server server = this.serverHandler.getServer(serverId);
+
+        if(server != null) {
+            server.stopServer(sender.toString());
+            return;
+        }
+
+        this.bungee.getSession().send(new CloudPlayerMessagePacket(sender, "§cCan't find a server called "+serverId+"!"));
     }
 
     public void sendGlobalPacket(Packet packet) {

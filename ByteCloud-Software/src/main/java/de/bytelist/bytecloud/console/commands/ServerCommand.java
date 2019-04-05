@@ -53,19 +53,6 @@ public class ServerCommand extends Command {
                 }
                 return;
             }
-
-            if(args[0].equalsIgnoreCase("screen")) {
-                String serverName = args[1];
-                Server server = byteCloud.getServerHandler().getServer(serverName);
-
-                if(server != null) {
-                    byteCloud.getScreenManager().joinNewScreen(server);
-                    return;
-                }
-
-                logger.info("Could not find a server with id: "+serverName);
-                return;
-            }
         }
 
         if(args.length == 1 && args[0].equalsIgnoreCase("list")) {
@@ -80,7 +67,6 @@ public class ServerCommand extends Command {
         System.out.println("Using server command:");
         System.out.println("server start <group>");
         System.out.println("server stop <id>");
-        System.out.println("server screen <id>");
         System.out.println("server list");
     }
 }

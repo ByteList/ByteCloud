@@ -7,16 +7,12 @@ import de.bytelist.bytecloud.common.CloudSoftware;
 import de.bytelist.bytecloud.common.Executable;
 import de.bytelist.bytecloud.common.packet.PacketFlag;
 import de.bytelist.bytecloud.common.packet.PacketInfo;
-import de.bytelist.bytecloud.common.packet.client.ClientKeepAlivePacket;
-import de.bytelist.bytecloud.common.packet.client.ClientServerChangeStatePacket;
-import de.bytelist.bytecloud.common.packet.client.ClientServerSetMotdPacket;
-import de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.client.*;
 import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerConnectPacket;
 import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerDisconnectPacket;
 import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerServerSwitchPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudKeepAlivePacket;
-import de.bytelist.bytecloud.common.server.CloudServer;
 
 /**
  * Created by ByteList on 11.02.2019.
@@ -52,11 +48,23 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
                 CloudSoftware.getInstance().getIServer(clientServerSetMotdPacket.getServerId()).
                         setMotd(clientServerSetMotdPacket.getMotd());
                 break;
+            case CLIENT_SERVER_START_PACKET:
+                ClientServerStartPacket clientServerStartPacket = event.getPacket();
+                if(!clientServerStartPacket.getServerGroup().equals("{null}")) {
+                    CloudSoftware.getInstance().startTempServer(clientServerStartPacket.getServerGroup(), clientServerStartPacket.getSender());
+                } else if(!clientServerStartPacket.getPermanentServer().equals("{null}")) {
+                    CloudSoftware.getInstance().startPermServer(clientServerStartPacket.getPermanentServer(), clientServerStartPacket.getSender());
+                }
+                break;
             case CLIENT_SERVER_STARTED_PACKET:
                 ClientServerStartedPacket clientServerStartedPacket = event.getPacket();
                 Executable executable = CloudSoftware.getInstance().getExecutable(clientServerStartedPacket.getServerId());
                 executable.setSession(event.getSession());
                 executable.onStart();
+                break;
+            case CLIENT_SERVER_STOP_PACKET:
+                ClientServerStopPacket clientServerStopPacket = event.getPacket();
+                CloudSoftware.getInstance().stopServer(clientServerStopPacket.getServerId(), clientServerStopPacket.getSender());
                 break;
             case CLIENT_SERVER_STOPPED_PACKET:
                 break;

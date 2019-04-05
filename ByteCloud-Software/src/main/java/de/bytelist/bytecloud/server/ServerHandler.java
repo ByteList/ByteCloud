@@ -145,6 +145,10 @@ public class ServerHandler {
         return Collections.unmodifiableCollection(servers.values());
     }
 
+    public Collection<String> getServerIds() {
+        return Collections.unmodifiableCollection(servers.keySet());
+    }
+
     public Server getServer(String serverId) {
         if(!servers.containsKey(serverId)) {
             serverId = ServerIdResolver.getUniqueServerId(serverId, servers.keySet());
