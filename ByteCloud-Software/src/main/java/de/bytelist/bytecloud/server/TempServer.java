@@ -1,24 +1,18 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
-import de.bytelist.bytecloud.common.CloudPlayer;
+import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.ServerState;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerGroupInfoPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStoppedPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
 import de.bytelist.bytecloud.file.EnumFile;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -56,7 +50,7 @@ public class TempServer extends Server {
             setServerState(ServerState.STARTING);
             if (!sender.equals("_cloud")) {
                 byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                        "§7Starting server §e" + getServerId() + "§7."));
+                        Cloud.PREFIX+"§7Starting server §e" + getServerId() + "§7."));
             }
             byteCloud.debug(toString() + " - start - process ?0 -> " + (process != null));
             if (process == null) {
@@ -110,7 +104,7 @@ public class TempServer extends Server {
             byteCloud.getLogger().info("Server " + serverId + " is stopping.");
             if (!sender.equals("_cloud")) {
                 byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                        "§7Stopping server §e" + getServerId() + "§7."));
+                        Cloud.PREFIX+"§7Stopping server §e" + getServerId() + "§7."));
             }
             setServerState(ServerState.STOPPED);
             if (this.process != null) {
@@ -135,7 +129,7 @@ public class TempServer extends Server {
 
             if (!stopper.equals("_cloud")) {
                 byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                        "§aServer §e" + getServerId() + "§a stopped."));
+                        Cloud.PREFIX+"§aServer §e" + getServerId() + "§a stopped."));
             }
 
             byteCloud.getLogger().info("Server " + serverId + " stopped.");
@@ -157,7 +151,7 @@ public class TempServer extends Server {
         }
         if (!starter.equals("_cloud")) {
             byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(starter),
-                    "§aServer §e" + getServerId() + "§a started."));
+                    Cloud.PREFIX+"§aServer §e" + getServerId() + "§a started."));
         }
     }
 }

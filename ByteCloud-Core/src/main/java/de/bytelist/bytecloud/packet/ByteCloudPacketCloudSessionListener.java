@@ -121,6 +121,7 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
     @Override
     public void disconnecting(DisconnectingEvent event) {
         System.out.println("Disconnecting ("+event.getSession().getHost() + ":" + event.getSession().getPort()+"): " + event.getReason());
+        event.getCause().printStackTrace();
     }
 
     @Override

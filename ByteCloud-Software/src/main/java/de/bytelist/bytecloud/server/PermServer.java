@@ -1,23 +1,16 @@
 package de.bytelist.bytecloud.server;
 
 import de.bytelist.bytecloud.ByteCloud;
-import de.bytelist.bytecloud.common.CloudPlayer;
+import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.ServerState;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerGroupInfoPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStoppedPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
-import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.file.EnumFile;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -50,7 +43,7 @@ public class PermServer extends Server {
                 setServerState(ServerState.STARTING);
                 if (!sender.equals("_cloud")) {
                     byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                            "§7Starting server §e" + getServerId() + "§7."));
+                            Cloud.PREFIX+"§7Starting server §e" + getServerId() + "§7 (permanent)."));
                 }
                 if (process == null) {
                     byteCloud.getLogger().info("Server " + serverId + " (permanent) is starting on port " + port + ".");
@@ -89,7 +82,7 @@ public class PermServer extends Server {
             } else {
                 if (!sender.equals("_cloud")) {
                     byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                            "§cToo much servers are currently online!"));
+                            Cloud.PREFIX + "§cToo much servers are currently online!"));
                 } else {
                     byteCloud.getLogger().info("Server " + serverId + " can't start! Too much servers are currently online!");
                 }
@@ -107,7 +100,7 @@ public class PermServer extends Server {
             byteCloud.getLogger().info("Server " + serverId + " (permanent) is stopping.");
             if (!sender.equals("_cloud")) {
                 byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                        "§7Stopping cloud §e" + getServerId() + "§7."));
+                        Cloud.PREFIX + "§7Stopping server §e" + getServerId() + "§7 (permanent)."));
             }
             setServerState(ServerState.STOPPED);
             if(this.process != null) {
@@ -119,7 +112,7 @@ public class PermServer extends Server {
 
             if (!stopper.equals("_cloud")) {
                 byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(sender),
-                        "§aServer §e" + getServerId() + "§a stopped."));
+                        Cloud.PREFIX + "§aServer §e" + getServerId() + "§a (permanent) stopped."));
             }
 
             byteCloud.getLogger().info("Server " + serverId + " (permanent) stopped.");
@@ -140,7 +133,7 @@ public class PermServer extends Server {
         }
         if (!starter.equals("_cloud")) {
             byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(UUID.fromString(starter),
-                    "§aServer §e" + getServerId() + "§a started."));
+                    Cloud.PREFIX + "§aServer §e" + getServerId() + "§a started."));
         }
     }
 }
