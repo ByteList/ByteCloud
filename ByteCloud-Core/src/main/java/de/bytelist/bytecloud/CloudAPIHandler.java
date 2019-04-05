@@ -100,8 +100,13 @@ public abstract class CloudAPIHandler {
         CloudPlayer cloudPlayer = getCloudPlayer(cloudPlayerServerSwitchPacket.getUuid());
         CloudServer cloudServer = getCloudServer(cloudPlayerServerSwitchPacket.getServerId());
 
-        if(cloudPlayer != null && cloudServer != null)
+        if(cloudPlayer != null && cloudServer != null) {
+            if(cloudPlayer.getCurrentServer() != null)
+                cloudPlayer.getCurrentServer().removePlayer(cloudPlayer);
+
+            cloudServer.addPlayer(cloudPlayer);
             cloudPlayer.setCurrentServer(cloudServer);
+        }
 
         System.out.println("CloudAPIHandler.updateCloudPlayerCurrentServer: "+cloudPlayerServerSwitchPacket.getUuid()+" : "+cloudPlayerServerSwitchPacket.getServerId());
     }

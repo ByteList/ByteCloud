@@ -21,15 +21,20 @@ public class EndCommand extends Command {
     @Override
     public void execute(String[] args) {
 
-        if(args.length == 1 && args[0].startsWith("-update")) {
-            UpdateChannel updateChannel;
-            if(args[0].contains("=")) updateChannel = UpdateChannel.getUpdateChannel(args[0].split("=")[1]);
-            else updateChannel = UpdateChannel.getUpdateChannel(byteCloud.getCloudConfig().getString("update-channel"));
+        if(args.length == 1) {
+            if(args[0].startsWith("-update")) {
+                UpdateChannel updateChannel;
+                if(args[0].contains("=")) updateChannel = UpdateChannel.getUpdateChannel(args[0].split("=")[1]);
+                else updateChannel = UpdateChannel.getUpdateChannel(byteCloud.getCloudConfig().getString("update-channel"));
 
-            Updater updater = new Updater(updateChannel, false);
-            while (true) {
-                if(!updater.isAlive()) break;
+                Updater updater = new Updater(updateChannel, false);
+                while (true) {
+                    if(!updater.isAlive()) break;
+                }
+                return;
             }
+            byteCloud.getLogger().info("Do you mean: \"end -update\" ?");
+            return;
         }
         ByteCloud.getInstance().stop();
     }
