@@ -177,7 +177,7 @@ public class Bungee implements IScreen, Executable {
 
                     for (CloudPlayer cloudPlayer : server.getPlayers()) {
                         this.session.send(new CloudPlayerConnectPacket(cloudPlayer.getUuid(), cloudPlayer.getName()));
-                        this.session.send(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), cloudPlayer.getCurrentServer().getServerId()));
+                        this.session.send(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), server.getServerId()));
                     }
                 }
             }

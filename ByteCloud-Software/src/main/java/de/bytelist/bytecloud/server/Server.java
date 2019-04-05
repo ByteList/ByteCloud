@@ -85,10 +85,8 @@ public abstract class Server implements IScreen, IServer {
                         server.isServerPermanent(), server.getSlots(), server.getMotd()));
 
                 for (CloudPlayer cloudPlayer : server.getPlayers()) {
-                    System.out.println("Server.onStart: for cloudPlayer: "+cloudPlayer.getUuid());
-                    System.out.println("Server.onStart: for cloudPlayer: getCurrentServer: "+cloudPlayer.getCurrentServer());
                     this.session.send(new CloudPlayerConnectPacket(cloudPlayer.getUuid(), cloudPlayer.getName()));
-                    this.session.send(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), cloudPlayer.getCurrentServer().getServerId()));
+                    this.session.send(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), server.getServerId()));
                 }
             }
         }
