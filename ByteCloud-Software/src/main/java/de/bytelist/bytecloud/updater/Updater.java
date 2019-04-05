@@ -65,13 +65,11 @@ public class Updater extends Thread {
             byteCloud.getLogger().info(downloadFile(jenkinsAPI, path+"ByteCloud-Software/target/ByteCloud-Software.jar", "./tempUpdate/ByteCloud-Software.jar"));
             byteCloud.getLogger().info(downloadFile(jenkinsAPI, path+"ByteCloud-Plugin-Spigot/target/ByteCloud-Plugin-Spigot.jar", "./tempUpdate/ByteCloud-Plugin-Spigot.jar"));
             byteCloud.getLogger().info(downloadFile(jenkinsAPI, path+"ByteCloud-Plugin-Bungee/target/ByteCloud-Plugin-Bungee.jar", "./tempUpdate/ByteCloud-Plugin-Bungee.jar"));
-            byteCloud.getLogger().info(downloadFile(jenkinsAPI, path+"ByteCloud-Plugin-Fallback/target/ByteCloud-Plugin-Fallback.jar", "./tempUpdate/ByteCloud-Plugin-Fallback.jar"));
             byteCloud.getLogger().info("Download successful! Moving files to their location...");
 
             byteCloud.getLogger().info(moveFile(new File("./tempUpdate/", "ByteCloud-Software.jar"), new File(".", "ByteCloud-Software-Updated.jar")));
             byteCloud.getLogger().info(moveFile(new File("./tempUpdate/", "ByteCloud-Plugin-Spigot.jar"), new File(EnumFile.GENERALS_PLUGINS.getPath(), "ByteCloud-Plugin-Spigot.jar")));
             byteCloud.getLogger().info(moveFile(new File("./tempUpdate/", "ByteCloud-Plugin-Bungee.jar"), new File(EnumFile.BUNGEE.getPath()+"plugins/", "ByteCloud-Plugin-Bungee.jar")));
-            byteCloud.getLogger().info(moveFile(new File("./tempUpdate/", "ByteCloud-Plugin-Fallback.jar"), new File("./Fallback-Server/plugins/", "ByteCloud-Plugin-Fallback.jar")));
 
             if(Objects.requireNonNull(file.listFiles()).length == 0) {
                 file.delete();

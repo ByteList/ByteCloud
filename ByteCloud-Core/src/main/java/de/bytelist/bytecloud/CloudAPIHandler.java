@@ -75,6 +75,9 @@ public abstract class CloudAPIHandler {
         System.out.println("CloudAPIHandler.removeCloudServer: "+cloudServerStoppedPacket.getServerId());
     }
 
+    /*
+     *   The cloudPlayer server is null on connect. Don't try to add the player to his server ;)
+     */
     public void addCloudPlayer(CloudPlayerConnectPacket cloudPlayerConnectPacket) {
         CloudPlayer cloudPlayer = new CloudPlayer(cloudPlayerConnectPacket.getUuid(), cloudPlayerConnectPacket.getName());
         this.cloudPlayers.add(cloudPlayer);
