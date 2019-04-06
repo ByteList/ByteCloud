@@ -55,7 +55,8 @@ public class CloudHandler extends CloudAPIHandler {
     @Override
     public void sendMessage(CloudPlayerMessagePacket cloudPlayerMessagePacket) {
         ProxiedPlayer player = ByteCloudMaster.getInstance().getProxy().getPlayer(cloudPlayerMessagePacket.getUuid());
-        player.sendMessage(cloudPlayerMessagePacket.getMessage());
+        if(player != null)
+            player.sendMessage(cloudPlayerMessagePacket.getMessage());
     }
 
     public Integer getSocketPort() {
