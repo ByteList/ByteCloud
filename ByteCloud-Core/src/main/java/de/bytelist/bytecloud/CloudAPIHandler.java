@@ -111,6 +111,8 @@ public abstract class CloudAPIHandler {
         }
     }
 
+    public abstract void moveCloudPlayer(CloudPlayerMoveToServerPacket cloudPlayerMoveToServerPacket);
+
     public abstract void kickCloudPlayer(CloudPlayerKickPacket cloudPlayerKickPacket);
 
     public abstract void sendMessage(CloudPlayerMessagePacket cloudPlayerMessagePacket);

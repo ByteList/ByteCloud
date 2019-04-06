@@ -106,6 +106,8 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
                 break;
             case CLOUD_PLAYER_MESSAGE_PACKET:
                 break;
+            case CLOUD_PLAYER_MOVE_TO_SERVER_PACKET:
+                break;
             case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
                 break;
         }

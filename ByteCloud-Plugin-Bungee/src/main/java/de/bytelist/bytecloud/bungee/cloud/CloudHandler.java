@@ -5,6 +5,7 @@ import de.bytelist.bytecloud.bungee.ByteCloudMaster;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMoveToServerPacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -44,6 +45,11 @@ public class CloudHandler extends CloudAPIHandler {
                         new InetSocketAddress("localhost", cloudServerStartedPacket.getPort()),
                         "ByteCloud Minecraft-Server", false));
 
+    }
+
+    @Override
+    public void moveCloudPlayer(CloudPlayerMoveToServerPacket cloudPlayerMoveToServerPacket) {
+        byteCloudMaster.getCloudAPI().movePlayerToServer(cloudPlayerMoveToServerPacket.getUuid(), cloudPlayerMoveToServerPacket.getServerId());
     }
 
     @Override

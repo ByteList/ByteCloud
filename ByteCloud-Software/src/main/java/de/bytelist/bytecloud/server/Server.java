@@ -11,6 +11,7 @@ import de.bytelist.bytecloud.common.packet.cloud.CloudServerSetMotdPacket;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMoveToServerPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
 import de.bytelist.bytecloud.server.screen.IScreen;
 import lombok.Getter;
@@ -114,7 +115,7 @@ public abstract class Server implements IScreen, IServer {
 
                 if (!byteCloud.getServerIdOnConnect().equals(this.serverId)) {
                     cloudPlayers.forEach(cloudPlayer -> {
-                        byteCloud.sendGlobalPacket(new CloudPlayerServerSwitchPacket(cloudPlayer.getUuid(), lobbyId));
+                        byteCloud.getBungee().getSession().send(new CloudPlayerMoveToServerPacket(cloudPlayer.getUuid(), lobbyId));
                         byteCloud.getBungee().getSession().send(new CloudPlayerMessagePacket(cloudPlayer.getUuid(),
                                 "§6Verbinde zur Lobby..."));
                     });

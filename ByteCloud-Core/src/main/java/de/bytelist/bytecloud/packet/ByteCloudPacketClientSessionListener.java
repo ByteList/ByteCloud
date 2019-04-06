@@ -74,6 +74,9 @@ public class ByteCloudPacketClientSessionListener extends SessionAdapter {
             case CLOUD_PLAYER_MESSAGE_PACKET:
                 CloudAPIHandler.getInstance().sendMessage(event.getPacket());
                 break;
+            case CLOUD_PLAYER_MOVE_TO_SERVER_PACKET:
+                CloudAPIHandler.getInstance().moveCloudPlayer(event.getPacket());
+                break;
             case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
                 CloudAPIHandler.getInstance().updateCloudPlayerCurrentServer(event.getPacket());
                 break;

@@ -4,6 +4,7 @@ import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.common.packet.cloud.CloudServerChangedStatePacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMoveToServerPacket;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.core.event.ByteCloudServerUpdateStateEvent;
@@ -24,6 +25,11 @@ public class CloudHandler extends CloudAPIHandler {
     public CloudHandler() {
         this.serverId = System.getProperty("de.bytelist.bytecloud.servername", Bukkit.getServerName());
         this.serverGroup = System.getProperty("de.bytelist.bytecloud.servergroup", "null");
+    }
+
+    @Override
+    public void moveCloudPlayer(CloudPlayerMoveToServerPacket cloudPlayerMoveToServerPacket) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
