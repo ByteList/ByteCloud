@@ -28,7 +28,7 @@ public class StopCommand implements CommandExecutor {
             }
         }
 
-        spigotCloudPlugin.getCloudAPI().shutdown((sender instanceof Player ? ((Player) sender).getUniqueId() : UUID.fromString("_cloud")));
+        spigotCloudPlugin.getCloudAPI().shutdown((sender instanceof Player ? ((Player) sender).getUniqueId() : UUID.randomUUID()));
         return true;
     }
 }
