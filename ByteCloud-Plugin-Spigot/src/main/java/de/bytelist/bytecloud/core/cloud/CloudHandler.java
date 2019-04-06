@@ -50,7 +50,7 @@ public class CloudHandler extends CloudAPIHandler {
 
         if(cloudServer != null)
             Bukkit.getPluginManager().callEvent(new ByteCloudServerUpdateStateEvent(cloudServer.getServerId(),
-                cloudServer.getServerGroup().getGroupName(),
+                    (cloudServer.isServerPermanent() ? "PERMANENT" : cloudServer.getServerGroup().getGroupName()),
                 cloudServerChangedStatePacket.getOld(), cloudServerChangedStatePacket.getState()));
     }
 
