@@ -138,7 +138,7 @@ public abstract class Server implements IScreen, IServer {
                 }
             }
             try {
-                this.process.getOutputStream().write("stop\n".getBytes());
+                this.process.getOutputStream().write("minecraft:stop\n".getBytes());
                 this.process.getOutputStream().flush();
                 Thread.sleep(1500L);
             } catch (IOException | InterruptedException e) {
