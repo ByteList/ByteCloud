@@ -71,7 +71,7 @@ public class CloudHandler extends CloudAPIHandler {
             player.teleport(location);
         } else {
             Bukkit.getPluginManager().registerEvents(new Listener() {
-                @EventHandler(priority = EventPriority.HIGHEST)
+                @EventHandler(priority = EventPriority.LOWEST)
                 public void onJoin(PlayerJoinEvent e) {
                     if(e.getPlayer().getUniqueId() == cloudPlayerTeleportPacket.getUuid()) {
                         e.getPlayer().teleport(location);
