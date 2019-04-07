@@ -67,7 +67,7 @@ public class CloudHandler extends CloudAPIHandler {
         Location location = new Location(world, cloudLocation.getX(), cloudLocation.getY(), cloudLocation.getZ(),
                 cloudLocation.getYaw(), cloudLocation.getPitch());
 
-        if(player != null) {
+        if(player != null && player.isOnline()) {
             player.teleport(location);
         } else {
             Bukkit.getPluginManager().registerEvents(new Listener() {
