@@ -122,8 +122,6 @@ public abstract class CloudAPIHandler {
 
         if(cloudPlayer != null) {
             cloudPlayer.setLocation(cloudPlayerLocationPacket.getLocation());
-
-            System.out.println("CloudAPIHandler.setCloudLocation: "+cloudPlayerLocationPacket.getUuid()+ " : "+cloudPlayerLocationPacket.getLocation().toCoordinatesString());
         }
     }
 

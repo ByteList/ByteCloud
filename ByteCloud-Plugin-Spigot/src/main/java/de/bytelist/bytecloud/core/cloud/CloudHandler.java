@@ -19,7 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.spigotmc.event.player.PlayerSpawnLocationEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  * Created by ByteList on 20.12.2016.
@@ -71,10 +71,10 @@ public class CloudHandler extends CloudAPIHandler {
             player.teleport(location);
         } else {
             Bukkit.getPluginManager().registerEvents(new Listener() {
-                @EventHandler(priority = EventPriority.LOWEST)
-                public void onSpawnLocation(PlayerSpawnLocationEvent e) {
+                @EventHandler(priority = EventPriority.HIGHEST)
+                public void onJoin(PlayerJoinEvent e) {
                     if(e.getPlayer().getUniqueId() == cloudPlayerTeleportPacket.getUuid()) {
-                        e.setSpawnLocation(location);
+                        e.getPlayer().teleport(location);
                         HandlerList.unregisterAll(this);
                     }
                 }
