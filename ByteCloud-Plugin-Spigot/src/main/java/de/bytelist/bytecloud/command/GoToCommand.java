@@ -2,8 +2,6 @@ package de.bytelist.bytecloud.command;
 
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPlayer;
-import de.bytelist.bytecloud.common.server.CloudServer;
-import de.bytelist.bytecloud.common.spigot.SpigotCloud;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import org.bukkit.command.Command;
@@ -58,7 +56,9 @@ public class GoToCommand implements CommandExecutor {
             }
 
             player.sendMessage(Cloud.PREFIX + "§7Connecting to " + targetPlayer.getCurrentServer().getServerId() + "...");
-            spigotCloudPlugin.getCloudAPI().movePlayerToServer(player.getUniqueId(), spigotCloudPlugin.getCloudAPI().getServerIdFromPlayer(target));
+            spigotCloudPlugin.getCloudAPI().movePlayerToServerAndTeleport(player.getUniqueId(),
+                    spigotCloudPlugin.getCloudAPI().getServerIdFromPlayer(target),
+                    targetPlayer.getLocation());
             return true;
         }
 

@@ -2,9 +2,10 @@ package de.bytelist.bytecloud.bungee;
 
 import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.ServerIdResolver;
+import de.bytelist.bytecloud.common.CloudLocation;
 import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudAPI;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
+import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerLocationPacket;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -84,6 +85,13 @@ public class ByteBungeeCloudAPI implements BungeeCloudAPI {
     @Override
     public void movePlayerToServer(UUID uuid, String serverId) {
         ByteCloudMaster.getInstance().getProxy().getPlayer(uuid).connect(ByteCloudMaster.getInstance().getProxy().getServerInfo(serverId));
+    }
+
+    @Override
+    public void movePlayerToServerAndTeleport(UUID uuid, String serverId, CloudLocation cloudLocation) {
+        ByteCloudMaster.getInstance().getProxy().getPlayer(uuid).connect(ByteCloudMaster.getInstance().getProxy().getServerInfo(serverId));
+        ByteCloudMaster.getInstance().getSession().send(new ClientPlayerLocationPacket(uuid, cloudLocation,
+                true, serverId));
     }
 
     @Override

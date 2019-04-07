@@ -1,8 +1,8 @@
 package de.bytelist.bytecloud;
 
 import de.bytelist.bytecloud.common.CloudPlayer;
-import de.bytelist.bytecloud.common.packet.cloud.*;
 import de.bytelist.bytecloud.common.packet.cloud.player.*;
+import de.bytelist.bytecloud.common.packet.cloud.server.*;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.common.server.CloudServerGroup;
 import lombok.Getter;
@@ -70,9 +70,9 @@ public abstract class CloudAPIHandler {
             }
 
             this.cloudServers.remove(cloudServer.getServerId());
+            System.out.println("CloudAPIHandler.removeCloudServer: "+cloudServerStoppedPacket.getServerId());
         }
 
-        System.out.println("CloudAPIHandler.removeCloudServer: "+cloudServerStoppedPacket.getServerId());
     }
 
     /*
@@ -116,6 +116,16 @@ public abstract class CloudAPIHandler {
     public abstract void kickCloudPlayer(CloudPlayerKickPacket cloudPlayerKickPacket);
 
     public abstract void sendMessage(CloudPlayerMessagePacket cloudPlayerMessagePacket);
+
+    public void setCloudLocation(CloudPlayerLocationPacket cloudPlayerLocationPacket) {
+        CloudPlayer cloudPlayer = this.getCloudPlayer(cloudPlayerLocationPacket.getUuid());
+
+        if(cloudPlayer != null) {
+            cloudPlayer.setLocation(cloudPlayerLocationPacket.getLocation());
+        }
+    }
+
+    public abstract void teleportPlayer(CloudPlayerTeleportPacket cloudPlayerTeleportPacket);
 
     public void setMotd(CloudServerSetMotdPacket cloudServerSetMotdPacket) {
         CloudServer cloudServer = this.getCloudServer(cloudServerSetMotdPacket.getServerId());

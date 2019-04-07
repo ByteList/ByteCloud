@@ -4,10 +4,7 @@ import com.github.steveice10.packetlib.packet.Packet;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import com.sun.management.OperatingSystemMXBean;
 import de.bytelist.bytecloud.bungee.Bungee;
-import de.bytelist.bytecloud.common.CloudPlayer;
-import de.bytelist.bytecloud.common.CloudSoftware;
-import de.bytelist.bytecloud.common.Executable;
-import de.bytelist.bytecloud.common.IServer;
+import de.bytelist.bytecloud.common.*;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerDisconnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
@@ -548,6 +545,15 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
     @Override
     public void kickPlayer(UUID uuid, String reason) {
         this.bungee.getSession().send(new CloudPlayerKickPacket(uuid, reason));
+    }
+
+    @Override
+    public void setCloudLocation(UUID uuid, CloudLocation cloudLocation) {
+        CloudPlayer cloudPlayer = this.cloudPlayers.get(uuid);
+
+        if(cloudPlayer != null) {
+            cloudPlayer.setLocation(cloudLocation);
+        }
     }
 
     @Override

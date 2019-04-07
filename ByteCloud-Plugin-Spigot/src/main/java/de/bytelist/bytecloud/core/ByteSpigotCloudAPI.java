@@ -2,11 +2,13 @@ package de.bytelist.bytecloud.core;
 
 import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.ServerIdResolver;
+import de.bytelist.bytecloud.common.CloudLocation;
 import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.ServerState;
-import de.bytelist.bytecloud.common.packet.client.ClientServerChangeStatePacket;
-import de.bytelist.bytecloud.common.packet.client.ClientServerSetMotdPacket;
-import de.bytelist.bytecloud.common.packet.client.ClientServerStopPacket;
+import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerLocationPacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerChangeStatePacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerSetMotdPacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerStopPacket;
 import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerKickPacket;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.common.server.CloudServerGroup;
@@ -46,6 +48,12 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
     @Override
     public void shutdown(UUID sender) {
         ByteCloudCore.getInstance().getSession().send(new ClientServerStopPacket(this.getCurrentServerId(), sender));
+    }
+
+    @Override
+    public void setLocation(UUID uuid, CloudLocation cloudLocation) {
+        ByteCloudCore.getInstance().getSession().send(new ClientPlayerLocationPacket(uuid, cloudLocation,
+                false, this.getCurrentServerId()));
     }
 
     @Override
@@ -122,6 +130,13 @@ public class ByteSpigotCloudAPI implements SpigotCloudAPI {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void movePlayerToServerAndTeleport(UUID uuid, String serverId, CloudLocation cloudLocation) {
+        this.movePlayerToServer(uuid, serverId);
+        ByteCloudCore.getInstance().getSession().send(new ClientPlayerLocationPacket(uuid, cloudLocation,
+                true, serverId));
     }
 
     @Override

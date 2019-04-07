@@ -4,8 +4,9 @@ import com.github.steveice10.packetlib.Session;
 import de.bytelist.bytecloud.ByteCloud;
 import de.bytelist.bytecloud.common.CloudPlayer;
 import de.bytelist.bytecloud.common.Executable;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerGroupInfoPacket;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.cloud.server.CloudServerGroupInfoPacket;
+import de.bytelist.bytecloud.common.packet.cloud.server.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerServerSwitchPacket;
 import de.bytelist.bytecloud.file.EnumFile;
@@ -159,7 +160,7 @@ public class Bungee implements IScreen, Executable {
     }
 
     /**
-     * Gets executed when the bungee sent the {@link de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket} packet.
+     * Gets executed when the bungee sent the {@link ClientServerStartedPacket} packet.
      * Set the bungee to started.
      */
     @Override

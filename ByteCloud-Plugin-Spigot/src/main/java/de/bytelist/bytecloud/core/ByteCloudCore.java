@@ -9,7 +9,7 @@ import de.bytelist.bytecloud.command.ServerCommand;
 import de.bytelist.bytecloud.command.StopCommand;
 import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
-import de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerStartedPacket;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;

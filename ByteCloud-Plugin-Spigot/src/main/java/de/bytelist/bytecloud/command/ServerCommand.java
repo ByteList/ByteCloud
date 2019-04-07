@@ -2,8 +2,8 @@ package de.bytelist.bytecloud.command;
 
 import com.google.common.base.Joiner;
 import de.bytelist.bytecloud.common.Cloud;
-import de.bytelist.bytecloud.common.packet.client.ClientServerStartPacket;
-import de.bytelist.bytecloud.common.packet.client.ClientServerStopPacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerStartPacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerStopPacket;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.core.ByteCloudCore;

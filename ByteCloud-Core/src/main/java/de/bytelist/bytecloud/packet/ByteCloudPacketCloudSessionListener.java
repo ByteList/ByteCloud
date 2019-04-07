@@ -7,12 +7,11 @@ import de.bytelist.bytecloud.common.CloudSoftware;
 import de.bytelist.bytecloud.common.Executable;
 import de.bytelist.bytecloud.common.packet.PacketFlag;
 import de.bytelist.bytecloud.common.packet.PacketInfo;
-import de.bytelist.bytecloud.common.packet.client.*;
-import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerConnectPacket;
-import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerDisconnectPacket;
-import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerKickPacket;
-import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerServerSwitchPacket;
+import de.bytelist.bytecloud.common.packet.client.ClientKeepAlivePacket;
+import de.bytelist.bytecloud.common.packet.client.player.*;
+import de.bytelist.bytecloud.common.packet.client.server.*;
 import de.bytelist.bytecloud.common.packet.cloud.CloudKeepAlivePacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerTeleportPacket;
 
 /**
  * Created by ByteList on 11.02.2019.
@@ -31,6 +30,7 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
         switch (packetInfo) {
             case UNKNOWN_PACKET:
                 break;
+
             case CLIENT_KEEP_ALIVE_PACKET:
                 ClientKeepAlivePacket clientKeepAlivePacket = event.getPacket();
                 if(clientKeepAlivePacket.getPingId() == this.lastPingId) {
@@ -80,6 +80,16 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
                 ClientPlayerKickPacket clientPlayerKickPacket = event.getPacket();
                 CloudSoftware.getInstance().kickPlayer(clientPlayerKickPacket.getUuid(), clientPlayerKickPacket.getReason());
                 break;
+            case CLIENT_PLAYER_LOCATION_PACKET:
+                ClientPlayerLocationPacket clientPlayerLocationPacket = event.getPacket();
+                CloudSoftware.getInstance().setCloudLocation(clientPlayerLocationPacket.getUuid(), clientPlayerLocationPacket.getLocation());
+                if(clientPlayerLocationPacket.isTeleportOnJoinEnabled()) {
+                    CloudSoftware.getInstance().getIServer(clientPlayerLocationPacket.getServerId()).getSession()
+                            .send(new CloudPlayerTeleportPacket(clientPlayerLocationPacket.getUuid(),
+                                    clientPlayerLocationPacket.getLocation()));
+                }
+
+                break;
             case CLIENT_PLAYER_SERVER_SWITCH_PACKET:
                 ClientPlayerServerSwitchPacket clientPlayerServerSwitchPacket = event.getPacket();
                 CloudSoftware.getInstance().setCurrentServer(clientPlayerServerSwitchPacket.getUuid(), clientPlayerServerSwitchPacket.getServerId());
@@ -88,6 +98,24 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
 
             case CLOUD_KEEP_ALIVE_PACKET:
                 break;
+
+            case CLOUD_PLAYER_CONNECT_PACKET:
+                break;
+            case CLOUD_PLAYER_DISCONNECT_PACKET:
+                break;
+            case CLOUD_PLAYER_KICK_PACKET:
+                break;
+            case CLOUD_PLAYER_LOCATION_PACKET:
+                break;
+            case CLOUD_PLAYER_MESSAGE_PACKET:
+                break;
+            case CLOUD_PLAYER_MOVE_TO_SERVER_PACKET:
+                break;
+            case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
+                break;
+            case CLOUD_PLAYER_TELEPORT_PACKET:
+                break;
+
             case CLOUD_SERVER_CHANGED_STATE_PACKET:
                 break;
             case CLOUD_SERVER_STARTED_PACKET:
@@ -97,18 +125,6 @@ public class ByteCloudPacketCloudSessionListener extends SessionAdapter {
             case CLOUD_SERVER_GROUP_INFO_PACKET:
                 break;
             case CLOUD_SERVER_SET_MOTD_PACKET:
-                break;
-            case CLOUD_PLAYER_CONNECT_PACKET:
-                break;
-            case CLOUD_PLAYER_DISCONNECT_PACKET:
-                break;
-            case CLOUD_PLAYER_KICK_PACKET:
-                break;
-            case CLOUD_PLAYER_MESSAGE_PACKET:
-                break;
-            case CLOUD_PLAYER_MOVE_TO_SERVER_PACKET:
-                break;
-            case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
                 break;
         }
     }

@@ -22,6 +22,18 @@ public class ByteCloudPacketClientSessionListener extends SessionAdapter {
 
             case CLIENT_KEEP_ALIVE_PACKET:
                 break;
+
+            case CLIENT_PLAYER_CONNECT_PACKET:
+                break;
+            case CLIENT_PLAYER_DISCONNECT_PACKET:
+                break;
+            case CLIENT_PLAYER_KICK_PACKET:
+                break;
+            case CLIENT_PLAYER_LOCATION_PACKET:
+                break;
+            case CLIENT_PLAYER_SERVER_SWITCH_PACKET:
+                break;
+
             case CLIENT_SERVER_CHANGE_STATE_PACKET:
                 break;
             case CLIENT_SERVER_SET_MOTD_PACKET:
@@ -34,19 +46,37 @@ public class ByteCloudPacketClientSessionListener extends SessionAdapter {
                 break;
             case CLIENT_SERVER_STOPPED_PACKET:
                 break;
-            case CLIENT_PLAYER_CONNECT_PACKET:
-                break;
-            case CLIENT_PLAYER_DISCONNECT_PACKET:
-                break;
-            case CLIENT_PLAYER_KICK_PACKET:
-                break;
-            case CLIENT_PLAYER_SERVER_SWITCH_PACKET:
-                break;
 
 
             case CLOUD_KEEP_ALIVE_PACKET:
                 event.getSession().send(new ClientKeepAlivePacket(event.<CloudKeepAlivePacket>getPacket().getPingId()));
                 break;
+
+            case CLOUD_PLAYER_CONNECT_PACKET:
+                CloudAPIHandler.getInstance().addCloudPlayer(event.getPacket());
+                break;
+            case CLOUD_PLAYER_DISCONNECT_PACKET:
+                CloudAPIHandler.getInstance().removeCloudPlayer(event.getPacket());
+                break;
+            case CLOUD_PLAYER_KICK_PACKET:
+                CloudAPIHandler.getInstance().kickCloudPlayer(event.getPacket());
+                break;
+            case CLOUD_PLAYER_LOCATION_PACKET:
+                CloudAPIHandler.getInstance().setCloudLocation(event.getPacket());
+                break;
+            case CLOUD_PLAYER_MESSAGE_PACKET:
+                CloudAPIHandler.getInstance().sendMessage(event.getPacket());
+                break;
+            case CLOUD_PLAYER_MOVE_TO_SERVER_PACKET:
+                CloudAPIHandler.getInstance().moveCloudPlayer(event.getPacket());
+                break;
+            case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
+                CloudAPIHandler.getInstance().updateCloudPlayerCurrentServer(event.getPacket());
+                break;
+            case CLOUD_PLAYER_TELEPORT_PACKET:
+                CloudAPIHandler.getInstance().teleportPlayer(event.getPacket());
+                break;
+
             case CLOUD_SERVER_CHANGED_STATE_PACKET:
                 CloudAPIHandler.getInstance().setServerState(event.getPacket());
                 break;
@@ -61,24 +91,6 @@ public class ByteCloudPacketClientSessionListener extends SessionAdapter {
                 break;
             case CLOUD_SERVER_SET_MOTD_PACKET:
                 CloudAPIHandler.getInstance().setMotd(event.getPacket());
-                break;
-            case CLOUD_PLAYER_CONNECT_PACKET:
-                CloudAPIHandler.getInstance().addCloudPlayer(event.getPacket());
-                break;
-            case CLOUD_PLAYER_DISCONNECT_PACKET:
-                CloudAPIHandler.getInstance().removeCloudPlayer(event.getPacket());
-                break;
-            case CLOUD_PLAYER_KICK_PACKET:
-                CloudAPIHandler.getInstance().kickCloudPlayer(event.getPacket());
-                break;
-            case CLOUD_PLAYER_MESSAGE_PACKET:
-                CloudAPIHandler.getInstance().sendMessage(event.getPacket());
-                break;
-            case CLOUD_PLAYER_MOVE_TO_SERVER_PACKET:
-                CloudAPIHandler.getInstance().moveCloudPlayer(event.getPacket());
-                break;
-            case CLOUD_PLAYER_SERVER_SWITCH_PACKET:
-                CloudAPIHandler.getInstance().updateCloudPlayerCurrentServer(event.getPacket());
                 break;
         }
     }

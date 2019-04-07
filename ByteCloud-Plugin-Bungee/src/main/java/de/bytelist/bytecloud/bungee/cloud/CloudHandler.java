@@ -2,7 +2,8 @@ package de.bytelist.bytecloud.bungee.cloud;
 
 import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.bungee.ByteCloudMaster;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerTeleportPacket;
+import de.bytelist.bytecloud.common.packet.cloud.server.CloudServerStartedPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMoveToServerPacket;
@@ -57,6 +58,11 @@ public class CloudHandler extends CloudAPIHandler {
         ProxiedPlayer player = ByteCloudMaster.getInstance().getProxy().getPlayer(cloudPlayerMessagePacket.getUuid());
         if(player != null)
             player.sendMessage(cloudPlayerMessagePacket.getMessage());
+    }
+
+    @Override
+    public void teleportPlayer(CloudPlayerTeleportPacket cloudPlayerTeleportPacket) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public Integer getSocketPort() {

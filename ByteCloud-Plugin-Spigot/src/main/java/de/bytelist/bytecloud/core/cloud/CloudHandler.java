@@ -1,16 +1,25 @@
 package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.CloudAPIHandler;
-import de.bytelist.bytecloud.common.packet.cloud.CloudServerChangedStatePacket;
+import de.bytelist.bytecloud.common.CloudLocation;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
 import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMoveToServerPacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerTeleportPacket;
+import de.bytelist.bytecloud.common.packet.cloud.server.CloudServerChangedStatePacket;
 import de.bytelist.bytecloud.common.server.CloudServer;
 import de.bytelist.bytecloud.core.ByteCloudCore;
 import de.bytelist.bytecloud.core.event.ByteCloudServerUpdateStateEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 /**
  * Created by ByteList on 20.12.2016.
@@ -46,6 +55,31 @@ public class CloudHandler extends CloudAPIHandler {
 
         if(player != null)
             player.sendMessage(cloudPlayerMessagePacket.getMessage());
+    }
+
+    @Override
+    public void teleportPlayer(CloudPlayerTeleportPacket cloudPlayerTeleportPacket) {
+        Player player = Bukkit.getPlayer(cloudPlayerTeleportPacket.getUuid());
+        CloudLocation cloudLocation = cloudPlayerTeleportPacket.getLocation();
+        World world = Bukkit.getWorld(cloudLocation.getWorld());
+        if(world == null) return;
+
+        Location location = new Location(world, cloudLocation.getX(), cloudLocation.getY(), cloudLocation.getZ(),
+                cloudLocation.getYaw(), cloudLocation.getPitch());
+
+        if(player != null) {
+            player.teleport(location);
+        } else {
+            Bukkit.getPluginManager().registerEvents(new Listener() {
+                @EventHandler(priority = EventPriority.LOWEST)
+                public void onSpawnLocation(PlayerSpawnLocationEvent e) {
+                    if(e.getPlayer().getUniqueId() == cloudPlayerTeleportPacket.getUuid()) {
+                        e.setSpawnLocation(location);
+                        HandlerList.unregisterAll(this);
+                    }
+                }
+            }, ByteCloudCore.getInstance());
+        }
     }
 
     @Override

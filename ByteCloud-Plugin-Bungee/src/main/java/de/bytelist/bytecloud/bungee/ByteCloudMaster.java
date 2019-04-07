@@ -11,7 +11,7 @@ import de.bytelist.bytecloud.common.Cloud;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudAPI;
 import de.bytelist.bytecloud.common.bungee.BungeeCloudPlugin;
-import de.bytelist.bytecloud.common.packet.client.ClientServerStartedPacket;
+import de.bytelist.bytecloud.common.packet.client.server.ClientServerStartedPacket;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import lombok.Getter;
