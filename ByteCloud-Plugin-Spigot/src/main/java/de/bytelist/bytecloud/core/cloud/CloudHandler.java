@@ -1,4 +1,4 @@
-package de.bytelist.bytecloud.cloud;
+package de.bytelist.bytecloud.core.cloud;
 
 import de.bytelist.bytecloud.CloudAPIHandler;
 import de.bytelist.bytecloud.common.CloudLocation;

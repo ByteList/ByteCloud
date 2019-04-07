@@ -15,7 +15,7 @@ import de.bytelist.bytecloud.common.packet.client.server.ClientServerStartedPack
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
-import de.bytelist.bytecloud.cloud.CloudHandler;
+import de.bytelist.bytecloud.core.cloud.CloudHandler;
 import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import lombok.Getter;
 import lombok.Setter;
