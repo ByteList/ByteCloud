@@ -8,16 +8,19 @@ import de.bytelist.bytecloud.command.JoinCommand;
 import de.bytelist.bytecloud.command.ServerCommand;
 import de.bytelist.bytecloud.command.StopCommand;
 import de.bytelist.bytecloud.common.Cloud;
+import de.bytelist.bytecloud.common.CloudLocation;
 import de.bytelist.bytecloud.common.CloudPermissionCheck;
+import de.bytelist.bytecloud.common.packet.client.player.ClientPlayerLocationPacket;
 import de.bytelist.bytecloud.common.packet.client.server.ClientServerStartedPacket;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudAPI;
 import de.bytelist.bytecloud.common.spigot.SpigotCloudPlugin;
 import de.bytelist.bytecloud.config.CloudConfig;
-import de.bytelist.bytecloud.core.cloud.CloudHandler;
+import de.bytelist.bytecloud.cloud.CloudHandler;
 import de.bytelist.bytecloud.packet.ByteCloudPacketProtocol;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -79,8 +82,6 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
         this.session.connect();
         this.session.send(new ClientServerStartedPacket(this.serverId));
 
-        Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§aEnabled!");
-
         getCommand("goto").setExecutor(new GoToCommand());
         getCommand("join").setExecutor(new JoinCommand());
         getCommand("server").setExecutor(new ServerCommand());
@@ -91,7 +92,18 @@ public class ByteCloudCore extends JavaPlugin implements SpigotCloudPlugin {
             return true;
         });
 
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, ()-> Bukkit.getOnlinePlayers().forEach(player -> {
+            Location location = player.getLocation();
+
+            this.getSession().send(new ClientPlayerLocationPacket(player.getUniqueId(),
+                    new CloudLocation(location.getWorld().getName(), location.getX(), location.getY(),
+                            location.getZ(), location.getYaw(), location.getPitch()),
+                    false, this.getServerId()));
+            }), 60L, 60L);
+
         this.cloudAPI = new ByteSpigotCloudAPI();
+
+        Bukkit.getConsoleSender().sendMessage(Cloud.PREFIX + "§aEnabled!");
     }
 
     @Override
