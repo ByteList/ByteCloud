@@ -5,10 +5,7 @@ import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import com.sun.management.OperatingSystemMXBean;
 import de.bytelist.bytecloud.bungee.Bungee;
 import de.bytelist.bytecloud.common.*;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerConnectPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerDisconnectPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerKickPacket;
-import de.bytelist.bytecloud.common.packet.cloud.player.CloudPlayerMessagePacket;
+import de.bytelist.bytecloud.common.packet.cloud.player.*;
 import de.bytelist.bytecloud.config.CloudConfig;
 import de.bytelist.bytecloud.console.Command;
 import de.bytelist.bytecloud.console.CommandHandler;
@@ -451,6 +448,13 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
                             e.printStackTrace();
                         }
                         startFallback = "false";
+
+                        UpdateChannel updateChannel = UpdateChannel.getUpdateChannel(cloudConfig.getString("update-channel"));
+                        Updater updater = new Updater(updateChannel, false);
+                        while (true) {
+                            if(!updater.isAlive()) break;
+                        }
+
                         ByteCloud.this.stop();
                     }
                 }
@@ -553,6 +557,7 @@ public class ByteCloud implements CloudSoftware.ICloudSoftware {
 
         if(cloudPlayer != null) {
             cloudPlayer.setLocation(cloudLocation);
+            this.sendGlobalPacket(new CloudPlayerLocationPacket(uuid, cloudLocation));
         }
     }
 
