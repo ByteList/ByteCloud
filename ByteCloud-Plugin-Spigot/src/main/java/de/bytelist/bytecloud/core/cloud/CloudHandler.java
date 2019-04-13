@@ -74,6 +74,8 @@ public class CloudHandler extends CloudAPIHandler {
                 @EventHandler(priority = EventPriority.LOWEST)
                 public void onJoin(PlayerJoinEvent e) {
                     if(e.getPlayer().getUniqueId() == cloudPlayerTeleportPacket.getUuid()) {
+                        System.out.println("CloudHandler.onJoin");
+
                         e.getPlayer().teleport(location);
                         HandlerList.unregisterAll(this);
                     }
