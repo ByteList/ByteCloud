@@ -59,6 +59,8 @@ public class CloudHandler extends CloudAPIHandler {
 
     @Override
     public void teleportPlayer(CloudPlayerTeleportPacket cloudPlayerTeleportPacket) {
+        System.out.println("CloudHandler.teleportPlayer1");
+
         Player player = Bukkit.getPlayer(cloudPlayerTeleportPacket.getUuid());
         CloudLocation cloudLocation = cloudPlayerTeleportPacket.getLocation();
         World world = Bukkit.getWorld(cloudLocation.getWorld());
@@ -69,12 +71,13 @@ public class CloudHandler extends CloudAPIHandler {
 
         if(player != null && player.isOnline()) {
             player.teleport(location);
+            System.out.println("CloudHandler.teleportPlayer2");
         } else {
             Bukkit.getPluginManager().registerEvents(new Listener() {
                 @EventHandler(priority = EventPriority.LOWEST)
                 public void onJoin(PlayerJoinEvent e) {
-                    if(e.getPlayer().getUniqueId() == cloudPlayerTeleportPacket.getUuid()) {
-                        System.out.println("CloudHandler.onJoin");
+                    System.out.println("CloudHandler.onJoin: ");
+                    if(e.getPlayer().getUniqueId().toString().equals(cloudPlayerTeleportPacket.getUuid().toString())) {
 
                         e.getPlayer().teleport(location);
                         HandlerList.unregisterAll(this);
