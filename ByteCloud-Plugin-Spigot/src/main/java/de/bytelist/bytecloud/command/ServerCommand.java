@@ -89,7 +89,8 @@ public class ServerCommand implements CommandExecutor {
 
                     sender.sendMessage("");
                     sender.sendMessage("§6Serverinformation §7(§e"+cloudServer.getServerId()+"§7)§6:");
-                    sender.sendMessage("§8\u00BB §7Group: §a"+cloudServer.getServerGroup().getGroupName());
+                    sender.sendMessage("§8\u00BB §7Group: §a"+(cloudServer.isServerPermanent() ? "Permanent" :
+                            cloudServer.getServerGroup().getGroupName()));
                     sender.sendMessage("§8\u00BB §7ServerState: §e"+cloudServer.getServerState().name());
                     sender.sendMessage("§8\u00BB §7Motd: "+cloudServer.getMotd());
                     player.spigot().sendMessage(listPlayer);
